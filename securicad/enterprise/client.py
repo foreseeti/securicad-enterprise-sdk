@@ -30,6 +30,7 @@ def serialize_datetime(o):
 
 class Client:
     def __init__(self, url, username, password, org, cacert):
+        self.web_url = url
         self.base_url = f"{url}/api/v1"
 
         self.session = requests.Session()
@@ -202,6 +203,7 @@ class Client:
     def get_results(self, pid, tid, simid):
         self.__poll_results(pid, tid, simid)
         result = self.__get_results(pid, simid)
+        result["report_url"] = f"{self.web_url}/project/{pid}/scenario/{tid}/report/{simid}"
         return result
 
     def __poll_results(self, pid, tid, simid):
