@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import base64
+import io
 import json
 import time
 from datetime import datetime
@@ -118,6 +119,39 @@ class Client:
         res.raise_for_status()
 
         return Model(res.json()["response"])
+
+    def upload_scad(self, pid: str, scad_name: str, scad_file: io.BufferedIOBase, description: str = None) -> str:
+        """Uploads an ``.sCAD`` file.
+
+        :param pid: Project ID of project to upload to.
+        :param scad_name: Name of the ``.sCAD`` file (including extension).
+        :param scad_file: The ``.sCAD`` file (either a file opened with ``"rb"`` or a :class:`io.BytesIO` object.
+        :param description: (optional) Model description.
+        :return: Model ID of the uploaded model.
+        """
+        url = f"{self.base_url}/models"
+
+        scad_content = scad_file.read()
+        scad_base64 = base64.b64encode(scad_content).decode("utf-8")
+        file_dict = {
+            "filename": scad_name,
+            "file": scad_base64,
+            "tags": [],
+            "type": "scad",
+        }
+        if description is not None:
+            file_dict["description"] = description
+        data = {"pid": pid, "files": [[file_dict]]}
+        res = self.session.put(url, json=data)
+        res.raise_for_status()
+        mid = res.json()["response"][0]["mid"]
+        while True:
+            res = self.session.post(url, json={"pid": pid})
+            res.raise_for_status()
+            for model in res.json()["response"]:
+                if mid == model["mid"] and model["valid"] > 0:
+                    return mid
+            time.sleep(1)
 
     def save_model(self, pid, model):
         mid = model.model["mid"]
