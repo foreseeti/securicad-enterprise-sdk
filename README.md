@@ -29,8 +29,19 @@ accesskey = "AWS ACCESS KEY"
 secretkey = "AWS SECRET KEY"
 region = "REGION"  # e.g., us-east-1
 
+# Create a config for the AWS data fetcher
+config = {
+    "accounts": [
+        {
+            "access_key": accesskey,
+            "secret_key": secretkey,
+            "regions": [region],
+        },
+    ],
+}
+
 # Fetch AWS data
-_, data = aws.import_cli(region, accesskey, secretkey)
+aws_data = aws.import_cli(config=config)
 
 # securiCAD Enterprise credentials
 username = "username"
@@ -54,7 +65,7 @@ client = enterprise.client(url=url, username=username, password=password, org=or
 project_id = client.get_project(name="My project")
 
 # Generate securiCAD model from AWS data
-model_id, model = client.add_model(project_id, data, name="my-model")
+model_id, model = client.add_aws_model(project_id, name="my-model", cli_files=[aws_data])
 
 # securiCAD metadata with all assets and attacksteps
 metadata = client.get_metadata()
@@ -81,7 +92,7 @@ results = client.get_results(project_id, scenario_id, sim_id)
 
 ```
 
-If you wish to run the SDK with a local file, replace the `_, data = aws.import_cli()` call in the above example with:
+If you wish to run the SDK with a local file, replace the `data = aws.import_cli()` call in the above example with:
 
 ```python
 with open('data.json', mode='r', encoding='utf-8') as json_file:

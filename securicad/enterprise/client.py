@@ -66,40 +66,46 @@ class Client:
             raise ValueError(f"a bytes-like object or dict is required, not {type(data)}")
         return content
 
-    def add_model(self, pid, json_data, name):
-        model_id = self.__add_model(pid, json_data, name)
-        model = self.get_model(pid, model_id)
-        return model_id, model
+    def add_aws_model(self, pid: str, name: str, cli_files: list = None, vul_files: list = None):
+        """Create a model from AWS data 
 
-    def __add_model(self, pid, json_data, name):
-        url = f"{self.base_url}/models"
-
-        model_content = self.__encode_data(json_data)
-        model_base64d = base64.b64encode(model_content).decode("utf-8")
-
+        :param pid: Project ID of project to upload to.
+        :param name: Name of the generated model.
+        :param cli_files: List of files created with ``aws_import_cli``.
+        :param vul_files: (optional) List of files with vulnerability data.
+        :return: Model ID of the generated model and a Model object
+        """
+        url = f"{self.base_url}/projects/{pid}/multiparser"
+    
+        files = []
+        def create_content(filelist, parser):
+            if filelist:
+                for filedata in filelist:
+                    model_content = self.__encode_data(filedata)
+                    model_base64d = base64.b64encode(model_content).decode("utf-8")
+                    files.append({
+                            "sub_parser": parser,
+                            "name": "aws.json",
+                            "content": model_base64d
+                    })
+        create_content(cli_files, "aws-cli-parser")           
+        create_content(vul_files, "aws-vul-parser")
         data = {
-            "pid": pid,
-            "files": [
-                [
-                    {
-                        "file": model_base64d,
-                        "filename": f"{name}.json",
-                        "type": "aws",
-                        "tags": [],
-                    }
-                ]
-            ],
+            "parser": "aws-parser",
+            "name": name,
+            "files": files
         }
-
-        res = self.session.put(url, json=data)
+        res = self.session.post(url, json=data)
         res.raise_for_status()
-        mid = res.json()["response"][0]["mid"]
+        model_data = res.json()["response"]
+        mid = model_data["mid"]
+        url = f"{self.base_url}/models"
         while True:
             res = self.session.post(url, json={"pid": pid})
             res.raise_for_status()
             for model in res.json()["response"]:
                 if mid == model["mid"] and model["valid"] > 0:
-                    return mid
+                    return mid, Model(model_data)
             time.sleep(1)
 
     def get_project(self, name):
