@@ -73,23 +73,26 @@ class Client:
         :param name: Name of the generated model.
         :param cli_files: List of files created with ``aws_import_cli``.
         :param vul_files: (optional) List of files with vulnerability data.
-        :return: Model ID of the generated model and a Model object
+        :return: A Model object
         """
         url = f"{self.base_url}/projects/{pid}/multiparser"
     
         files = []
         def create_content(filelist, parser):
+            file_contents = []
             if filelist:
                 for filedata in filelist:
                     model_content = self.__encode_data(filedata)
                     model_base64d = base64.b64encode(model_content).decode("utf-8")
-                    files.append({
+                    file_contents.append({
                             "sub_parser": parser,
                             "name": "aws.json",
                             "content": model_base64d
                     })
-        create_content(cli_files, "aws-cli-parser")           
-        create_content(vul_files, "aws-vul-parser")
+            return file_contents
+
+        files.extend(create_content(cli_files, "aws-cli-parser"))
+        files.extend(create_content(vul_files, "aws-vul-parser"))
         data = {
             "parser": "aws-parser",
             "name": name,
@@ -105,7 +108,7 @@ class Client:
             res.raise_for_status()
             for model in res.json()["response"]:
                 if mid == model["mid"] and model["valid"] > 0:
-                    return mid, Model(model_data)
+                    return Model(model_data)
             time.sleep(1)
 
     def get_project(self, name):
