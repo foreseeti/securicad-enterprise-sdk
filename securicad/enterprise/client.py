@@ -298,3 +298,48 @@ class Client:
                 }
             )
         return sorted(metalist, key=lambda k: k["name"])
+
+    def create_organization(self, name):
+        url = f"{self.base_url}/organization"
+        data = {
+            "name": name,
+        }
+        res = self.session.put(url, json=data)
+        res.raise_for_status()
+        return res.json()["response"]["tag"]
+
+    def create_project(self, org, name, description=""):
+        url = f"{self.base_url}/project"
+        data = {
+            "name": name,
+            "description": description,
+            "organization": org
+        }
+        res = self.session.put(url, json=data)
+        res.raise_for_status()
+        return res.json()["response"]["pid"]
+
+    def create_user(self, username, password, firstname, lastname, org, role):
+        url = f"{self.base_url}/user"
+        data = {
+            "email": username,
+            "firstname": firstname,
+            "lastname": lastname,
+            "roles": [role],
+            "organization": org,
+            "isactive": True,
+            "password": password
+        }
+        res = self.session.put(url, json=data)
+        res.raise_for_status()
+        return res.json()["response"]["uid"]
+
+    def add_project_user(self, project_id, user_id, accesslevel=180):
+        url = f"{self.base_url}/project/user"
+        data = {
+            "pid": project_id,
+            "uid": user_id,
+            "accesslevel": accesslevel
+        }
+        res = self.session.put(url, json=data)
+        res.raise_for_status()
