@@ -16,7 +16,7 @@ To use the Enterprise SDK for AWS-based environments, the SDK requires AWS crede
 * [Create an IAM user](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html) with this [IAM policy](https://vanguard.securicad.com/iam_policy.json)
 * [Generate access keys](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html) for the IAM user
 
-### Run your first simulation
+### Run your first AWS simulation
 The following snippet runs a simulation on an AWS environment where the high value assets are all S3 Buckets and fetches the results. Please note, never store your credentials in source code, this is just an example.
 ```python
 import aws_import_cli as aws
@@ -119,6 +119,31 @@ high_value_assets = [
 model.set_high_value_assets(high_value_assets=high_value_assets)
 ```
 `id` is used to match objects in the model with the high value assets. The supported `type` are currently `name`, `arn` and `tag`. Omitting the `id` parameters will set all assets of that type as a high value asset. Omitting `consequence` will automatically set it to `10`.
+
+## User management
+You can create Organizations, Projects and Users via the SDK. Users have a `Role` in an Organization as well as an `AccessLevel` in a Project. Read more about user management in Enterprise [here](https://www.foreseeti.com/).
+
+```python
+# Create new organization
+org_id = client.create_organization("My org")
+# Create new project
+project_id = client.create_project(org_id, "My project")
+# Create a new user with the User-level Role
+user_id = client.create_user(
+    username="MyUser",
+    password="Password",
+    firstname="John",
+    lastname="Doe",
+    org_id,
+    enterprise.Role.USER
+)
+# Add the user to the new project
+client.add_project_user(
+    project_id,
+    user_id,
+    enterprise.AccessLevel.USER
+)
+```
 
 ## Disable attacksteps
 To configure the attack simulation and the capabilities of the attacker use `Model.disable_attackstep(metaconcept, attackstep, name)`:

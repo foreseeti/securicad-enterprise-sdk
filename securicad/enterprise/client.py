@@ -17,7 +17,6 @@ import io
 import json
 import time
 from datetime import datetime
-from enum import Enum
 
 import requests
 
@@ -28,19 +27,6 @@ from securicad.enterprise.model import Model
 def serialize_datetime(o):
     if isinstance(o, datetime):
         return o.__str__()
-
-
-class Role(Enum):
-    USER = ["user"]
-    PROJECT_CREATOR = ["user", "project_creator"]
-    ADMIN = ["user", "project_creator", "admin"]
-    SYSADMIN = ["user", "project_creator", "admin", "system_admin"]
-
-
-class AccessLevel(Enum):
-    GUEST = 100
-    USER = 180
-    OWNER = 250
 
 
 class Client:
@@ -339,7 +325,7 @@ class Client:
             "email": username,
             "firstname": firstname,
             "lastname": lastname,
-            "roles": role,
+            "roles": role.value,
             "organization": org,
             "isactive": True,
             "password": password
@@ -353,7 +339,7 @@ class Client:
         data = {
             "pid": project_id,
             "uid": user_id,
-            "accesslevel": accesslevel
+            "accesslevel": accesslevel.value
         }
         res = self.session.put(url, json=data)
         res.raise_for_status()

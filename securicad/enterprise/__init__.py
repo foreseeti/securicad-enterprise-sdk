@@ -12,11 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+from enum import Enum
 from securicad.enterprise.client import Client
 
 __version__ = "0.0.1"
 __author__ = "Foreseeti AB"
+
+
+class Role(Enum):
+    USER = ["user"]
+    PROJECT_CREATOR = ["user", "project_creator"]
+    ADMIN = ["user", "project_creator", "admin"]
+    SYSADMIN = ["user", "project_creator", "admin", "system_admin"]
+
+
+class AccessLevel(Enum):
+    GUEST = 100
+    USER = 180
+    OWNER = 250
 
 
 def client(url, username, password, org=None, cacert=None):
