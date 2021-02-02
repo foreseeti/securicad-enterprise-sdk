@@ -7,6 +7,11 @@ A Python SDK for [foreseeti's securiCAD Enterprise](https://foreseeti.com/securi
 `requests`, `boto3`
 
 ### Download and setup the SDK
+Install `securicad-enterprise` with pip:
+```shell
+pip install securicad-enterprise
+```
+or clone this repository from GitHub:
 ```shell
 git clone https://github.com/foreseeti/securicad-enterprise-sdk.git
 ```
@@ -19,7 +24,7 @@ To use the Enterprise SDK for AWS-based environments, the SDK requires AWS crede
 ### Run your first AWS simulation
 The following snippet runs a simulation on an AWS environment where the high value assets are all S3 Buckets and fetches the results. Please note, never store your credentials in source code, this is just an example.
 ```python
-import aws_import_cli as aws
+import securicad.enterprise.aws_import_cli as aws
 from securicad import enterprise
 
 # Create a config with credentials for the AWS data fetcher
@@ -28,7 +33,7 @@ config = {
         {
             "access_key": "AWS ACCESS KEY",
             "secret_key": "AWS SECRET KEY",
-            "regions": ["REGION"], # e.g., us-east-1
+            "regions": ["REGION"],  # e.g., us-east-1
         },
     ],
 }
@@ -49,10 +54,12 @@ org = "My organization"
 cacert = "/path/to/cacert.pem"
 
 # securiCAD Enterprise URL
-url = "https://xx.xx.xxx.x"
+url = "https://xx.xx.xx.xx"
 
 # Create an authenticated enterprise client
-client = enterprise.client(url=url, username=username, password=password, org=org, cacert=cacert)
+client = enterprise.client(
+    url=url, username=username, password=password, org=org, cacert=cacert
+)
 
 # Get project id of project where the model will be added
 project_id = client.get_project(name="My project")
@@ -78,7 +85,9 @@ model.set_high_value_assets(high_value_assets=high_value_assets)
 client.save_model(project_id, model)
 
 # Start a new simulation in a new scenario
-sim_id, scenario_id = client.start_simulation(project_id, model.id, name="My first simulation")
+sim_id, scenario_id = client.start_simulation(
+    project_id, model.id, name="My first simulation"
+)
 
 # Poll for results and return them when simulation is done
 results = client.get_results(project_id, scenario_id, sim_id)
@@ -221,6 +230,6 @@ for bucket in s3.buckets.all():
 
 ## License
 
-Copyright © 2020 [Foreseeti AB](https://www.foreseeti.com/)
+Copyright © 2020-2021 [Foreseeti AB](https://foreseeti.com)
 
 Licensed under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)

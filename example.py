@@ -1,4 +1,4 @@
-import aws_import_cli as aws
+import securicad.enterprise.aws_import_cli as aws
 from securicad import enterprise
 
 # Create a config with credentials for the AWS data fetcher
@@ -7,7 +7,7 @@ config = {
         {
             "access_key": "AWS ACCESS KEY",
             "secret_key": "AWS SECRET KEY",
-            "regions": ["REGION"], # e.g., us-east-1
+            "regions": ["REGION"],  # e.g., us-east-1
         },
     ],
 }
@@ -31,7 +31,9 @@ cacert = "/path/to/cacert.pem"
 url = "https://xx.xx.xx.xx"
 
 # Create an authenticated enterprise client
-client = enterprise.client(url=url, username=username, password=password, org=org, cacert=cacert)
+client = enterprise.client(
+    url=url, username=username, password=password, org=org, cacert=cacert
+)
 
 # Get project id of project where the model will be added
 project_id = client.get_project(name="My project")
@@ -57,7 +59,9 @@ model.set_high_value_assets(high_value_assets=high_value_assets)
 client.save_model(project_id, model)
 
 # Start a new simulation in a new scenario
-sim_id, scenario_id = client.start_simulation(project_id, model.id, name="My first simulation")
+sim_id, scenario_id = client.start_simulation(
+    project_id, model.id, name="My first simulation"
+)
 
 # Poll for results and return them when simulation is done
 results = client.get_results(project_id, scenario_id, sim_id)

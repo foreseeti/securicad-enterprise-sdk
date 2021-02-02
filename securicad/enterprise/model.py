@@ -1,4 +1,4 @@
-# Copyright 2020 Foreseeti AB
+# Copyright 2020-2021 Foreseeti AB <https://foreseeti.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -48,7 +48,10 @@ class Model:
         if hv_asset["id"]["type"] == "name" and obj["name"] == hv_asset["id"]["value"]:
             return True
         elif hv_asset["id"]["type"] == "tag":
-            if obj.get("tags", {}).get(hv_asset["id"]["key"]) == hv_asset["id"]["value"]:
+            if (
+                obj.get("tags", {}).get(hv_asset["id"]["key"])
+                == hv_asset["id"]["value"]
+            ):
                 return True
         elif hv_asset["id"]["type"] == "arn":
             if obj.get("tags", {}).get("arn") == hv_asset["id"]["value"]:

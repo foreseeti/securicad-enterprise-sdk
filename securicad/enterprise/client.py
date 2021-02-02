@@ -1,4 +1,4 @@
-# Copyright 2020 Foreseeti AB
+# Copyright 2020-2021 Foreseeti AB <https://foreseeti.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -42,8 +42,12 @@ class Client:
             requests.packages.urllib3.disable_warnings(
                 requests.packages.urllib3.exceptions.InsecureRequestWarning
             )
-        self.session.headers["User-Agent"] = f"Enterprise SDK {securicad.enterprise.__version__}"
-        self.session.headers["Authorization"] = self.__authenticate(username, password, org)
+        self.session.headers[
+            "User-Agent"
+        ] = f"Enterprise SDK {securicad.enterprise.__version__}"
+        self.session.headers["Authorization"] = self.__authenticate(
+            username, password, org
+        )
 
     def __authenticate(self, username, password, org):
         url = f"{self.base_url}/auth/login"
@@ -63,11 +67,15 @@ class Client:
         elif isinstance(data, bytes):
             content = data
         else:
-            raise ValueError(f"a bytes-like object or dict is required, not {type(data)}")
+            raise ValueError(
+                f"a bytes-like object or dict is required, not {type(data)}"
+            )
         return content
 
-    def add_aws_model(self, pid: str, name: str, cli_files: list = None, vul_files: list = None):
-        """Create a model from AWS data 
+    def add_aws_model(
+        self, pid: str, name: str, cli_files: list = None, vul_files: list = None
+    ):
+        """Create a model from AWS data
 
         :param pid: Project ID of project to upload to.
         :param name: Name of the generated model.
@@ -76,19 +84,22 @@ class Client:
         :return: A Model object
         """
         url = f"{self.base_url}/projects/{pid}/multiparser"
-    
+
         files = []
+
         def create_content(filelist, parser):
             file_contents = []
             if filelist:
                 for filedata in filelist:
                     model_content = self.__encode_data(filedata)
                     model_base64d = base64.b64encode(model_content).decode("utf-8")
-                    file_contents.append({
+                    file_contents.append(
+                        {
                             "sub_parser": parser,
                             "name": "aws.json",
-                            "content": model_base64d
-                    })
+                            "content": model_base64d,
+                        }
+                    )
             return file_contents
 
         files.extend(create_content(cli_files, "aws-cli-parser"))
@@ -96,7 +107,7 @@ class Client:
         data = {
             "parser": "aws-parser",
             "name": name,
-            "files": files
+            "files": files,
         }
         res = self.session.post(url, json=data)
         res.raise_for_status()
@@ -129,7 +140,13 @@ class Client:
 
         return Model(res.json()["response"])
 
-    def upload_scad(self, pid: str, scad_name: str, scad_file: io.BufferedIOBase, description: str = None) -> str:
+    def upload_scad(
+        self,
+        pid: str,
+        scad_name: str,
+        scad_file: io.BufferedIOBase,
+        description: str = None,
+    ) -> str:
         """Uploads an ``.sCAD`` file.
 
         :param pid: Project ID of project to upload to.
@@ -246,7 +263,9 @@ class Client:
     def get_results(self, pid, tid, simid):
         self.__poll_results(pid, tid, simid)
         result = self.__get_results(pid, simid)
-        result["report_url"] = f"{self.web_url}/project/{pid}/scenario/{tid}/report/{simid}"
+        result[
+            "report_url"
+        ] = f"{self.web_url}/project/{pid}/scenario/{tid}/report/{simid}"
         return result
 
     def __poll_results(self, pid, tid, simid):
@@ -313,7 +332,7 @@ class Client:
         data = {
             "name": name,
             "description": description,
-            "organization": org
+            "organization": org,
         }
         res = self.session.put(url, json=data)
         res.raise_for_status()
@@ -328,7 +347,7 @@ class Client:
             "roles": role.value,
             "organization": org,
             "isactive": True,
-            "password": password
+            "password": password,
         }
         res = self.session.put(url, json=data)
         res.raise_for_status()
@@ -339,7 +358,7 @@ class Client:
         data = {
             "pid": project_id,
             "uid": user_id,
-            "accesslevel": accesslevel.value
+            "accesslevel": accesslevel.value,
         }
         res = self.session.put(url, json=data)
         res.raise_for_status()

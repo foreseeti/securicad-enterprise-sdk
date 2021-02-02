@@ -1,4 +1,4 @@
-# Copyright 2019 Foreseeti AB
+# Copyright 2019-2021 Foreseeti AB <https://foreseeti.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 import argparse
 import concurrent.futures
 import json
+import logging
 import os
 import sys
 import time
@@ -33,6 +34,7 @@ except ModuleNotFoundError as e:
         f"You need jsonschema, boto3, botocore.config and botocore.exceptions to run this script: {e}"
     )
 
+log = logging.getLogger(__name__)
 CONFIG = Config(retries=dict(max_attempts=10))
 
 PARSER_VERSION = 8
@@ -243,10 +245,14 @@ def get_global_services(session, threads, delay, log_func):
     client_cache = {}
 
     def paginate(client, func, key, param=None):
-        return paginate_cached(session, client_lock, client_cache, client, func, key, param)
+        return paginate_cached(
+            session, client_lock, client_cache, client, func, key, param
+        )
 
     def unpaginated(client, func, key=None, param=None):
-        return unpaginated_cached(session, client_lock, client_cache, client, func, key, param)
+        return unpaginated_cached(
+            session, client_lock, client_cache, client, func, key, param
+        )
 
     tasks = []
 
@@ -254,9 +260,13 @@ def get_global_services(session, threads, delay, log_func):
         log_func(
             "Executing iam list-users, list-access-keys, list-attached-user-policies, list-user-policies, get-user-policy, list-groups-for-user, list-mfa-devices, get-login-profile, list-virtual-mfa-devices"
         )
-        mfa_devices = paginate("iam", "list_virtual_mfa_devices", key="VirtualMFADevices")
+        mfa_devices = paginate(
+            "iam", "list_virtual_mfa_devices", key="VirtualMFADevices"
+        )
         user_mfa_devices = {
-            x["User"]["UserName"]: x for x in mfa_devices["VirtualMFADevices"] if "User" in x
+            x["User"]["UserName"]: x
+            for x in mfa_devices["VirtualMFADevices"]
+            if "User" in x and "UserName" in x["User"]
         }
         users = paginate("iam", "list_users", key="Users")["Users"]
         for user in users:
@@ -403,7 +413,9 @@ def get_global_services(session, threads, delay, log_func):
                     "VersionId": policy["DefaultVersionId"],
                 },
             )
-            policy["Statement"] = policy_statement["PolicyVersion"]["Document"]["Statement"]
+            policy["Statement"] = policy_statement["PolicyVersion"]["Document"][
+                "Statement"
+            ]
 
         return ["iam", "Policies"], iam_policies
 
@@ -413,7 +425,9 @@ def get_global_services(session, threads, delay, log_func):
         log_func("Executing iam list-instance-profiles")
         return (
             ["iam", "InstanceProfiles"],
-            paginate("iam", "list_instance_profiles", key="InstanceProfiles")["InstanceProfiles"],
+            paginate("iam", "list_instance_profiles", key="InstanceProfiles")[
+                "InstanceProfiles"
+            ],
         )
 
     tasks.append(iam_list_instance_profiles)
@@ -442,13 +456,17 @@ def get_global_services(session, threads, delay, log_func):
                 bucket["Public"] = False
             # Bucket policy
             try:
-                policy = unpaginated("s3", "get_bucket_policy", param={"Bucket": bucket["Name"]})
+                policy = unpaginated(
+                    "s3", "get_bucket_policy", param={"Bucket": bucket["Name"]}
+                )
                 bucket["Policy"] = json.loads(policy["Policy"])
             except (KeyError, ClientError) as e:
                 pass
             # Bucket tags
             try:
-                tagset = unpaginated("s3", "get_bucket_tagging", param={"Bucket": bucket["Name"]})
+                tagset = unpaginated(
+                    "s3", "get_bucket_tagging", param={"Bucket": bucket["Name"]}
+                )
                 bucket["Tags"] = tagset["TagSet"]
             except (KeyError, ClientError) as e:
                 pass
@@ -465,10 +483,14 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
     client_cache = {}
 
     def paginate(client, func, key, param=None):
-        return paginate_cached(session, client_lock, client_cache, client, func, key, param)
+        return paginate_cached(
+            session, client_lock, client_cache, client, func, key, param
+        )
 
     def unpaginated(client, func, key=None, param=None):
-        return unpaginated_cached(session, client_lock, client_cache, client, func, key, param)
+        return unpaginated_cached(
+            session, client_lock, client_cache, client, func, key, param
+        )
 
     def fake_paginate(client, func, request_key, response_key, param, n, items):
         pages_data = []
@@ -483,6 +505,13 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
 
     tasks = []
 
+    def add_task(task, *services):
+        for service in services:
+            if session.region_name not in session.get_available_regions(service):
+                log.warning(f"Region {session.region_name} did not support {service}")
+                return
+        tasks.append(task)
+
     def describe_instances():
         log_func("Executing ec2 describe-instances, describe-images")
         reservations = paginate("ec2", "describe_instances", key="Reservations")
@@ -493,7 +522,10 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
                 image_ids[instance["ImageId"]].append(instance)
         # Determine if images assigned to an instance is on the Windows Platform
         images = unpaginated(
-            "ec2", "describe_images", key="Images", param={"ImageIds": list(image_ids.keys())}
+            "ec2",
+            "describe_images",
+            key="Images",
+            param={"ImageIds": list(image_ids.keys())},
         )
         for image in images:
             if image.get("Platform") == "windows":
@@ -501,7 +533,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
                     instance["IsWindows"] = True
         return ["instance"], reservations
 
-    tasks.append(describe_instances)
+    add_task(describe_instances, "ec2")
 
     def describe_network_interfaces():
         log_func("Executing ec2 describe-network-interfaces")
@@ -510,7 +542,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             paginate("ec2", "describe_network_interfaces", key="NetworkInterfaces"),
         )
 
-    tasks.append(describe_network_interfaces)
+    add_task(describe_network_interfaces, "ec2")
 
     def describe_security_groups():
         log_func("Executing ec2 describe-security-groups")
@@ -519,34 +551,36 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             paginate("ec2", "describe_security_groups", key="SecurityGroups"),
         )
 
-    tasks.append(describe_security_groups)
+    add_task(describe_security_groups, "ec2")
 
     def describe_subnet():
         log_func("Executing ec2 describe-subnets")
         return ["subnet"], paginate("ec2", "describe_subnets", key="Subnets")
 
-    tasks.append(describe_subnet)
+    add_task(describe_subnet, "ec2")
 
     def describe_network_acls():
         log_func("Executing ec2 describe-network-acls")
         return ["acl"], paginate("ec2", "describe_network_acls", key="NetworkAcls")
 
-    tasks.append(describe_network_acls)
+    add_task(describe_network_acls, "ec2")
 
     def describe_vpcs():
         log_func("Executing ec2 describe-vpcs")
         return ["vpc"], paginate("ec2", "describe_vpcs", key="Vpcs")
 
-    tasks.append(describe_vpcs)
+    add_task(describe_vpcs, "ec2")
 
     def describe_vpc_peering_connections():
         log_func("Executing ec2 describe-vpc-peering-connections")
         return (
             ["vpcpeering"],
-            paginate("ec2", "describe_vpc_peering_connections", key="VpcPeeringConnections"),
+            paginate(
+                "ec2", "describe_vpc_peering_connections", key="VpcPeeringConnections"
+            ),
         )
 
-    tasks.append(describe_vpc_peering_connections)
+    add_task(describe_vpc_peering_connections, "ec2")
 
     def describe_internet_gateways():
         log_func("Executing ec2 describe-internet-gateways")
@@ -555,20 +589,20 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             paginate("ec2", "describe_internet_gateways", key="InternetGateways"),
         )
 
-    tasks.append(describe_internet_gateways)
+    add_task(describe_internet_gateways, "ec2")
 
     def describe_vpn_gateways():
         log_func("Executing ec2 describe-vpn-gateways")
         vgws = unpaginated("ec2", "describe_vpn_gateways")
         return ["vgw"], vgws
 
-    tasks.append(describe_vpn_gateways)
+    add_task(describe_vpn_gateways, "ec2")
 
     def describe_nat_gateways():
         log_func("Executing ec2 describe-nat-gateways")
         return ["ngw"], paginate("ec2", "describe_nat_gateways", key="NatGateways")
 
-    tasks.append(describe_nat_gateways)
+    add_task(describe_nat_gateways, "ec2")
 
     def describe_route_tables():
         log_func("Executing ec2 describe-route-tables")
@@ -577,7 +611,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             paginate("ec2", "describe_route_tables", key="RouteTables"),
         )
 
-    tasks.append(describe_route_tables)
+    add_task(describe_route_tables, "ec2")
 
     def describe_vpc_endpoints():
         log_func("Executing ec2 describe-vpc-endpoints")
@@ -586,13 +620,13 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             paginate("ec2", "describe_vpc_endpoints", key="VpcEndpoints"),
         )
 
-    tasks.append(describe_vpc_endpoints)
+    add_task(describe_vpc_endpoints, "ec2")
 
     def describe_volumes():
         log_func("Executing ec2 describe-volumes")
         return ["ebs"], paginate("ec2", "describe_volumes", key="Volumes")
 
-    tasks.append(describe_volumes)
+    add_task(describe_volumes, "ec2")
 
     def elb_describe_load_balancers():
         log_func("Executing elb describe-load-balancers")
@@ -601,7 +635,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             paginate("elb", "describe_load_balancers", key="LoadBalancerDescriptions"),
         )
 
-    tasks.append(elb_describe_load_balancers)
+    add_task(elb_describe_load_balancers, "elb")
 
     def elbv2_describe_load_balancers():
         log_func(
@@ -635,7 +669,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             lb["Listeners"] = listeners
         return ["elbv2"], data
 
-    tasks.append(elbv2_describe_load_balancers)
+    add_task(elbv2_describe_load_balancers, "elbv2")
 
     def autoscaling_describe_launch_configurations():
         log_func("Executing autoscaling describe-launch-configurations")
@@ -648,7 +682,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             ),
         )
 
-    tasks.append(autoscaling_describe_launch_configurations)
+    add_task(autoscaling_describe_launch_configurations, "autoscaling")
 
     def rds_describe_db_instances():
         log_func("Executing rds describe-db-instances")
@@ -657,7 +691,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             paginate("rds", "describe_db_instances", key="DBInstances"),
         )
 
-    tasks.append(rds_describe_db_instances)
+    add_task(rds_describe_db_instances, "rds")
 
     def rds_describe_db_subnet_groups():
         log_func("Executing rds describe-db-subnet-groups")
@@ -666,13 +700,13 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             paginate("rds", "describe_db_subnet_groups", key="DBSubnetGroups"),
         )
 
-    tasks.append(rds_describe_db_subnet_groups)
+    add_task(rds_describe_db_subnet_groups, "rds")
 
     def lambda_list_functions():
         log_func("Executing lambda list-functions")
         return ["lambda"], paginate("lambda", "list_functions", key="Functions")
 
-    tasks.append(lambda_list_functions)
+    add_task(lambda_list_functions, "lambda")
 
     def kms_list_keys():
         log_func("Executing kms list-keys, get-key-policy")
@@ -686,7 +720,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             )
         return ["kms"], keys
 
-    tasks.append(kms_list_keys)
+    add_task(kms_list_keys, "kms")
 
     def inspector_list_findings():
         log_func(
@@ -722,9 +756,9 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             return ["inspector"], []
         # Get all supported rule packages
         package_arns = []
-        all_package_arns = paginate("inspector", "list_rules_packages", key="rulesPackageArns")[
-            "rulesPackageArns"
-        ]
+        all_package_arns = paginate(
+            "inspector", "list_rules_packages", key="rulesPackageArns"
+        )["rulesPackageArns"]
         package_arns_details = unpaginated(
             "inspector",
             "describe_rules_packages",
@@ -765,17 +799,21 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
         return ["inspector"], findings_details
 
     if include_inspector:
-        tasks.append(inspector_list_findings)
+        add_task(inspector_list_findings, "inspector")
 
     def dynamodb_list_tables():
         log_func("Executing dynamodb list-tables")
         return ["dynamodb"], paginate("dynamodb", "list_tables", key="TableNames")
 
-    tasks.append(dynamodb_list_tables)
+    add_task(dynamodb_list_tables, "dynamodb")
 
     def ecr_describe_repositories():
-        log_func("Executing ecr describe-repositories, get-repository-policy, list-images")
-        repositories = paginate("ecr", "describe_repositories", key="repositories")["repositories"]
+        log_func(
+            "Executing ecr describe-repositories, get-repository-policy, list-images"
+        )
+        repositories = paginate("ecr", "describe_repositories", key="repositories")[
+            "repositories"
+        ]
         for repository in repositories:
             try:
                 repository["policy"] = json.loads(
@@ -798,7 +836,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             )["imageIds"]
         return ["ecr"], repositories
 
-    tasks.append(ecr_describe_repositories)
+    add_task(ecr_describe_repositories, "ecr")
 
     def ecs_list_clusters():
         log_func(
@@ -827,7 +865,10 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
                 )["taskArns"]
 
             arns = paginate(
-                "ecs", "list_services", key="serviceArns", param={"cluster": cluster_arn}
+                "ecs",
+                "list_services",
+                key="serviceArns",
+                param={"cluster": cluster_arn},
             )["serviceArns"]
             services = fake_paginate(
                 "ecs",
@@ -876,9 +917,9 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             return container_instances
 
         def list_cluster_tasks(cluster_arn):
-            arns = paginate("ecs", "list_tasks", key="taskArns", param={"cluster": cluster_arn})[
-                "taskArns"
-            ]
+            arns = paginate(
+                "ecs", "list_tasks", key="taskArns", param={"cluster": cluster_arn}
+            )["taskArns"]
             return fake_paginate(
                 "ecs",
                 "describe_tasks",
@@ -893,11 +934,13 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
         for cluster in clusters:
             cluster_arn = cluster["clusterArn"]
             cluster["services"] = list_cluster_services(cluster_arn)
-            cluster["containerInstances"] = list_cluster_container_instances(cluster_arn)
+            cluster["containerInstances"] = list_cluster_container_instances(
+                cluster_arn
+            )
             cluster["tasks"] = list_cluster_tasks(cluster_arn)
         return ["ecs"], clusters
 
-    tasks.append(ecs_list_clusters)
+    add_task(ecs_list_clusters, "ecs")
 
     def apigateway_get_apis():
         log_func(
@@ -912,26 +955,40 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
 
         def get_usage_plan_keys(plan_id):
             return paginate(
-                "apigateway", "get_usage_plan_keys", key="items", param={"usagePlanId": plan_id}
+                "apigateway",
+                "get_usage_plan_keys",
+                key="items",
+                param={"usagePlanId": plan_id},
             )["items"]
 
         def get_authorizers(api_id):
             return paginate(
-                "apigateway", "get_authorizers", key="items", param={"restApiId": api_id}
+                "apigateway",
+                "get_authorizers",
+                key="items",
+                param={"restApiId": api_id},
             )["items"]
 
         def get_deployments(api_id):
             return paginate(
-                "apigateway", "get_deployments", key="items", param={"restApiId": api_id}
+                "apigateway",
+                "get_deployments",
+                key="items",
+                param={"restApiId": api_id},
             )["items"]
 
         def get_request_validators(api_id):
             return paginate(
-                "apigateway", "get_request_validators", key="items", param={"restApiId": api_id}
+                "apigateway",
+                "get_request_validators",
+                key="items",
+                param={"restApiId": api_id},
             )["items"]
 
         def get_stages(api_id):
-            return unpaginated("apigateway", "get_stages", param={"restApiId": api_id})["item"]
+            return unpaginated("apigateway", "get_stages", param={"restApiId": api_id})[
+                "item"
+            ]
 
         def get_resources(api_id):
             return paginate(
@@ -942,7 +999,11 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             return unpaginated(
                 "apigateway",
                 "get_method",
-                param={"restApiId": api_id, "resourceId": resource_id, "httpMethod": method},
+                param={
+                    "restApiId": api_id,
+                    "resourceId": resource_id,
+                    "httpMethod": method,
+                },
             )
 
         apis = get_rest_apis()
@@ -967,7 +1028,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             api["resources"] = resources
         return ["apigateway"], {"Apis": apis, "UsagePlans": plans}
 
-    tasks.append(apigateway_get_apis)
+    add_task(apigateway_get_apis, "apigateway")
 
     return execute_tasks(tasks, threads, delay)
 
@@ -991,7 +1052,12 @@ def import_cli(
             session, client_lock, client_cache, "sts", "get_caller_identity", "Account"
         )
         account_aliases = paginate_cached(
-            session, client_lock, client_cache, "iam", "list_account_aliases", "AccountAliases"
+            session,
+            client_lock,
+            client_cache,
+            "iam",
+            "list_account_aliases",
+            "AccountAliases",
         )["AccountAliases"]
         log_func(
             f"> Fetching AWS environment information of account {account_id} {account_aliases}"
@@ -1004,7 +1070,9 @@ def import_cli(
 
     def get_region_data(session, region):
         log_func(f">> Fetching AWS environment information in region {region}")
-        region_data = get_region_services(session, include_inspector, threads, delay, log_func)
+        region_data = get_region_services(
+            session, include_inspector, threads, delay, log_func
+        )
         region_data["region_name"] = region
         return region_data
 
@@ -1025,7 +1093,8 @@ def import_cli(
 
     for account in config["accounts"]:
         session = boto3.session.Session(
-            aws_access_key_id=account["access_key"], aws_secret_access_key=account["secret_key"]
+            aws_access_key_id=account["access_key"],
+            aws_secret_access_key=account["secret_key"],
         )
         account_data = get_account_data(session)
         if account_data["account_id"] in {a["account_id"] for a in output["accounts"]}:
@@ -1078,7 +1147,9 @@ def parse_args():
 
     def create_config_from_session(session):
         credentials = session.get_credentials()
-        return create_config(credentials.access_key, credentials.secret_key, session.region_name)
+        return create_config(
+            credentials.access_key, credentials.secret_key, session.region_name
+        )
 
     description = """
 Fetches AWS environment information and stores the output in a JSON file.
@@ -1101,9 +1172,15 @@ If no profile is specified, the default profile is used.
     parser.add_argument("-a", "--access-key", help="AWS Access Key")
     parser.add_argument("-s", "--secret-key", help="AWS Secret Key")
     parser.add_argument("-r", "--region", help="AWS Region")
-    parser.add_argument("-i", "--inspector", action="store_true", help="Include Amazon Inspector")
-    parser.add_argument("-t", "--threads", type=int, help="Number of concurrent threads")
-    parser.add_argument("-d", "--delay", type=float, help="Seconds of delay before a new API call")
+    parser.add_argument(
+        "-i", "--inspector", action="store_true", help="Include Amazon Inspector"
+    )
+    parser.add_argument(
+        "-t", "--threads", type=int, help="Number of concurrent threads"
+    )
+    parser.add_argument(
+        "-d", "--delay", type=float, help="Seconds of delay before a new API call"
+    )
     parser.add_argument("-c", "--config", help="Configuration file", metavar="PATH")
     parser.add_argument(
         "-o",
@@ -1122,7 +1199,9 @@ If no profile is specified, the default profile is used.
     elif args.access_key or args.secret_key or args.region:
         config = create_config(args.access_key, args.secret_key, args.region)
     elif args.profile:
-        config = create_config_from_session(boto3.session.Session(profile_name=args.profile))
+        config = create_config_from_session(
+            boto3.session.Session(profile_name=args.profile)
+        )
     else:
         config = create_config_from_session(boto3.session.Session())
     return config, args
@@ -1132,7 +1211,9 @@ def main():
     config, args = parse_args()
 
     try:
-        output = import_cli(config, args.inspector, threads=args.threads, delay=args.delay)
+        output = import_cli(
+            config, args.inspector, threads=args.threads, delay=args.delay
+        )
         try:
             with open(args.output, mode="w", encoding="utf-8") as f:
                 json.dump(output, f, indent=2, default=serialize_datetime)

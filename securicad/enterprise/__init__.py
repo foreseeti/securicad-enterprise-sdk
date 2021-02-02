@@ -1,4 +1,4 @@
-# Copyright 2020 Foreseeti AB
+# Copyright 2020-2021 Foreseeti AB <https://foreseeti.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from enum import Enum
+
 from securicad.enterprise.client import Client
 
 __version__ = "0.0.1"
