@@ -32,17 +32,17 @@ url = "https://xx.xx.xx.xx"
 
 # Create an authenticated enterprise client
 client = enterprise.client(
-    url=url, username=username, password=password, org=org, cacert=cacert
+    base_url=url, username=username, password=password, org=org, cacert=cacert
 )
 
-# Get project id of project where the model will be added
-project_id = client.get_project(name="My project")
+# Get the project where the model will be added
+project = client.projects.get_project_by_name("My project")
 
 # Generate securiCAD model from AWS data
-model = client.add_aws_model(project_id, name="my-model", cli_files=[aws_data])
-
-# securiCAD metadata with all assets and attacksteps
-metadata = client.get_metadata()
+model_info = client.models.upload_aws_model(
+    project, name="My model", cli_files=[aws_data]
+)
+model = model_info.get_model()
 
 high_value_assets = [
     {
@@ -56,12 +56,13 @@ high_value_assets = [
 model.set_high_value_assets(high_value_assets=high_value_assets)
 
 # Save changes to model in project
-client.save_model(project_id, model)
+client.models.save(project, model)
 
 # Start a new simulation in a new scenario
-sim_id, scenario_id = client.start_simulation(
-    project_id, model.id, name="My first simulation"
+scenario = client.scenarios.create_scenario(project, model_info, name="My scenario")
+simulation = client.simulations.get_simulation_by_name(
+    scenario, name="Initial simulation"
 )
 
 # Poll for results and return them when simulation is done
-results = client.get_results(project_id, scenario_id, sim_id)
+results = simulation.get_results()

@@ -34,7 +34,7 @@ class Model:
         hv_assets = defaultdict(list)
         [hv_assets[x["metaconcept"]].append(x) for x in hv_list]
 
-        # Check if any of the objects are eligable as a high value asset
+        # Check if any of the objects are eligible as a high value asset
         for oid, obj in self.model["objects"].items():
             if obj["metaconcept"] in hv_assets:
                 for hv_asset in hv_assets[obj["metaconcept"]]:

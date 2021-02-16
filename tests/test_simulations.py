@@ -12,16 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from securicad.enterprise.client import Client
-from securicad.enterprise.models import ModelInfo
-from securicad.enterprise.organizations import Organization
-from securicad.enterprise.projects import AccessLevel, Project
-from securicad.enterprise.scenarios import Scenario
-from securicad.enterprise.users import Role, User
+import sys
+from pathlib import Path
 
-__version__ = "0.0.1"
-__author__ = "Foreseeti AB"
+import pytest
 
+import utils
 
-def client(*args, **kwargs) -> Client:
-    return Client(*args, **kwargs)
+# isort: off
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+from securicad.enterprise.exceptions import StatusCodeException
+
+# isort: on
+
+# TODO:
+# test_list_simulations()
+# test_get_simulation_by_simid()
+# test_get_simulation_by_name()
+# test_create_simulation()
+# test_simulation_delete()
+# test_simulation_get_results()

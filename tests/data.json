@@ -1,0 +1,72 @@
+{
+  "users": [
+    {
+      "username": "admin",
+      "password": null,
+      "firstname": "admin",
+      "lastname": "admin",
+      "role": "SYSADMIN"
+    }
+  ],
+  "organizations": [
+    {
+      "name": "org1",
+      "users": [
+        {
+          "username": "org1_admin",
+          "password": null,
+          "firstname": "org1",
+          "lastname": "admin",
+          "role": "ADMIN"
+        },
+        {
+          "username": "org1_pc",
+          "password": null,
+          "firstname": "org1",
+          "lastname": "pc",
+          "role": "PROJECT_CREATOR"
+        },
+        {
+          "username": "org1_user",
+          "password": null,
+          "firstname": "org1",
+          "lastname": "user",
+          "role": "USER"
+        }
+      ],
+      "projects": [
+        {
+          "name": "p1",
+          "description": null
+        }
+      ]
+    },
+    {
+      "name": "org2",
+      "users": [
+        {
+          "username": "org2_admin",
+          "password": null,
+          "firstname": "org2",
+          "lastname": "admin",
+          "role": "ADMIN"
+        },
+        {
+          "username": "org2_pc",
+          "password": null,
+          "firstname": "org2",
+          "lastname": "pc",
+          "role": "PROJECT_CREATOR"
+        },
+        {
+          "username": "org2_user",
+          "password": null,
+          "firstname": "org2",
+          "lastname": "user",
+          "role": "USER"
+        }
+      ],
+      "projects": []
+    }
+  ]
+}

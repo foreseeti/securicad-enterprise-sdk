@@ -1,0 +1,105 @@
+{
+  "definitions": {
+    "user": {
+      "type": "object",
+      "properties": {
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": [
+            "null",
+            "integer"
+          ]
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "USER",
+            "PROJECT_CREATOR",
+            "ADMIN",
+            "SYSADMIN"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "username",
+        "password",
+        "firstname",
+        "lastname",
+        "role"
+      ]
+    },
+    "organization": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/user"
+          }
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/project"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "users",
+        "projects"
+      ]
+    },
+    "project": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "description"
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "users": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/user"
+      }
+    },
+    "organizations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/organization"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "users",
+    "organizations"
+  ]
+}

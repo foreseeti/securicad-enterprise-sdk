@@ -16,10 +16,7 @@ create_venv() {
 }
 
 run_mypy() {
-  git ls-tree -r --name-only HEAD |
-  grep "\.py$" |
-  tr "\n" "\0" |
-  xargs -0 mypy
+  mypy --namespace-packages -p securicad.enterprise
 }
 
 main() {

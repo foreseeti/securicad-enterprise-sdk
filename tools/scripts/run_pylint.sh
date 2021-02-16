@@ -16,10 +16,13 @@ create_venv() {
 }
 
 run_pylint() {
-  git ls-tree -r --name-only HEAD |
-  grep "\.py$" |
-  tr "\n" "\0" |
-  xargs -0 pylint
+  touch securicad/__init__.py
+  set +e
+  pylint securicad.enterprise
+  status=$?
+  set -e
+  rm securicad/__init__.py
+  return $status
 }
 
 main() {
