@@ -44,6 +44,9 @@ model_info = client.models.upload_aws_model(
 )
 model = model_info.get_model()
 
+# securiCAD metadata with all assets and attacksteps
+metadata = client.metadata.get_metadata()
+
 high_value_assets = [
     {
         "metaconcept": "S3Bucket",

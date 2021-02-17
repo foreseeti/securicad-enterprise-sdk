@@ -18,6 +18,7 @@ from urllib.parse import urljoin
 import requests
 
 from securicad.enterprise.exceptions import StatusCodeException
+from securicad.enterprise.metadata import Metadata
 from securicad.enterprise.models import Models
 from securicad.enterprise.organizations import Organizations
 from securicad.enterprise.projects import Projects
@@ -46,6 +47,7 @@ class Client:
         self.models = Models(client=self)
         self.scenarios = Scenarios(client=self)
         self.simulations = Simulations(client=self)
+        self.metadata = Metadata(client=self)
 
         self.login(username, password, organization)
 
