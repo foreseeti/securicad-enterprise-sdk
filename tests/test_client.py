@@ -78,18 +78,18 @@ def test_init(data):
 def test_login(data):
     def assert_login(client, username, password):
         utils.assert_access_token(client)
-        old_token = utils.get_access_token(client)
+        old_token = client._get_access_token()
 
         client.login(username, password)
 
         utils.assert_access_token(client)
-        new_token = utils.get_access_token(client)
+        new_token = client._get_access_token()
 
         assert old_token != new_token
 
     def assert_logout_login(client, username, password):
         utils.assert_access_token(client)
-        old_token = utils.get_access_token(client)
+        old_token = client._get_access_token()
 
         client.logout()
 
@@ -98,24 +98,24 @@ def test_login(data):
         client.login(username, password)
 
         utils.assert_access_token(client)
-        new_token = utils.get_access_token(client)
+        new_token = client._get_access_token()
 
         assert old_token != new_token
 
     def assert_login_org(client, username, password, org):
         utils.assert_access_token(client)
-        old_token = utils.get_access_token(client)
+        old_token = client._get_access_token()
 
         client.login(username, password, org)
 
         utils.assert_access_token(client)
-        new_token = utils.get_access_token(client)
+        new_token = client._get_access_token()
 
         assert old_token != new_token
 
     def assert_logout_login_org(client, username, password, org):
         utils.assert_access_token(client)
-        old_token = utils.get_access_token(client)
+        old_token = client._get_access_token()
 
         client.logout()
 
@@ -124,7 +124,7 @@ def test_login(data):
         client.login(username, password, org)
 
         utils.assert_access_token(client)
-        new_token = utils.get_access_token(client)
+        new_token = client._get_access_token()
 
         assert old_token != new_token
 
@@ -237,12 +237,12 @@ def test_logout(data):
 def test_refresh(data):
     def assert_refresh(client):
         utils.assert_access_token(client)
-        old_token = utils.get_access_token(client)
+        old_token = client._get_access_token()
 
         client.refresh()
 
         utils.assert_access_token(client)
-        new_token = utils.get_access_token(client)
+        new_token = client._get_access_token()
 
         assert old_token != new_token
 

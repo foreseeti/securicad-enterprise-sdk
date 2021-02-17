@@ -68,27 +68,12 @@ def get_client_sysadmin() -> "Client":
     return get_client(conftest.ADMIN_USERNAME, conftest.ADMIN_PASSWORD)
 
 
-def __get_headers(client: "Client") -> Dict[str, str]:
-    return client._Client__session.headers
-
-
-def get_access_token(client: "Client") -> str:
-    return __get_headers(client)["Authorization"]
-
-
 def assert_access_token(client: "Client") -> None:
-    assert "Authorization" in __get_headers(
-        client
-    ), 'Missing header "Authorization" in client'
-    assert get_access_token(client).startswith(
-        "JWT "
-    ), 'Invalid access token in header "Authorization" in client'
+    assert client._get_access_token() is not None, "Missing access token in client"
 
 
 def assert_not_access_token(client: "Client") -> None:
-    assert "Authorization" not in __get_headers(
-        client
-    ), 'Unexpected header "Authorization" in client'
+    assert client._get_access_token() is None, "Unexpected access token in client"
 
 
 def assert_status_code_exception(

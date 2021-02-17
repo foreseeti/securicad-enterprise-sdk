@@ -67,7 +67,7 @@ class Simulation:
         data: Dict[str, Any] = {"pid": self.pid, "simid": self.simid}
         result = self.client._post("simulation/data", data)
         result["report_url"] = urljoin(
-            self.client._Client__base_url,
+            self.client._base_url,
             f"project/{self.pid}/scenario/{self.tid}/report/{self.simid}",
         )
         return result

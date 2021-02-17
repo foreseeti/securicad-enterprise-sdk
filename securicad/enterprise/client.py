@@ -52,10 +52,10 @@ class Client:
         self.login(username, password, organization)
 
     def __init_urls(self, base_url: str, backend_url: Optional[str]) -> None:
-        self.__base_url = urljoin(base_url, "/")
+        self._base_url = urljoin(base_url, "/")
         if backend_url is None:
             backend_url = base_url
-        self.__backend_url = urljoin(backend_url, "/api/v1/")
+        self._backend_url = urljoin(backend_url, "/api/v1/")
 
     def __init_session(
         self,
@@ -68,8 +68,8 @@ class Client:
 
             return f"Enterprise SDK {securicad.enterprise.__version__}"
 
-        self.__session = requests.Session()
-        self.__session.headers["User-Agent"] = get_user_agent()
+        self._session = requests.Session()
+        self._session.headers["User-Agent"] = get_user_agent()
 
         # Server certificate verification
         if cacert is not None:
@@ -78,21 +78,27 @@ class Client:
                 requests.packages.urllib3.disable_warnings(
                     requests.packages.urllib3.exceptions.InsecureRequestWarning
                 )
-            self.__session.verify = cacert
+            self._session.verify = cacert
 
         # Client certificate
         if client_cert is not None:
-            self.__session.cert = client_cert
+            self._session.cert = client_cert
+
+    def _get_access_token(self) -> Optional[str]:
+        if "Authorization" not in self._session.headers:
+            return None
+        return self._session.headers["Authorization"][len("JWT ") :]
 
     def _set_access_token(self, access_token: Optional[str]) -> None:
-        if access_token is None and "Authorization" in self.__session.headers:
-            del self.__session.headers["Authorization"]
+        if access_token is None:
+            if "Authorization" in self._session.headers:
+                del self._session.headers["Authorization"]
         else:
-            self.__session.headers["Authorization"] = f"JWT {access_token}"
+            self._session.headers["Authorization"] = f"JWT {access_token}"
 
     def __request(self, method: str, endpoint: str, data: Any, status_code: int) -> Any:
-        url = urljoin(self.__backend_url, endpoint)
-        response = self.__session.request(method, url, json=data)
+        url = urljoin(self._backend_url, endpoint)
+        response = self._session.request(method, url, json=data)
         if response.status_code != status_code:
             raise StatusCodeException(status_code, method, url, response)
         return response.json()["response"]

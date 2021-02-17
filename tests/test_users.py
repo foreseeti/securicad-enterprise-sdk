@@ -80,14 +80,14 @@ def test_change_password(data):
         assert_password_correct(username, old_password, org)
         assert_password_incorrect(username, new_password, org)
         utils.assert_access_token(client)
-        old_token = utils.get_access_token(client)
+        old_token = client._get_access_token()
 
         client.users.change_password(old_password, new_password)
 
         assert_password_incorrect(username, old_password, org)
         assert_password_correct(username, new_password, org)
         utils.assert_access_token(client)
-        new_token = utils.get_access_token(client)
+        new_token = client._get_access_token()
 
         assert old_token != new_token
 
