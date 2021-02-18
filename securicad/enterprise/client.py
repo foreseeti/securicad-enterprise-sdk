@@ -45,7 +45,7 @@ class Client:
         self.organizations = Organizations(client=self)
         self.users = Users(client=self)
         self.projects = Projects(client=self)
-        self.parser = Parsers(client=self)
+        self.parsers = Parsers(client=self)
         self.models = Models(client=self)
         self.scenarios = Scenarios(client=self)
         self.simulations = Simulations(client=self)

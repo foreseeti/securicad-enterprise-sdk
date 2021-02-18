@@ -1124,7 +1124,7 @@ def import_cli(
     except jsonschema.exceptions.ValidationError as e:
         raise ValueError(f"Invalid output: {e.message}") from None
 
-    return output
+    return json.loads(json.dumps(output, default=serialize_datetime))
 
 
 def parse_args():
@@ -1216,7 +1216,7 @@ def main():
         )
         try:
             with open(args.output, mode="w", encoding="utf-8") as f:
-                json.dump(output, f, indent=2, default=serialize_datetime)
+                json.dump(output, f, indent=2)
             print(f"Output written to {args.output}")
         except Exception as e:
             sys.exit(e)
