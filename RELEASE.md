@@ -84,14 +84,15 @@ Create `~/.pypirc` with the following content:
 ```
 [distutils]
 index-servers =
-  pypi
-  testpypi
+  securicad-enterprise
+  securicad-enterprise-test
 
-[pypi]
+[securicad-enterprise]
+repository = https://upload.pypi.org/legacy/
 username = __token__
 password = pypi-****
 
-[testpypi]
+[securicad-enterprise-test]
 repository = https://test.pypi.org/legacy/
 username = __token__
 password = pypi-****
@@ -100,11 +101,11 @@ password = pypi-****
 Publish distribution files to testpypi:
 
 ```
-twine upload --repository testpypi dist/*
+twine upload --repository securicad-enterprise-test dist/*
 ```
 
 Publish distribution files to pypi:
 
 ```
-twine upload dist/*
+twine upload --repository securicad-enterprise dist/*
 ```

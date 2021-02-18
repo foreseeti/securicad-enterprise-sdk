@@ -65,7 +65,7 @@ client = enterprise.client(
 project = client.projects.get_project_by_name("My project")
 
 # Generate securiCAD model from AWS data
-model_info = client.models.upload_aws_model(
+model_info = client.parsers.generate_aws_model(
     project, name="My model", cli_files=[aws_data]
 )
 model = model_info.get_model()

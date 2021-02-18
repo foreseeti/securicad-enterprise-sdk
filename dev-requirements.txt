@@ -30,7 +30,7 @@ click==7.1.2
     # via black
 colorama==0.4.4
     # via twine
-cryptography==3.4.5
+cryptography==3.4.6
     # via secretstorage
 docutils==0.16
     # via readme-renderer
@@ -108,7 +108,7 @@ toml==0.10.2
     #   black
     #   pylint
     #   pytest
-tqdm==4.56.2
+tqdm==4.57.0
     # via twine
 twine==3.3.0
     # via -r dev-requirements.in
