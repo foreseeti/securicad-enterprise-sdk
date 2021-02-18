@@ -26,5 +26,52 @@ from securicad.enterprise.exceptions import StatusCodeException
 
 # isort: on
 
-# TODO:
-# test_get_metadata()
+
+def test_get_metadata(data, awslang):
+    def assert_get_metadata(client):
+        metalist = client.metadata.get_metadata()
+        expected_len = len(awslang)
+        actual_len = len(metalist)
+        assert (
+            actual_len == expected_len
+        ), f"len(metalist) {actual_len} != {expected_len}"
+
+        for i in range(actual_len):
+            expected_asset = awslang[i]
+            actual_asset = metalist[i]
+            assert (
+                actual_asset["name"] == expected_asset["name"]
+            ), f"Unexpected asset name \"{actual_asset['name']}\" != \"{expected_asset['name']}\""
+            expected_attacksteps_len = len(expected_asset["attacksteps"])
+            actual_attacksteps_len = len(actual_asset["attacksteps"])
+            assert (
+                actual_attacksteps_len == expected_attacksteps_len
+            ), f"len({expected_asset['name']}[\"attacksteps\"]) {actual_attacksteps_len} != {expected_attacksteps_len}"
+
+    def assert_get_metadata_fails(client):
+        with pytest.raises(StatusCodeException) as e:
+            client.metadata.get_metadata()
+        utils.assert_status_code_exception(
+            exception=e.value,
+            status_code=401,
+            method="GET",
+            url=utils.get_url("metadata"),
+            data={"msg": "Missing Authorization Header"},
+        )
+
+    for user_data in data["users"].values():
+        client = utils.get_client(user_data["username"], user_data["password"])
+        assert_get_metadata(client)
+        client.logout()
+
+    for org_data in data["organizations"].values():
+        for user_data in org_data["users"].values():
+            client = utils.get_client_org(
+                user_data["username"], user_data["password"], org_data["name"]
+            )
+            assert_get_metadata(client)
+            client.logout()
+
+    client = utils.get_client_sysadmin()
+    client.logout()
+    assert_get_metadata_fails(client)

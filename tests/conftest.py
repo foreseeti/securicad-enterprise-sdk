@@ -15,7 +15,7 @@
 import json
 import sys
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 import jsonschema
 import pytest
@@ -34,6 +34,8 @@ BACKEND_URL: Optional[str] = None
 ADMIN_USERNAME: Optional[str] = None
 ADMIN_PASSWORD: Optional[str] = None
 COMMON_PASSWORD: Optional[str] = None
+
+AWSLANG: Optional[List[Dict[str, Any]]] = None
 
 
 def get_config() -> Dict[str, Any]:
@@ -56,6 +58,13 @@ def get_data() -> Dict[str, Any]:
         data = json.load(f)
     jsonschema.validate(instance=data, schema=schema)
     return data
+
+
+def get_awslang() -> List[Dict[str, Any]]:
+    awslang_path = Path(__file__).with_name("awslang.json")
+    with awslang_path.open(mode="r", encoding="utf-8") as f:
+        awslang = json.load(f)
+    return awslang
 
 
 def read_config() -> None:
@@ -181,3 +190,11 @@ def init_data() -> None:
 @pytest.fixture
 def data() -> Dict[str, Dict[str, Any]]:
     return DATA
+
+
+@pytest.fixture
+def awslang() -> List[Dict[str, Any]]:
+    global AWSLANG
+    if AWSLANG is None:
+        AWSLANG = get_awslang()
+    return AWSLANG

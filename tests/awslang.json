@@ -1,0 +1,2888 @@
+[
+  {
+    "name": "APIGateway",
+    "description": "This asset represents the API Gateway service.",
+    "attacksteps": []
+  },
+  {
+    "name": "APIKey",
+    "description": "Represents passphrase or keys needed to authenticate as an identity in AWS, e.g., private SSH keys. Credentials are typically vulnerable to phishing attacks.",
+    "attacksteps": [
+      {
+        "name": "AttemptAccess",
+        "description": "The attacker is attempting to access the credentials."
+      },
+      {
+        "name": "CredentialTheft",
+        "description": "The attacker is able to steal or harvest the credentials from for example public repositories."
+      }
+    ]
+  },
+  {
+    "name": "AccessKey",
+    "description": "Represents the access key pair for the AWS CLI. Access keys can be vulnerable to phishing attacks or leakage.",
+    "attacksteps": [
+      {
+        "name": "Activate",
+        "description": "The attacker is able to activate this inactive access key pair."
+      },
+      {
+        "name": "AttemptAccess",
+        "description": "The attacker is attempting to access the credentials."
+      },
+      {
+        "name": "CredentialTheft",
+        "description": "The attacker is able to steal or harvest the credentials from for example public repositories."
+      },
+      {
+        "name": "Use",
+        "description": "The attacker has gained access to and is able to use this active access key pair to assume its user."
+      }
+    ]
+  },
+  {
+    "name": "AmazonResourceName",
+    "description": "Amazon Resource Names (ARNs) are used to reference AWS resources",
+    "attacksteps": []
+  },
+  {
+    "name": "Application",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "Access",
+        "description": "The attacker is authenticated and has access to the application."
+      },
+      {
+        "name": "Authenticate",
+        "description": "The attacker is able to authenticate in the application."
+      },
+      {
+        "name": "CodeExecution",
+        "description": "Vulnerabilities in the application could allow an attacker to inject code into the service process, thus assuming the service's privileges on the hosting instance. An attacker could under these circumstances influence other applications or the underlying operating system itself."
+      },
+      {
+        "name": "Deny",
+        "description": "The attacker can deny some or all functionality and data pertaining to this service."
+      },
+      {
+        "name": "LocalConnect",
+        "description": "The attacker has gained low-privilege access on the executing instance and can interact with the application."
+      },
+      {
+        "name": "Modify",
+        "description": "The attacker can modify some or all of this service's data."
+      },
+      {
+        "name": "NetworkRequestConnect",
+        "description": "The attacker has successfully sent a request to the application."
+      },
+      {
+        "name": "NetworkRespondConnect",
+        "description": "An attacker might be able to respond with forged requests submitted by an application."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read some or all of this service's code and data."
+      }
+    ]
+  },
+  {
+    "name": "Attacker",
+    "description": "An Attacker is an individual who is determined to gain access to resources with or without the proper authority, often to uncover and exploit weaknesses or cause damage. Naturally, the success rate of the attacker is dependent on its characteristics.\n\nIn securiCAD, an Attacker is assumed to be a professional penetration tester with all public knowledge and tools to its disposal. As such, each attack step and the provided statistics of success must be viewed in the light of a penetration tester attacker profile.",
+    "attacksteps": [
+      {
+        "name": "EntryPoint",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "AuthorizationToken",
+    "description": "Represents passphrase or keys needed to authenticate as an identity in AWS, e.g., private SSH keys. Credentials are typically vulnerable to phishing attacks.",
+    "attacksteps": [
+      {
+        "name": "AttemptAccess",
+        "description": "The attacker is attempting to access the credentials."
+      },
+      {
+        "name": "CredentialTheft",
+        "description": "The attacker is able to steal or harvest the credentials from for example public repositories."
+      },
+      {
+        "name": "GenerateRegistryPassword",
+        "description": "The attacker can decode the base64 token, the string is used in the docker login command."
+      }
+    ]
+  },
+  {
+    "name": "CMKKey",
+    "description": "Customer Master Keys (CMKs) and are mainly used to generate keys for encryption and decryption.",
+    "attacksteps": [
+      {
+        "name": "Decrypt",
+        "description": "The attacker is able to decrypt data with the generated data keys."
+      },
+      {
+        "name": "Encrypt",
+        "description": "The attacker is able to encrypt data with the generated data keys."
+      },
+      {
+        "name": "GenerateDataKey",
+        "description": "The attacker is able to generate data keys for encryption and decryption."
+      }
+    ]
+  },
+  {
+    "name": "CloudFormation",
+    "description": "This asset represents the CloudFormation service.",
+    "attacksteps": []
+  },
+  {
+    "name": "CloudFormationCreateStack",
+    "description": "Creates a stack as specified in a Cloudformation template.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Creates a stack as specified in a Cloudformation template."
+      }
+    ]
+  },
+  {
+    "name": "CodeStar",
+    "description": "This asset represents the CodeStar service.",
+    "attacksteps": []
+  },
+  {
+    "name": "CodeStarCreateProject",
+    "description": "Creates a CodeStar project, including resources.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Creates a CodeStar project, including resources."
+      }
+    ]
+  },
+  {
+    "name": "ContainerInstance",
+    "description": "A container instance is an EC2 instance running the container agent",
+    "attacksteps": [
+      {
+        "name": "Connect",
+        "description": "The attacker can connect to the instance through e.g., a shell, but is not authenticated."
+      },
+      {
+        "name": "GetRoleCredentials",
+        "description": "The attacker can get access to the set of permissions that the attached instance profile or role has."
+      },
+      {
+        "name": "HighPrivilegeAccess",
+        "description": "The attacker has gained full control of the instance docker daemon effectively compromising all containers and possibly stored registry credentials."
+      },
+      {
+        "name": "LowPrivilegeAccess",
+        "description": "Access to Docker daemon means the containers are compromised, the container instance might have stored registry credentials"
+      },
+      {
+        "name": "Terminate",
+        "description": "The attacker has terminated the instance. When an instance terminates, the data on any instance store volumes associated with that instance is deleted and associated tasks are stopped."
+      }
+    ]
+  },
+  {
+    "name": "ContainerInterface",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "RespondConnect",
+        "description": "The attacker is able to spoof the server, in case a client submits a request."
+      },
+      {
+        "name": "TransmitRequest",
+        "description": "The attacker is able to transmit requests from the container network interface."
+      },
+      {
+        "name": "TransmitResponse",
+        "description": "The attacker is able to spoof and transmit responses to clients from the network interface."
+      }
+    ]
+  },
+  {
+    "name": "ContainerListener",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "Access",
+        "description": "The attacker is authenticated and has access to the application."
+      },
+      {
+        "name": "Authenticate",
+        "description": "The attacker is able to authenticate in the application."
+      },
+      {
+        "name": "CodeExecution",
+        "description": "Vulnerabilities in the application could allow an attacker to inject code into the service process, thus assuming the service's privileges on the hosting instance. An attacker could under these circumstances influence other applications or the underlying operating system itself."
+      },
+      {
+        "name": "Deny",
+        "description": "The attacker can deny some or all functionality and data pertaining to this service."
+      },
+      {
+        "name": "LocalConnect",
+        "description": "The attacker has gained low-privilege access on the executing instance and can interact with the application."
+      },
+      {
+        "name": "Modify",
+        "description": "The attacker can modify some or all of this service's data."
+      },
+      {
+        "name": "NetworkRequestConnect",
+        "description": "The attacker can send requests to the application."
+      },
+      {
+        "name": "NetworkRespondConnect",
+        "description": "An attacker might be able to respond with forged requests submitted by an application."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read some or all of this service's code and data."
+      }
+    ]
+  },
+  {
+    "name": "Credentials",
+    "description": "Represents passphrase or keys needed to authenticate as an identity in AWS, e.g., private SSH keys. Credentials are typically vulnerable to phishing attacks.",
+    "attacksteps": [
+      {
+        "name": "AttemptAccess",
+        "description": "The attacker is attempting to access the credentials."
+      },
+      {
+        "name": "CredentialTheft",
+        "description": "The attacker is able to steal or harvest the credentials from for example public repositories."
+      }
+    ]
+  },
+  {
+    "name": "DBData",
+    "description": "This asset represent data in the databases hosted by the DB instance.",
+    "attacksteps": [
+      {
+        "name": "AuthenticatedDecrypt",
+        "description": "The attacker is authenticated to decrypt encrypted data."
+      },
+      {
+        "name": "AuthenticatedDelete",
+        "description": "The attacker is authenticated to access and delete the data."
+      },
+      {
+        "name": "AuthenticatedEncrypt",
+        "description": "The attacker is authenticated to encrypt and write the encrypted data."
+      },
+      {
+        "name": "AuthenticatedList",
+        "description": "The attacker is authenticated to access and list the data."
+      },
+      {
+        "name": "AuthenticatedRead",
+        "description": "The attacker is authenticated to access and read the data."
+      },
+      {
+        "name": "AuthenticatedWrite",
+        "description": "The attacker is authenticated to access and write data."
+      },
+      {
+        "name": "Delete",
+        "description": "The attacker can delete the data."
+      },
+      {
+        "name": "DenialOfService",
+        "description": "The attacker is preventing regular access to the data."
+      },
+      {
+        "name": "Encrypt",
+        "description": "The attacker is able to encrypt the data to interrupt availability or extortion."
+      },
+      {
+        "name": "List",
+        "description": "The attacker can list the data."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read the data."
+      },
+      {
+        "name": "Write",
+        "description": "The attacker can write to the location of the data, effectively deleting it."
+      }
+    ]
+  },
+  {
+    "name": "DBEngine",
+    "description": "Each DB instance runs a DB engine. Amazon RDS currently supports the MySQL, MariaDB, PostgreSQL, Oracle, and Microsoft SQL Server DB engines.",
+    "attacksteps": [
+      {
+        "name": "Access",
+        "description": "The attacked has gained access to the endpoint of the DB instance."
+      },
+      {
+        "name": "Authenticate",
+        "description": "The attacker is able to authenticate in the application."
+      },
+      {
+        "name": "CodeExecution",
+        "description": "Vulnerabilities in the application could allow an attacker to inject code into the service process, thus assuming the service's privileges on the hosting instance. An attacker could under these circumstances influence other applications or the underlying operating system itself."
+      },
+      {
+        "name": "Deny",
+        "description": "The attacker can deny some or all functionality and data pertaining to this service."
+      },
+      {
+        "name": "LocalConnect",
+        "description": "The attacker has gained low-privilege access on the executing instance and can interact with the application."
+      },
+      {
+        "name": "Modify",
+        "description": "The attacker can modify some or all of this service's data."
+      },
+      {
+        "name": "NetworkRequestConnect",
+        "description": "The attacker has successfully sent a request to the application."
+      },
+      {
+        "name": "NetworkRespondConnect",
+        "description": "An attacker might be able to respond with forged requests submitted by an application."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read some or all of this service's code and data."
+      }
+    ]
+  },
+  {
+    "name": "DBInstance",
+    "description": "A DB instance is isolated database environment in Amazon's Relational Database Service (Amazon RDS) to set up, operate, and scale a relational database in the Amazon Web Services (AWS) cloud infrastructure.",
+    "attacksteps": [
+      {
+        "name": "Connect",
+        "description": "The attacker can connect to the instance, e.g., through a shell, but has not yet authenticated."
+      },
+      {
+        "name": "Delete",
+        "description": "The attacker has deleted the DB instance, all automated backups for that instance are deleted and can't be recovered."
+      },
+      {
+        "name": "DeleteDatabase",
+        "description": "The attacker is able to delete one or more database in the database instance."
+      },
+      {
+        "name": "HighPrivilegeAccess",
+        "description": "High privilege access to the instance means that the attacker can access any application and transmit from the instance."
+      },
+      {
+        "name": "ListDatabase",
+        "description": "The attacker is able to list one or more database in the database instance."
+      },
+      {
+        "name": "LowPrivilegeAccess",
+        "description": "Low privilege access means that the attacker can connect to any local application. Additionally, we assume low-privilege access allows network transmissions."
+      },
+      {
+        "name": "ReadDatabase",
+        "description": "The attacker is able to read one or more database in the database instance."
+      },
+      {
+        "name": "Terminate",
+        "description": "The attacker has terminated the instance. When an instance terminates, the data on any instance store volumes associated with that instance is deleted."
+      },
+      {
+        "name": "WriteDatabase",
+        "description": "The attacker is able to write to one or more database in the database instance."
+      }
+    ]
+  },
+  {
+    "name": "DBMasterUser",
+    "description": "",
+    "attacksteps": [
+      {
+        "name": "Authenticate",
+        "description": "The attacker is able to authenticate as the DB master user."
+      }
+    ]
+  },
+  {
+    "name": "Data",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "AuthenticatedDelete",
+        "description": "The attacker is authenticated to access and delete the data."
+      },
+      {
+        "name": "AuthenticatedList",
+        "description": "The attacker is authenticated to access and list the data."
+      },
+      {
+        "name": "AuthenticatedRead",
+        "description": "The attacker is authenticated to access and read the data."
+      },
+      {
+        "name": "AuthenticatedWrite",
+        "description": "The attacker is authenticated to access and write data."
+      },
+      {
+        "name": "Delete",
+        "description": "The attacker can delete the data."
+      },
+      {
+        "name": "DenialOfService",
+        "description": "The attacker is preventing regular access to the data."
+      },
+      {
+        "name": "List",
+        "description": "The attacker can list the data."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read the data."
+      },
+      {
+        "name": "Write",
+        "description": "The attacker can write to the location of the data, effectively deleting it."
+      }
+    ]
+  },
+  {
+    "name": "DataPipeline",
+    "description": "This asset represents the Data Pipeline service.",
+    "attacksteps": []
+  },
+  {
+    "name": "DataPipelineCreatePipeline",
+    "description": "Creates a new, empty pipeline.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Creates a new, empty pipeline."
+      }
+    ]
+  },
+  {
+    "name": "DataPipelinePutPipelineDefinition",
+    "description": "Adds tasks, schedules, and preconditions to the specified pipeline.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Adds tasks, schedules, and preconditions to the specified pipeline."
+      }
+    ]
+  },
+  {
+    "name": "DockerContainer",
+    "description": "Docker containers are an isolated computing environment in which applications are run",
+    "attacksteps": [
+      {
+        "name": "Connect",
+        "description": "The attacker can connect to the instance through e.g., a shell, but is not authenticated."
+      },
+      {
+        "name": "HighPrivilegeAccess",
+        "description": "High privilege access to the instance means that the attacker can access any application and transmit from the instance."
+      },
+      {
+        "name": "LowPrivilegeAccess",
+        "description": "Low privilege access means that the attacker can connect to any local application. Additionally, we assume low-privilege access allows network transmissions."
+      },
+      {
+        "name": "Terminate",
+        "description": "The attacker has terminated the instance. When an instance terminates, the data on any instance store volumes associated with that instance is deleted."
+      }
+    ]
+  },
+  {
+    "name": "DockerEngine",
+    "description": "Docker Engine is the used container runtime in ECS",
+    "attacksteps": [
+      {
+        "name": "Access",
+        "description": "The attacker has gained authenticated access to the application."
+      },
+      {
+        "name": "Authenticate",
+        "description": "The attacker is able to authenticate in the application."
+      },
+      {
+        "name": "CodeExecution",
+        "description": "Vulnerabilities in the application could allow an attacker to inject code into the service process, thus assuming the service's privileges on the hosting instance. An attacker could under these circumstances influence other applications or the underlying operating system itself."
+      },
+      {
+        "name": "Deny",
+        "description": "The attacker can deny some or all functionality and data pertaining to this service."
+      },
+      {
+        "name": "LocalConnect",
+        "description": "An attacker with low-privilege access on the executing instance is assumed to be able to locally interact with the service."
+      },
+      {
+        "name": "Modify",
+        "description": "The attacker can modify some or all of this service's data."
+      },
+      {
+        "name": "NetworkRequestConnect",
+        "description": "The attacker has successfully sent a request to the application."
+      },
+      {
+        "name": "NetworkRespondConnect",
+        "description": "An attacker might be able to respond with forged requests submitted by an application."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read some or all of this service's code and data."
+      }
+    ]
+  },
+  {
+    "name": "DockerImage",
+    "description": "",
+    "attacksteps": [
+      {
+        "name": "CredentialCompromise",
+        "description": "The attacker is able to get credentials that might be stored in the docker history or from docker inspect commands."
+      },
+      {
+        "name": "DataCompromise",
+        "description": "The attacker is able to compromise sensitive data that might be stored in the docker history or from docker inspect commands."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDB",
+    "description": "This asset represents the DynamoDB service.",
+    "attacksteps": []
+  },
+  {
+    "name": "DynamoDBAPI",
+    "description": "A service API is an Amazon-controlled endpoint accepting API calls to the AWS infrastructure.",
+    "attacksteps": [
+      {
+        "name": "Invoke",
+        "description": "Invoke the DynamoDB API."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBBatchGetItem",
+    "description": "The BatchGetItem operation returns the attributes of one or more items from one or more tables.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Returns the attributes of one or more items from one or more tables."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBBatchWriteItem",
+    "description": "The BatchWriteItem operation puts or deletes multiple items in one or more tables.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Puts or deletes multiple items in one or more tables."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBDeleteItem",
+    "description": "Deletes a single item in a table by primary key.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Deletes a single item in a table by primary key."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBDeleteTable",
+    "description": "The DeleteTable operation deletes a table and all of its items.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Deletes a table and all of its items."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBGetItem",
+    "description": "The GetItem operation returns a set of attributes for the item with the given primary key.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Returns a set of attributes for the item with the given primary key"
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBPutItem",
+    "description": "Creates a new item, or replaces an old item with a new item.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Creates a new item, or replaces an old item with a new item."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBQuery",
+    "description": "The Query operation finds items based on primary key values.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Finds items based on primary key values."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBScan",
+    "description": "The Scan operation returns one or more items and item attributes by accessing every item in a table or a secondary index.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Returns one or more items and item attributes by accessing every item in a table or a secondary index."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBTable",
+    "description": "A DynamoDB database table",
+    "attacksteps": [
+      {
+        "name": "AuthenticatedDelete",
+        "description": "The attacker is authenticated to access and delete the data."
+      },
+      {
+        "name": "AuthenticatedList",
+        "description": "The attacker is authenticated to access and list the data."
+      },
+      {
+        "name": "AuthenticatedRead",
+        "description": "The attacker is authenticated to access and read the data."
+      },
+      {
+        "name": "AuthenticatedWrite",
+        "description": "The attacker is authenticated to access and write data."
+      },
+      {
+        "name": "Connect",
+        "description": "Anyone can connect to any public table but the correct permissions are required to access the content."
+      },
+      {
+        "name": "Delete",
+        "description": "The attacker can delete the data."
+      },
+      {
+        "name": "DenialOfService",
+        "description": "The attacker is preventing regular access to the data."
+      },
+      {
+        "name": "List",
+        "description": "The attacker can list the data."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read the data."
+      },
+      {
+        "name": "Write",
+        "description": "The attacker can write to the location of the data, effectively deleting it."
+      }
+    ]
+  },
+  {
+    "name": "DynamoDBUpdateItem",
+    "description": "Edits an existing item's attributes, or adds a new item to the table if it does not already exist.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Edits an existing item's attributes, or adds a new item to the table if it does not already exist."
+      }
+    ]
+  },
+  {
+    "name": "EC2",
+    "description": "This asset represents the EC2 service.",
+    "attacksteps": []
+  },
+  {
+    "name": "EC2AssociateIamInstanceProfile",
+    "description": "Associates an EC2 instance with an instance profile.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Associates an EC2 instance with an instance profile."
+      }
+    ]
+  },
+  {
+    "name": "EC2DisassociateIamInstanceProfile",
+    "description": "Disassociates an EC2 instance with an instance profile.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Disassociates an EC2 instance with an instance profile."
+      }
+    ]
+  },
+  {
+    "name": "EC2Instance",
+    "description": "An EC2 instance is a virtual computing environment in Amazon's Elastic Compute Cloud (EC2) service for running applications on the Amazon Web Services (AWS) infrastructure.",
+    "attacksteps": [
+      {
+        "name": "Connect",
+        "description": "The attacker can connect to the instance through e.g., a shell, but is not authenticated."
+      },
+      {
+        "name": "GetRoleCredentials",
+        "description": "The attacker can get access to the set of permissions that the attached instance profile or role has."
+      },
+      {
+        "name": "HighPrivilegeAccess",
+        "description": "The attacker has gained full control of the instance and can access any applications, transmit data and assume the permissions of the instance."
+      },
+      {
+        "name": "LowPrivilegeAccess",
+        "description": "Low privilege access means that the attacker can connect to any local application. Additionally, we assume low-privilege access allows network transmissions."
+      },
+      {
+        "name": "Terminate",
+        "description": "The attacker has terminated the instance. When an instance terminates, the data on any instance store volumes associated with that instance is deleted."
+      }
+    ]
+  },
+  {
+    "name": "EC2ReplaceIamInstanceProfileAssociation",
+    "description": "Replaces the instance profile association of an EC2 instance.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Replaces the instance profile association of an EC2 instance."
+      }
+    ]
+  },
+  {
+    "name": "EC2RunInstances",
+    "description": "Starts one or more instances.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Starts one or more instances."
+      }
+    ]
+  },
+  {
+    "name": "EC2TerminateInstances",
+    "description": "Shuts down an instance.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Shuts down an instance."
+      }
+    ]
+  },
+  {
+    "name": "ECR",
+    "description": "This asset represents the ECR service.",
+    "attacksteps": []
+  },
+  {
+    "name": "ECRBatchCheckLayerAvailability",
+    "description": "Check the availability of multiple image layers in a specified registry and repository.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Check the availability of multiple image layers in a specified registry and repository."
+      }
+    ]
+  },
+  {
+    "name": "ECRBatchGetImage",
+    "description": "Gets detailed information for specified images within a specified repository. Images are specified with either imageTag or imageDigest.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Gets detailed information for specified images within a specified repository."
+      }
+    ]
+  },
+  {
+    "name": "ECRCompleteLayerUpload",
+    "description": "Informs Amazon ECR that the image layer upload has completed for a specified registry, repository name, and upload ID. You can optionally provide a sha256 digest of the image layer for data validation purposes",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Informs Amazon ECR that the image layer upload has completed for a specified registry, repository name, and upload ID."
+      }
+    ]
+  },
+  {
+    "name": "ECRGetAuthorizationToken",
+    "description": "Get a base64 authorization token used for authenticating with an ECR registry.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Get a base64 authorization token used for authenticating with an ECR registry."
+      }
+    ]
+  },
+  {
+    "name": "ECRGetDownloadUrlForLayer",
+    "description": "Retrieves the pre-signed Amazon S3 download URL corresponding to an image layer. You can only get URLs for image layers that are referenced in an image.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Retrieves the pre-signed Amazon S3 download URL corresponding to an image layer."
+      }
+    ]
+  },
+  {
+    "name": "ECRInitiateLayerUpload",
+    "description": "Notify Amazon ECR that you intend to upload an image layer.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Notify Amazon ECR that you intend to upload an image layer."
+      }
+    ]
+  },
+  {
+    "name": "ECRPutImage",
+    "description": "Creates or updates the image manifest and tags associated with an image.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Creates or updates the image manifest and tags associated with an image."
+      }
+    ]
+  },
+  {
+    "name": "ECRRegistry",
+    "description": "An ECR registry is tied to an AWS account",
+    "attacksteps": [
+      {
+        "name": "Authenticate",
+        "description": "The attacker has gained authenticated access to the registry."
+      }
+    ]
+  },
+  {
+    "name": "ECRRepository",
+    "description": "A repository stores container images",
+    "attacksteps": [
+      {
+        "name": "PoisonRepository",
+        "description": "The attacker can inject arbitrary code into images, effectively compromising all containers using those images."
+      },
+      {
+        "name": "PullAccess",
+        "description": "The attacker can pull images from the repository, possibly getting access to sensitive data or credentials."
+      },
+      {
+        "name": "PushAccess",
+        "description": "The attacker can push images to the repository, possibly containing malicious code."
+      }
+    ]
+  },
+  {
+    "name": "ECRUploadLayerPart",
+    "description": "Uploads an image layer part to Amazon ECR.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Uploads an image layer part to Amazon ECR."
+      }
+    ]
+  },
+  {
+    "name": "ECS",
+    "description": "This asset represents the ECS service.",
+    "attacksteps": []
+  },
+  {
+    "name": "ECSCluster",
+    "description": "An ECS Cluster is a logical grouping of EC2 instances (for the EC2 launch type) acting as a single computational unit",
+    "attacksteps": [
+      {
+        "name": "Delete",
+        "description": "The attacker deletes all cluster resources and terminates its instances."
+      },
+      {
+        "name": "DeleteServices",
+        "description": "The attacker can delete ECS services and its running tasks."
+      },
+      {
+        "name": "DeregisterContainerInstances",
+        "description": "The attacker is able to deregister instances from the cluster."
+      },
+      {
+        "name": "StopTasks",
+        "description": "The attacker can stop tasks in the cluster."
+      }
+    ]
+  },
+  {
+    "name": "ECSDeleteCluster",
+    "description": "Deletes the cluster and all its resources.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Deletes the cluster and all its resources."
+      }
+    ]
+  },
+  {
+    "name": "ECSDeleteService",
+    "description": "Deletes ECS services.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Deletes ECS services."
+      }
+    ]
+  },
+  {
+    "name": "ECSDeregisterContainerInstance",
+    "description": "Deregisters instances from the cluster.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Deregisters instances from the cluster."
+      }
+    ]
+  },
+  {
+    "name": "ECSService",
+    "description": "An ECS service maintains a certain number of replicas of a task in the cluster",
+    "attacksteps": [
+      {
+        "name": "Delete",
+        "description": "The attacker has deleted the service."
+      }
+    ]
+  },
+  {
+    "name": "ECSStopTask",
+    "description": "Stops tasks running in the cluster.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Stops tasks running in the cluster."
+      }
+    ]
+  },
+  {
+    "name": "ECSTask",
+    "description": "Tasks are a grouping of containers which are deployed in the cluster",
+    "attacksteps": [
+      {
+        "name": "Stop",
+        "description": "The attacker has stopped the task."
+      }
+    ]
+  },
+  {
+    "name": "ElasticIP",
+    "description": "An Elastic IP address is a static, public IPv4 address, which is reachable from the internet.",
+    "attacksteps": []
+  },
+  {
+    "name": "EncryptableData",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "AuthenticatedDecrypt",
+        "description": "The attacker is authenticated to decrypt encrypted data."
+      },
+      {
+        "name": "AuthenticatedDelete",
+        "description": "The attacker is authenticated to access and delete the data."
+      },
+      {
+        "name": "AuthenticatedEncrypt",
+        "description": "The attacker is authenticated to encrypt and write the encrypted data."
+      },
+      {
+        "name": "AuthenticatedList",
+        "description": "The attacker is authenticated to access and list the data."
+      },
+      {
+        "name": "AuthenticatedRead",
+        "description": "The attacker is authenticated to access and read the data."
+      },
+      {
+        "name": "AuthenticatedWrite",
+        "description": "The attacker is authenticated to access and write data."
+      },
+      {
+        "name": "Delete",
+        "description": "The attacker can delete the data."
+      },
+      {
+        "name": "DenialOfService",
+        "description": "The attacker is preventing regular access to the data."
+      },
+      {
+        "name": "Encrypt",
+        "description": "The attacker is able to encrypt the data to interrupt availability or extortion."
+      },
+      {
+        "name": "List",
+        "description": "The attacker can list the data."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read the data."
+      },
+      {
+        "name": "Write",
+        "description": "The attacker can write to the location of the data, effectively deleting it."
+      }
+    ]
+  },
+  {
+    "name": "Glue",
+    "description": "This asset represents the Glue service.",
+    "attacksteps": []
+  },
+  {
+    "name": "GlueCreateDevEndpoint",
+    "description": "Creates a new development endpoint.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Creates a new development endpoint."
+      }
+    ]
+  },
+  {
+    "name": "HHHExploit",
+    "description": "Confidentiality Impact: High, Integrity Impact: High, Availability Impact: High. An HHH exploit is assumed to grant the attacker full control of the vulnerable application's executing code.",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker has gained full control of the vulnerable application's executing code"
+      }
+    ]
+  },
+  {
+    "name": "HHLExploit",
+    "description": "Confidentiality Impact: High, Integrity Impact: High, Availability Impact: Low",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: High, Integrity Impact: High, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "HHNExploit",
+    "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: High, Integrity Impact: High, Availability Impact: None",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "Confidentiality Impact: High, Integrity Impact: High, Availability Impact: None"
+      }
+    ]
+  },
+  {
+    "name": "HLHExploit",
+    "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: High, Integrity Impact: Low, Availability Impact: High",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: High, Integrity Impact: Low, Availability Impact: High"
+      }
+    ]
+  },
+  {
+    "name": "HLLExploit",
+    "description": "Confidentiality Impact: High, Integrity Impact: Low, Availability Impact: Low",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: High, Integrity Impact: Low, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "HLNExploit",
+    "description": "Confidentiality Impact: High, Integrity Impact: Low, Availability Impact: None",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: High, Integrity Impact: Low, Availability Impact: None"
+      }
+    ]
+  },
+  {
+    "name": "HNHExploit",
+    "description": "Confidentiality Impact: High, Integrity Impact: None, Availability Impact: High",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: High, Integrity Impact: None, Availability Impact: High"
+      }
+    ]
+  },
+  {
+    "name": "HNLExploit",
+    "description": "Confidentiality Impact: High, Integrity Impact: None, Availability Impact: Low",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: High, Integrity Impact: None, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "HNNExploit",
+    "description": "Confidentiality Impact: High, Integrity Impact: None, Availability Impact: None",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: High, Integrity Impact: None, Availability Impact: None"
+      }
+    ]
+  },
+  {
+    "name": "HTTPAPI",
+    "description": "This asset represents a HTTP API connected to the API Gateway.",
+    "attacksteps": [
+      {
+        "name": "Invoke",
+        "description": "The attacker is attempting to invoke APIs via API Gateway."
+      }
+    ]
+  },
+  {
+    "name": "HTTPAPIMethod",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "Invoke",
+        "description": "The attacker can invoke the API method."
+      },
+      {
+        "name": "MalformedInvoke",
+        "description": "The attacker can invoke integrations with malformed input."
+      }
+    ]
+  },
+  {
+    "name": "IAM",
+    "description": "This asset represents the IAM service.",
+    "attacksteps": []
+  },
+  {
+    "name": "IAMAddRoleToInstanceProfile",
+    "description": "An attacker can use this to add roles to instance profiles, potentially leading to escalated privileges.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Add an IAM Role to an IAM instance profile."
+      }
+    ]
+  },
+  {
+    "name": "IAMCreateAccessKey",
+    "description": "An attacker with this permission can create an access key secret access key pair for another user (unless 2 pairs exist).",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Create an access key secret access key pair for another user (unless 2 pairs exist)."
+      }
+    ]
+  },
+  {
+    "name": "IAMCreateLoginProfile",
+    "description": "An attacker can use this permission to create a console login password for a non-console user.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Create a console login password for a non-console user."
+      }
+    ]
+  },
+  {
+    "name": "IAMDeleteAccessKey",
+    "description": "Deletes the access key pair associated with the specified IAM user.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Deletes the access key pair associated with the specified IAM user."
+      }
+    ]
+  },
+  {
+    "name": "IAMDeleteLoginProfile",
+    "description": "An attacker can use this permission to delete the existing console login password of other users.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Delete the existing console login password of other users."
+      }
+    ]
+  },
+  {
+    "name": "IAMGroup",
+    "description": "An IAM group consists of a set of IAM users",
+    "attacksteps": [
+      {
+        "name": "Assume",
+        "description": "The attacker has assumed the IAM identity and can perform all actions allowed through policies, groups and roles."
+      },
+      {
+        "name": "AssumeRoleViaCloudFormation",
+        "description": "The attacker can escalate privileges through PassRole and CreateStack that will perform actions and create resources with CloudFormation using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaCodeStar",
+        "description": "The attacker can escalate privileges through PassRole and CreateProject by deploying resources with CodeStar using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaDataPipeline",
+        "description": "The attacker can escalate privileges through PassRole, CreatePipeline, PutPipelineDefinition by creating a pipeline and updating it to run an arbitrary AWS CLI command using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaGlue",
+        "description": "The attacker can escalate privileges through PassRole and CreateDevEndpoint by creating a Glue development endpoint and pass an existing role to it, SSH into the instance and use the AWS CLI with the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaCreateFunction",
+        "description": "The attacker can escalate privileges through PassRole, CreateFunction and InvokeFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaUpdateFunction",
+        "description": "The attacker can escalate privileges through UpdateFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaUpdateFunctionConfiguration",
+        "description": "The attacker can escalate privileges through PassRole, CreateFunction and InvokeFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaSageMaker",
+        "description": "The attacker can escalate privileges through PassRole, CreateNotebookInstance, CreatePresignedNotebookInstanceUrl by by creating a new Jupyter notebook, gaining access to it, then using the permissions of the passed role."
+      },
+      {
+        "name": "PassRole",
+        "description": "The attacker is able to pass IAM roles from the IAM identity to other services for privilege escalation."
+      }
+    ]
+  },
+  {
+    "name": "IAMIdentity",
+    "description": "An IAM identity can be any of the three: IAM User, IAM Group, IAM Role.",
+    "attacksteps": [
+      {
+        "name": "Assume",
+        "description": "The attacker has assumed the IAM identity and can perform all actions allowed through policies, groups and roles."
+      },
+      {
+        "name": "AssumeRoleViaCloudFormation",
+        "description": "The attacker can escalate privileges through PassRole and CreateStack that will perform actions and create resources with CloudFormation using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaCodeStar",
+        "description": "The attacker can escalate privileges through PassRole and CreateProject by deploying resources with CodeStar using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaDataPipeline",
+        "description": "The attacker can escalate privileges through PassRole, CreatePipeline, PutPipelineDefinition by creating a pipeline and updating it to run an arbitrary AWS CLI command using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaGlue",
+        "description": "The attacker can escalate privileges through PassRole and CreateDevEndpoint by creating a Glue development endpoint and pass an existing role to it, SSH into the instance and use the AWS CLI with the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaCreateFunction",
+        "description": "The attacker can escalate privileges through PassRole, CreateFunction and InvokeFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaUpdateFunction",
+        "description": "The attacker can escalate privileges through UpdateFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaUpdateFunctionConfiguration",
+        "description": "The attacker can escalate privileges through PassRole, CreateFunction and InvokeFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaSageMaker",
+        "description": "The attacker can escalate privileges through PassRole, CreateNotebookInstance, CreatePresignedNotebookInstanceUrl by by creating a new Jupyter notebook, gaining access to it, then using the permissions of the passed role."
+      },
+      {
+        "name": "PassRole",
+        "description": "The attacker is able to pass IAM roles from the IAM identity to other services for privilege escalation."
+      }
+    ]
+  },
+  {
+    "name": "IAMInstanceProfile",
+    "description": "An instance profile is used to associate IAM roles to EC2 instances.",
+    "attacksteps": []
+  },
+  {
+    "name": "IAMPassRole",
+    "description": "An attacker can use this to pass roles to AWS services, potentially leading to escalated privileges.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Pass an IAM Role to an AWS service."
+      }
+    ]
+  },
+  {
+    "name": "IAMRole",
+    "description": "An IAM role can be utilized by either a person or an application for authentication. An attacker can assume all permissions of an IAM role e.g., via a compromised EC2 instance.",
+    "attacksteps": [
+      {
+        "name": "Assume",
+        "description": "The attacker is able to assume the role and perform all allowed actions."
+      },
+      {
+        "name": "AssumeRoleViaCloudFormation",
+        "description": "The attacker can escalate privileges through PassRole and CreateStack that will perform actions and create resources with CloudFormation using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaCodeStar",
+        "description": "The attacker can escalate privileges through PassRole and CreateProject by deploying resources with CodeStar using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaDataPipeline",
+        "description": "The attacker can escalate privileges through PassRole, CreatePipeline, PutPipelineDefinition by creating a pipeline and updating it to run an arbitrary AWS CLI command using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaGlue",
+        "description": "The attacker can escalate privileges through PassRole and CreateDevEndpoint by creating a Glue development endpoint and pass an existing role to it, SSH into the instance and use the AWS CLI with the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaCreateFunction",
+        "description": "The attacker can escalate privileges through PassRole, CreateFunction and InvokeFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaUpdateFunction",
+        "description": "The attacker can escalate privileges through UpdateFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaUpdateFunctionConfiguration",
+        "description": "The attacker can escalate privileges through PassRole, CreateFunction and InvokeFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaSageMaker",
+        "description": "The attacker can escalate privileges through PassRole, CreateNotebookInstance, CreatePresignedNotebookInstanceUrl by by creating a new Jupyter notebook, gaining access to it, then using the permissions of the passed role."
+      },
+      {
+        "name": "PassRole",
+        "description": "The attacker is able to pass IAM roles to other services for privilege escalation."
+      }
+    ]
+  },
+  {
+    "name": "IAMUpdateAccessKey",
+    "description": "An attacker with this permission can activate an inactive access key pair for another user.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Activate an inactive access key pair for another user."
+      }
+    ]
+  },
+  {
+    "name": "IAMUpdateLoginProfile",
+    "description": "An attacker can use this permission to change the existing console login password of other users.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Change the existing console login password of other users."
+      }
+    ]
+  },
+  {
+    "name": "IAMUser",
+    "description": "An IAM user can be utilized by either a person or an application for authentication. An attacker can assume all permissions of a compromised IAM user.",
+    "attacksteps": [
+      {
+        "name": "Assume",
+        "description": "The attacker is able to assume the user account and perform all allowed actions."
+      },
+      {
+        "name": "AssumeRoleViaCloudFormation",
+        "description": "The attacker can escalate privileges through PassRole and CreateStack that will perform actions and create resources with CloudFormation using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaCodeStar",
+        "description": "The attacker can escalate privileges through PassRole and CreateProject by deploying resources with CodeStar using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaDataPipeline",
+        "description": "The attacker can escalate privileges through PassRole, CreatePipeline, PutPipelineDefinition by creating a pipeline and updating it to run an arbitrary AWS CLI command using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaGlue",
+        "description": "The attacker can escalate privileges through PassRole and CreateDevEndpoint by creating a Glue development endpoint and pass an existing role to it, SSH into the instance and use the AWS CLI with the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaCreateFunction",
+        "description": "The attacker can escalate privileges through PassRole, CreateFunction and InvokeFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaUpdateFunction",
+        "description": "The attacker can escalate privileges through UpdateFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaLambdaUpdateFunctionConfiguration",
+        "description": "The attacker can escalate privileges through PassRole, CreateFunction and InvokeFunction that will execute code in Lambda using the permissions of the passed role."
+      },
+      {
+        "name": "AssumeRoleViaSageMaker",
+        "description": "The attacker can escalate privileges through PassRole, CreateNotebookInstance, CreatePresignedNotebookInstanceUrl by by creating a new Jupyter notebook, gaining access to it, then using the permissions of the passed role."
+      },
+      {
+        "name": "ConsoleLogin",
+        "description": "The attacker is able to login through the AWS console with the IAM user's credentials."
+      },
+      {
+        "name": "CreateAccessKey",
+        "description": "The attacker can create a new access key pair for the IAM user, and use it to assume the user."
+      },
+      {
+        "name": "CreateLoginProfile",
+        "description": "The attacker can create a new login profile for this user, and use it to assume this user."
+      },
+      {
+        "name": "DeleteAccessKey",
+        "description": "The attacker can delete an access key pair of this user to enable creating a new access key pair."
+      },
+      {
+        "name": "DeleteLoginProfile",
+        "description": "The attacker can delete the login profile of this user to enable creating a new login profile."
+      },
+      {
+        "name": "MFAPhishing",
+        "description": "The attacker has intercepted a virtual MFA token by standing as a man-in-the-middle between the IAM user and a AWS console phishing page."
+      },
+      {
+        "name": "PassRole",
+        "description": "The attacker is able to pass IAM roles from the IAM user to other services for privilege escalation."
+      },
+      {
+        "name": "UpdateAccessKey",
+        "description": "The attacker can update the state of an access key pair of this user from inactive to active."
+      },
+      {
+        "name": "UpdateLoginProfile",
+        "description": "The attacker can update the existing login profile for this user, and use it to assume this user."
+      }
+    ]
+  },
+  {
+    "name": "Identity",
+    "description": "Another word for identity is oftentimes account. Identities have privileges on various resources.",
+    "attacksteps": [
+      {
+        "name": "Assume",
+        "description": "The attacker can assume the identity and gain all it's privileges and permissions."
+      }
+    ]
+  },
+  {
+    "name": "IdentityBasedAllowStatement",
+    "description": "An identity-based statement which explicitly allows an action.",
+    "attacksteps": [
+      {
+        "name": "Satisfy",
+        "description": "The attacker has satisfied the conditions to execute the actions of the statement."
+      }
+    ]
+  },
+  {
+    "name": "IdentityBasedDenyStatement",
+    "description": "An identity-based statement which explicitly denies an action.",
+    "attacksteps": [
+      {
+        "name": "Satisfy",
+        "description": "The attacker has satisfied the conditions to execute the actions of the statement."
+      }
+    ]
+  },
+  {
+    "name": "IdentityBasedInlinePolicy",
+    "description": "A policy is an entity in AWS that, when associated with an identity or resource, defines their permissions.",
+    "attacksteps": [
+      {
+        "name": "Satisfy",
+        "description": "The policy has been successfully used by the attacker."
+      }
+    ]
+  },
+  {
+    "name": "IdentityBasedManagedPolicy",
+    "description": "A policy is an entity in AWS that, when associated with an identity or resource, defines their permissions.",
+    "attacksteps": [
+      {
+        "name": "Satisfy",
+        "description": "The policy has been successfully used by the attacker."
+      }
+    ]
+  },
+  {
+    "name": "InboundNetworkACLRule",
+    "description": "",
+    "attacksteps": []
+  },
+  {
+    "name": "InboundSecurityGroupRule",
+    "description": "",
+    "attacksteps": []
+  },
+  {
+    "name": "Internet",
+    "description": "",
+    "attacksteps": []
+  },
+  {
+    "name": "InternetGateway",
+    "description": "An internet gateway is a horizontally scaled, redundant, and highly available VPC component that allows communication between instances in your VPC and the internet.",
+    "attacksteps": []
+  },
+  {
+    "name": "KMS",
+    "description": "This asset represents the KMS service.",
+    "attacksteps": []
+  },
+  {
+    "name": "KMSDecrypt",
+    "description": "The Action element of a IAM policy describes the specific action or actions that will be allowed or denied.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Decrypts ciphertext that was encrypted by a AWS KMS customer master key (CMK)."
+      }
+    ]
+  },
+  {
+    "name": "KMSEncrypt",
+    "description": "The Action element of a IAM policy describes the specific action or actions that will be allowed or denied.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Encrypts plaintext into ciphertext by using a customer master key (CMK)."
+      }
+    ]
+  },
+  {
+    "name": "KMSGenerateDataKey",
+    "description": "The Action element of a IAM policy describes the specific action or actions that will be allowed or denied.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Generates a unique symmetric data key for client-side encryption."
+      }
+    ]
+  },
+  {
+    "name": "KMSGenerateDataKeyPair",
+    "description": "The Action element of a IAM policy describes the specific action or actions that will be allowed or denied.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Generates a unique asymmetric data key pair."
+      }
+    ]
+  },
+  {
+    "name": "KMSGenerateDataKeyPairWithoutPlaintext",
+    "description": "The Action element of a IAM policy describes the specific action or actions that will be allowed or denied.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Generates a unique asymmetric data key pair."
+      }
+    ]
+  },
+  {
+    "name": "KMSGenerateDataKeyWithoutPlaintext",
+    "description": "The Action element of a IAM policy describes the specific action or actions that will be allowed or denied.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Generates a unique symmetric data key."
+      }
+    ]
+  },
+  {
+    "name": "Key",
+    "description": "Every service on the EC2 Instance needs some sort of key that can be used to authenticate on it.",
+    "attacksteps": [
+      {
+        "name": "AttemptAccess",
+        "description": "The attacker is attempting to access the credentials."
+      },
+      {
+        "name": "CredentialTheft",
+        "description": "The attacker is able to steal or harvest the credentials from for example public repositories."
+      }
+    ]
+  },
+  {
+    "name": "LHHExploit",
+    "description": "Confidentiality Impact: Low, Integrity Impact: High, Availability Impact: High",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: Low, Integrity Impact: High, Availability Impact: High"
+      }
+    ]
+  },
+  {
+    "name": "LHHNVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: High, Privileges Required: High, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LHHRVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: High, Privileges Required: High, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LHLExploit",
+    "description": "Confidentiality Impact: Low, Integrity Impact: High, Availability Impact: Low",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: Low, Integrity Impact: High, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "LHLNVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: High, Privileges Required: Low, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LHLRVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: High, Privileges Required: Low, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LHNExploit",
+    "description": "Confidentiality Impact: Low, Integrity Impact: High, Availability Impact: None",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: Low, Integrity Impact: High, Availability Impact: None"
+      }
+    ]
+  },
+  {
+    "name": "LHNNVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: High, Privileges Required: None, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LHNRVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: High, Privileges Required: None, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LLHExploit",
+    "description": "Confidentiality Impact: Low, Integrity Impact: Low, Availability Impact: High",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: Low, Integrity Impact: Low, Availability Impact: High"
+      }
+    ]
+  },
+  {
+    "name": "LLHNVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: Low, Privileges Required: High, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LLHRVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: Low, Privileges Required: High, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LLLExploit",
+    "description": "Confidentiality Impact: Low, Integrity Impact: Low, Availability Impact: Low",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: Low, Integrity Impact: Low, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "LLLNVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: Low, Privileges Required: Low, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LLLRVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: Low, Privileges Required: Low, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LLNExploit",
+    "description": "Confidentiality Impact: Low, Integrity Impact: Low, Availability Impact: None",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: Low, Integrity Impact: Low, Availability Impact: None"
+      }
+    ]
+  },
+  {
+    "name": "LLNNVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: Low, Privileges Required: None, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LLNRVulnerability",
+    "description": "Attack Vector: Local, Attack Complexity: Low, Privileges Required: None, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "LNHExploit",
+    "description": "Confidentiality Impact: Low, Integrity Impact: None, Availability Impact: High",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: Low, Integrity Impact: None, Availability Impact: High"
+      }
+    ]
+  },
+  {
+    "name": "LNLExploit",
+    "description": "Confidentiality Impact: Low, Integrity Impact: None, Availability Impact: Low",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: Low, Integrity Impact: None, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "LNNExploit",
+    "description": "Confidentiality Impact: Low, Integrity Impact: None, Availability Impact: None",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: Low, Integrity Impact: None, Availability Impact: None"
+      }
+    ]
+  },
+  {
+    "name": "Lambda",
+    "description": "This asset represents the Lambda service.",
+    "attacksteps": []
+  },
+  {
+    "name": "LambdaCreateFunction",
+    "description": "Creates a new Lambda function.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Creates a new Lambda function."
+      }
+    ]
+  },
+  {
+    "name": "LambdaDeleteFunction",
+    "description": "Deletes an existing Lambda function.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Deletes an existing Lambda function."
+      }
+    ]
+  },
+  {
+    "name": "LambdaFunction",
+    "description": "This asset represents a Lambda function.",
+    "attacksteps": [
+      {
+        "name": "Delete",
+        "description": "The attacker can delete the Lambda function."
+      },
+      {
+        "name": "InputManipulation",
+        "description": "The attacker has manipulated the input to the lambda function."
+      },
+      {
+        "name": "Invoke",
+        "description": "The attacker can invoke the lambda function."
+      },
+      {
+        "name": "InvokeUpdatedFunction",
+        "description": "The attacker is able to invoke a lambda function with arbitrary code running, effectively assuming the execution role of the function."
+      },
+      {
+        "name": "MalformedInvoke",
+        "description": "The attacker can invoke the lambda function with malformed input."
+      },
+      {
+        "name": "UpdateCode",
+        "description": "The attacker can inject arbitrary code to the lambda function."
+      }
+    ]
+  },
+  {
+    "name": "LambdaInvokeFunction",
+    "description": "Invokes an existing Lambda function.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Invokes an existing Lambda function."
+      }
+    ]
+  },
+  {
+    "name": "LambdaUpdateFunctionCode",
+    "description": "Updates the code of an existing Lambda functions.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Updates the code of an existing Lambda functions."
+      }
+    ]
+  },
+  {
+    "name": "LambdaUpdateFunctionConfiguration",
+    "description": "Modify the version-specific settings of a Lambda function.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Modify the version-specific settings of a Lambda function."
+      }
+    ]
+  },
+  {
+    "name": "LoadBalancer",
+    "description": "A Load Balancer Instance is an Instance that hosts the Load Balancer service",
+    "attacksteps": [
+      {
+        "name": "Connect",
+        "description": "The attacker can connect to the instance, e.g., through a shell, but has not yet authenticated."
+      },
+      {
+        "name": "HighPrivilegeAccess",
+        "description": "High privilege access to the instance means that the attacker can access any application and transmit from the instance."
+      },
+      {
+        "name": "LowPrivilegeAccess",
+        "description": "Low privilege access means that the attacker can connect to any local application. Additionally, we assume low-privilege access allows network transmissions."
+      },
+      {
+        "name": "Terminate",
+        "description": "The attacker has terminated the instance. When an instance terminates, the data on any instance store volumes associated with that instance is deleted."
+      }
+    ]
+  },
+  {
+    "name": "LoadBalancerListener",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "Access",
+        "description": "The attacker is authenticated and has access to the application."
+      },
+      {
+        "name": "Authenticate",
+        "description": "The attacker is able to authenticate in the application."
+      },
+      {
+        "name": "CodeExecution",
+        "description": "Vulnerabilities in the application could allow an attacker to inject code into the service process, thus assuming the service's privileges on the hosting instance. An attacker could under these circumstances influence other applications or the underlying operating system itself."
+      },
+      {
+        "name": "Deny",
+        "description": "The attacker can deny some or all functionality and data pertaining to this service."
+      },
+      {
+        "name": "LocalConnect",
+        "description": "The attacker has gained low-privilege access on the executing instance and can interact with the application."
+      },
+      {
+        "name": "Modify",
+        "description": "The attacker can modify some or all of this service's data."
+      },
+      {
+        "name": "NetworkRequestConnect",
+        "description": "The attacker can send requests to the application."
+      },
+      {
+        "name": "NetworkRespondConnect",
+        "description": "An attacker might be able to respond with forged requests submitted by an application."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read some or all of this service's code and data."
+      }
+    ]
+  },
+  {
+    "name": "LoadBalancerNetworkInterface",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "RespondConnect",
+        "description": "The attacker is able to spoof the server, in case a client submits a request."
+      },
+      {
+        "name": "TransmitRequest",
+        "description": "The attacker is able to transmit requests through the load balancer."
+      },
+      {
+        "name": "TransmitResponse",
+        "description": "The attacker is able to spoof and transmit responses to clients from the network interface."
+      }
+    ]
+  },
+  {
+    "name": "NATGateway",
+    "description": "A network address translation (NAT) gateway can be used to enable instances in a private subnet to connect to the internet or other AWS services, but prevent the internet from initiating a connection with those instances.",
+    "attacksteps": []
+  },
+  {
+    "name": "NHHExploit",
+    "description": "Confidentiality Impact: None, Integrity Impact: High, Availability Impact: High",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: None, Integrity Impact: High, Availability Impact: High"
+      }
+    ]
+  },
+  {
+    "name": "NHHNVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: High, Privileges Required: High, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NHHRVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: High, Privileges Required: High, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NHLExploit",
+    "description": "Confidentiality Impact: None, Integrity Impact: High, Availability Impact: Low",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: None, Integrity Impact: High, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "NHLNVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: High, Privileges Required: Low, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NHLRVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: High, Privileges Required: Low, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NHNExploit",
+    "description": "Confidentiality Impact: None, Integrity Impact: High, Availability Impact: None",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: None, Integrity Impact: High, Availability Impact: None"
+      }
+    ]
+  },
+  {
+    "name": "NHNNVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: High, Privileges Required: None, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NHNRVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: High, Privileges Required: None, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NLHExploit",
+    "description": "Confidentiality Impact: None, Integrity Impact: Low, Availability Impact: High",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: None, Integrity Impact: Low, Availability Impact: High"
+      }
+    ]
+  },
+  {
+    "name": "NLHNVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: Low, Privileges Required: High, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NLHRVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: Low, Privileges Required: High, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NLLExploit",
+    "description": "Confidentiality Impact: None, Integrity Impact: Low, Availability Impact: Low",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: None, Integrity Impact: Low, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "NLLNVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: Low, Privileges Required: Low, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NLLRVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: Low, Privileges Required: Low, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NLNExploit",
+    "description": "Confidentiality Impact: None, Integrity Impact: Low, Availability Impact: None",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: None, Integrity Impact: Low, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "NLNNVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: Low, Privileges Required: None, User Interaction: None",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NLNRVulnerability",
+    "description": "Attack Vector: Network, Attack Complexity: Low, Privileges Required: None, User Interaction: Required",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "NNHExploit",
+    "description": "Confidentiality Impact: None, Integrity Impact: None, Availability Impact: High",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: None, Integrity Impact: None, Availability Impact: High"
+      }
+    ]
+  },
+  {
+    "name": "NNLExploit",
+    "description": "Confidentiality Impact: None, Integrity Impact: None, Availability Impact: Low",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": "The attacker is able to use the exploit with the following impact: Confidentiality Impact: None, Integrity Impact: None, Availability Impact: Low"
+      }
+    ]
+  },
+  {
+    "name": "NNNExploit",
+    "description": "Confidentiality Impact: None, Integrity Impact: None, Availability Impact: None",
+    "attacksteps": [
+      {
+        "name": "Impact",
+        "description": ""
+      }
+    ]
+  },
+  {
+    "name": "Network",
+    "description": "",
+    "attacksteps": []
+  },
+  {
+    "name": "NetworkACL",
+    "description": "",
+    "attacksteps": []
+  },
+  {
+    "name": "NetworkInterface",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "RespondConnect",
+        "description": "The attacker is able to spoof the server, in case a client submits a request."
+      },
+      {
+        "name": "TransmitRequest",
+        "description": "The attacker is able to transmit requests from the network interface."
+      },
+      {
+        "name": "TransmitResponse",
+        "description": "The attacker is able to spoof and transmit responses to clients from the network interface."
+      }
+    ]
+  },
+  {
+    "name": "OutboundNetworkACLRule",
+    "description": "",
+    "attacksteps": []
+  },
+  {
+    "name": "OutboundSecurityGroupRule",
+    "description": "",
+    "attacksteps": []
+  },
+  {
+    "name": "Password",
+    "description": "Represents passphrase or keys needed to authenticate as an identity in AWS, e.g., private SSH keys. Credentials are typically vulnerable to phishing attacks.",
+    "attacksteps": [
+      {
+        "name": "AttemptAccess",
+        "description": "The attacker is attempting to access the credentials."
+      },
+      {
+        "name": "CredentialTheft",
+        "description": "The attacker is able to steal or harvest the credentials from for example public repositories."
+      }
+    ]
+  },
+  {
+    "name": "PortRange",
+    "description": "A PortRange is an instance-independent port range, e.g. port 22, or ports 1-1024.",
+    "attacksteps": []
+  },
+  {
+    "name": "PrivateIPRange",
+    "description": "A range of IP addresses",
+    "attacksteps": []
+  },
+  {
+    "name": "PrivateRESTAPI",
+    "description": "This asset represents a private REST API connected to the API Gateway.",
+    "attacksteps": [
+      {
+        "name": "Invoke",
+        "description": "The attacker is attempting to invoke APIs via API Gateway."
+      }
+    ]
+  },
+  {
+    "name": "PublicIPRange",
+    "description": "A range of IP addresses",
+    "attacksteps": []
+  },
+  {
+    "name": "RDS",
+    "description": "This asset represents the RDS service.",
+    "attacksteps": []
+  },
+  {
+    "name": "RDSDeleteDBInstance",
+    "description": "The DeleteDBInstance action deletes a previously provisioned DB instance.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "The DeleteDBInstance action deletes a previously provisioned DB instance."
+      }
+    ]
+  },
+  {
+    "name": "RDSModifyDBInstance",
+    "description": "Modifies settings for a DB instance inluding the master password.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Modifies settings for a DB instance inluding the master password."
+      }
+    ]
+  },
+  {
+    "name": "RESTAPI",
+    "description": "This asset represents a REST API connected to the API Gateway.",
+    "attacksteps": [
+      {
+        "name": "Invoke",
+        "description": "The attacker is attempting to invoke APIs via API Gateway."
+      }
+    ]
+  },
+  {
+    "name": "RESTAPIMethod",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "BodyManipulation",
+        "description": "The attacker has manipulated the request body."
+      },
+      {
+        "name": "Invoke",
+        "description": "The attacker can invoke the API method."
+      },
+      {
+        "name": "MalformedInvoke",
+        "description": "The attacker can invoke integrations with malformed input."
+      },
+      {
+        "name": "ParameterManipulation",
+        "description": "The attacker has manipulated the request parameters."
+      }
+    ]
+  },
+  {
+    "name": "Region",
+    "description": "AWS is hosted in multiple locations world-wide. Each region is a separate geographic area.",
+    "attacksteps": []
+  },
+  {
+    "name": "RegistryPassword",
+    "description": "Docker login password for an ECR Registry",
+    "attacksteps": [
+      {
+        "name": "Access",
+        "description": "The attacker is able to access the registry password stored in the instance and can compromise it immediately if unencrypted."
+      },
+      {
+        "name": "Compromise",
+        "description": "The attacker has compromised the password and can access all repositories the corresponding IAM user has access to."
+      },
+      {
+        "name": "CompromiseCrack",
+        "description": "The attacker has cracked the encrypted registry password."
+      },
+      {
+        "name": "CompromiseGenerated",
+        "description": "The attacker has generated a registry password for ECR authentication."
+      },
+      {
+        "name": "CompromiseUnencrypted",
+        "description": "The attacker can access the unencrypted registry password with docker ps -e or from a config file."
+      }
+    ]
+  },
+  {
+    "name": "ResourceBasedAllowStatement",
+    "description": "A resource-based statement which explicitly allows an action.",
+    "attacksteps": [
+      {
+        "name": "Satisfy",
+        "description": "The attacker has satisfied the conditions to execute the actions of the statement."
+      }
+    ]
+  },
+  {
+    "name": "ResourceBasedDenyStatement",
+    "description": "A resource-based statement which explicitly denies an action.",
+    "attacksteps": [
+      {
+        "name": "Satisfy",
+        "description": "The attacker has satisfied the conditions to execute the actions of the statement."
+      }
+    ]
+  },
+  {
+    "name": "ResourceBasedPolicy",
+    "description": "A policy is an entity in AWS that, when associated with an identity or resource, defines their permissions.",
+    "attacksteps": [
+      {
+        "name": "Satisfy",
+        "description": "The policy has been successfully used by the attacker."
+      }
+    ]
+  },
+  {
+    "name": "Route",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": []
+  },
+  {
+    "name": "RouteTable",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": []
+  },
+  {
+    "name": "S3",
+    "description": "This asset represents the S3 service.",
+    "attacksteps": []
+  },
+  {
+    "name": "S3API",
+    "description": "A service API is an Amazon-controlled endpoint accepting API calls to the AWS infrastructure.",
+    "attacksteps": [
+      {
+        "name": "Invoke",
+        "description": "Invoke the S3 API by effectively connecting to S3 over the Internet."
+      }
+    ]
+  },
+  {
+    "name": "S3Bucket",
+    "description": "An S3 bucket is a virtual environment in Amazon's Simple Storage Service (Amazon S3) for object storage in the Amazon Web Services (AWS) cloud infrastructure.",
+    "attacksteps": [
+      {
+        "name": "Connect",
+        "description": "Anyone can connect to any bucket but the correct permissions are required to access the content."
+      },
+      {
+        "name": "DeleteBucket",
+        "description": "The attacker has gained the sufficient permissions and network access to delete S3 buckets."
+      },
+      {
+        "name": "DeleteObject",
+        "description": "The attacker is able to delete one or more objects in the bucket."
+      },
+      {
+        "name": "EncryptObjectForImpact",
+        "description": "The attacker can encrypt objects in a bucket to interrupt availability or for extortion."
+      },
+      {
+        "name": "ListBucket",
+        "description": "The attacker has gained the sufficient permissions and network access to list S3 buckets."
+      },
+      {
+        "name": "ListObject",
+        "description": "The attacker is able to list one or more objects in the bucket."
+      },
+      {
+        "name": "ReadObject",
+        "description": "The attacker is able to read one or more objects in the bucket."
+      },
+      {
+        "name": "WriteObject",
+        "description": "The attacker is able to write one or more objects in the bucket."
+      }
+    ]
+  },
+  {
+    "name": "S3DeleteBucket",
+    "description": "DELETE Bucket. All objects (including all object versions and Delete Markers) in the bucket must be deleted before the bucket itself can be deleted.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Deletes the bucket and all objects in it."
+      }
+    ]
+  },
+  {
+    "name": "S3DeleteObject",
+    "description": "The DELETE operation removes the null version (if there is one) of an object and inserts a delete marker, which becomes the current version of the object. If there isn't a null version, Amazon S3 does not remove any objects.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Removes and object from a bucket."
+      }
+    ]
+  },
+  {
+    "name": "S3GetObject",
+    "description": "Retrieves objects from Amazon S3 bucket.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Retrieves objects from Amazon S3 bucket."
+      }
+    ]
+  },
+  {
+    "name": "S3ListBucket",
+    "description": "GET Bucket (List Objects), HEAD Bucket (determine if a bucket exists and you have permission to access it)",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Determines if a bucket exists and if you have access to it."
+      }
+    ]
+  },
+  {
+    "name": "S3Object",
+    "description": "Amazon S3 stores data as objects within buckets.",
+    "attacksteps": [
+      {
+        "name": "AuthenticatedDecrypt",
+        "description": "The attacker is authenticated to decrypt encrypted data."
+      },
+      {
+        "name": "AuthenticatedDelete",
+        "description": "The attacker is authenticated to access and delete the data."
+      },
+      {
+        "name": "AuthenticatedEncrypt",
+        "description": "The attacker is authenticated to encrypt and write the encrypted data."
+      },
+      {
+        "name": "AuthenticatedList",
+        "description": "The attacker is authenticated to access and list the data."
+      },
+      {
+        "name": "AuthenticatedRead",
+        "description": "The attacker has gained read access to the S3 object"
+      },
+      {
+        "name": "AuthenticatedWrite",
+        "description": "The attacker is authenticated to access and write data."
+      },
+      {
+        "name": "Delete",
+        "description": "The attacker can delete the data."
+      },
+      {
+        "name": "DenialOfService",
+        "description": "The attacker is preventing regular access to the data."
+      },
+      {
+        "name": "Encrypt",
+        "description": "The attacker is able to encrypt the data to interrupt availability or extortion."
+      },
+      {
+        "name": "List",
+        "description": "The attacker can list the data."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read the data."
+      },
+      {
+        "name": "Write",
+        "description": "The attacker can write to the location of the data, effectively deleting it."
+      }
+    ]
+  },
+  {
+    "name": "S3PutObject",
+    "description": "Adds an object to a bucket.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Adds an object to a bucket."
+      }
+    ]
+  },
+  {
+    "name": "STSAssumeRole",
+    "description": "Assume a role by requesting a set of temporary security credentials that you can use to access AWS resources.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Assume a role by requesting a set of temporary security credentials that you can use to access AWS resources."
+      }
+    ]
+  },
+  {
+    "name": "SageMaker",
+    "description": "This asset represents the SageMaker service.",
+    "attacksteps": []
+  },
+  {
+    "name": "SageMakerCreateNotebookInstance",
+    "description": "Creates an Amazon SageMaker notebook instance. A notebook instance is a machine learning (ML) compute instance running on a Jupyter notebook.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Creates an Amazon SageMaker notebook instance. A notebook instance is a machine learning (ML) compute instance running on a Jupyter notebook."
+      }
+    ]
+  },
+  {
+    "name": "SageMakerCreatePresignedNotebookInstanceUrl",
+    "description": "Returns a URL that you can use to connect to the Jupyter server from a notebook instance.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Returns a URL that you can use to connect to the Jupyter server from a notebook instance."
+      }
+    ]
+  },
+  {
+    "name": "SecurityGroup",
+    "description": "",
+    "attacksteps": [
+      {
+        "name": "Satisfy",
+        "description": "The attacker satisfies the rules of the security group by connecting to or from allowed IP addresses and ports."
+      }
+    ]
+  },
+  {
+    "name": "ServiceAPI",
+    "description": "A service API is an Amazon-controlled endpoint accepting API calls to the AWS infrastructure.",
+    "attacksteps": [
+      {
+        "name": "Invoke",
+        "description": "An example service API invocation is an HTTP GET request for an object in an S3 bucket."
+      }
+    ]
+  },
+  {
+    "name": "SoftwareExploit",
+    "description": "Potential exploits that might occur due to known flaws or configuration errors in software discovered by scanners and categorized according to CWE.",
+    "attacksteps": [
+      {
+        "name": "AlterExecutionLogic",
+        "description": "The attacker has exploited a weakness that allows it to alter the execution logic."
+      },
+      {
+        "name": "BypassProtectionMechanism",
+        "description": "The attacker has exploited a weakness that allows it to bypass protection mechanisms."
+      },
+      {
+        "name": "DoSCrashExitRestart",
+        "description": "The attacker has exploited a weakness that allows it to crash or restart the application."
+      },
+      {
+        "name": "DoSresourceConsumption",
+        "description": "The attacker has exploited a weakness that allows it to drain the resources."
+      },
+      {
+        "name": "ExecuteUnauthorizedCodeOrCommands",
+        "description": "The attacker has exploited a weakness that allows it to execute code or commands."
+      },
+      {
+        "name": "GainPrivilegesOrAssumeIdentity",
+        "description": "The attacker has exploited a weakness that allows it to escalate its privileges."
+      },
+      {
+        "name": "HideActivities",
+        "description": ""
+      },
+      {
+        "name": "Impact",
+        "description": ""
+      },
+      {
+        "name": "ModifyApplicationData",
+        "description": "The attacker has exploited a weakness that allows it to modify application data."
+      },
+      {
+        "name": "ModifyFilesOrDirectories",
+        "description": "The attacker has exploited a weakness that allows it to modify files or directories."
+      },
+      {
+        "name": "ModifyMemory",
+        "description": "The attacker has exploited a weakness that allows it to modify the memory."
+      },
+      {
+        "name": "ReadApplicationData",
+        "description": "The attacker has exploited a weakness that allows it to read application data."
+      },
+      {
+        "name": "ReadFilesOrDirectories",
+        "description": "The attacker has exploited a weakness that allows it to read files or directories."
+      },
+      {
+        "name": "ReadMemory",
+        "description": "The attacker has exploited a weakness that allows it to read the memory."
+      },
+      {
+        "name": "UnexpectedState",
+        "description": "The attacker has exploited a weakness that allows it to modify the state of the application."
+      }
+    ]
+  },
+  {
+    "name": "SoftwareVulnerability",
+    "description": "Software vulnerabilities categorized according to CWE",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "Subnet",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": []
+  },
+  {
+    "name": "UnknownApplication",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "Access",
+        "description": "The attacker has gained authenticated access to the application."
+      },
+      {
+        "name": "Authenticate",
+        "description": "The attacker is able to authenticate in the application."
+      },
+      {
+        "name": "CodeExecution",
+        "description": "The attacker can inject code into the application process to assume it's privileges and influence the operating system."
+      },
+      {
+        "name": "Deny",
+        "description": "The attacker can deny some or all functionality and data pertaining to this service."
+      },
+      {
+        "name": "LocalConnect",
+        "description": "An attacker with low-privilege access on the executing instance is assumed to be able to locally interact with the service."
+      },
+      {
+        "name": "Modify",
+        "description": "The attacker can modify some or all of this service's data."
+      },
+      {
+        "name": "NetworkRequestConnect",
+        "description": "The attacker can send requests to the application."
+      },
+      {
+        "name": "NetworkRespondConnect",
+        "description": "An attacker might be able to respond with forged requests submitted by an application."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read some or all of this service's code and data."
+      }
+    ]
+  },
+  {
+    "name": "UnknownExploit",
+    "description": "Potential unknown exploits that might occur due flaws or configuration errors in software, e.g., 0-day exploits or exploits not discovered by scanners.",
+    "attacksteps": [
+      {
+        "name": "CodeExecution",
+        "description": "The attacker is able to inject code into the application process, thus assuming the application's privileges on the hosting instance and influence other applications or the underlying OS."
+      },
+      {
+        "name": "Deny",
+        "description": "Denial-of-service attack is an attack in where a machine or network resource is rendered unavailable to its intended users by temporarily or indefinitely disrupting it"
+      },
+      {
+        "name": "Impact",
+        "description": ""
+      },
+      {
+        "name": "Modify",
+        "description": "The attacker can modify some or all of this application's data."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read some or all of this applications's code and data."
+      },
+      {
+        "name": "RequestForgery",
+        "description": "Request Forgery attacks occur when the attacker can create or control transmissions from a vulnerable application."
+      }
+    ]
+  },
+  {
+    "name": "UnknownVulnerability",
+    "description": "Vulnerabilities are categorized according to CVSS 3.0",
+    "attacksteps": [
+      {
+        "name": "Abuse",
+        "description": "The attacker is attempting to abuse a vulnerability in an application."
+      }
+    ]
+  },
+  {
+    "name": "VPC",
+    "description": "",
+    "attacksteps": []
+  },
+  {
+    "name": "VPCEndpoint",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": []
+  },
+  {
+    "name": "VPCPeering",
+    "description": "A VPC peering connection is a networking connection between two VPCs that enables you to route traffic between them privately",
+    "attacksteps": []
+  },
+  {
+    "name": "VPCService",
+    "description": "This asset represents the VPC service.",
+    "attacksteps": []
+  },
+  {
+    "name": "VPNConnection",
+    "description": "An AWS Site-to-Site VPN provide an IPSec connection between your VPC and your remote network.",
+    "attacksteps": []
+  },
+  {
+    "name": "VPNGateway",
+    "description": "In AWS, the VPN concentrator on the Amazon side of the Site-to-Site VPN connection is called 'virtual private gateway' while that on the remote network side is called 'customer gateway'. In awsLang, they are referred by the same name, 'VPNGateway', because they perform similar functions.",
+    "attacksteps": []
+  },
+  {
+    "name": "VulnerableAccount",
+    "description": "Another word for identity is oftentimes account. Identities have privileges on various resources.",
+    "attacksteps": [
+      {
+        "name": "Assume",
+        "description": "The attacker is able to assume the account and it's permissions."
+      }
+    ]
+  },
+  {
+    "name": "VulnerableApplication",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "Access",
+        "description": "The attacker has gained authenticated access to the application."
+      },
+      {
+        "name": "Authenticate",
+        "description": "The attacker is able to authenticate in the application."
+      },
+      {
+        "name": "CodeExecution",
+        "description": "Vulnerabilities in the application could allow an attacker to inject code into the service process, thus assuming the service's privileges on the hosting instance. An attacker could under these circumstances influence other applications or the underlying operating system itself."
+      },
+      {
+        "name": "Deny",
+        "description": "The attacker can deny some or all functionality and data pertaining to this service."
+      },
+      {
+        "name": "LocalConnect",
+        "description": "An attacker with low-privilege access on the executing instance is assumed to be able to locally interact with the service."
+      },
+      {
+        "name": "Modify",
+        "description": "The attacker can modify some or all of this service's data."
+      },
+      {
+        "name": "NetworkRequestConnect",
+        "description": "The attacker has successfully sent a request to the application."
+      },
+      {
+        "name": "NetworkRespondConnect",
+        "description": "An attacker might be able to respond with forged requests submitted by an application."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read some or all of this service's code and data."
+      }
+    ]
+  }
+]
