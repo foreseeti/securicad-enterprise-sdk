@@ -104,6 +104,10 @@ class Users:
     def __init__(self, client: "Client") -> None:
         self.client = client
 
+    def _list_dict_users(self) -> List[Dict[str, Any]]:
+        dict_users = self.client._post("users")["users"]
+        return dict_users
+
     def whoami(self) -> User:
         dict_user = self.client._get("whoami")
         dict_user["uid"] = dict_user["id"]
@@ -118,7 +122,7 @@ class Users:
         self.client._set_access_token(access_token)
 
     def list_users(self) -> List[User]:
-        dict_users = self.client._post("users")["users"]
+        dict_users = self._list_dict_users()
         users = []
         for dict_user in dict_users:
             users.append(User.from_dict(client=self.client, dict_user=dict_user))

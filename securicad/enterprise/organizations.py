@@ -39,14 +39,14 @@ class Organization:
         self.client._delete("organization", {"tag": self.tag})
 
     def list_users(self) -> List["User"]:
-        dict_org = self.client._get(f"organization/{self.tag}")
+        dict_org = self.client.organizations._get_dict_organization_by_tag(self.tag)
         users = []
         for dict_user in dict_org["users"]:
             users.append(self.client.users.get_user_by_uid(dict_user["id"]))
         return users
 
     def list_projects(self) -> List["Project"]:
-        dict_org = self.client._get(f"organization/{self.tag}")
+        dict_org = self.client.organizations._get_dict_organization_by_tag(self.tag)
         projects = []
         for dict_project in dict_org["projects"]:
             projects.append(
@@ -59,8 +59,16 @@ class Organizations:
     def __init__(self, client: "Client") -> None:
         self.client = client
 
+    def _list_dict_organizations(self) -> List[Dict[str, Any]]:
+        dict_organizations = self.client._get("organization/all")
+        return dict_organizations
+
+    def _get_dict_organization_by_tag(self, tag: str) -> Dict[str, Any]:
+        dict_organization = self.client._get(f"organization/{tag}")
+        return dict_organization
+
     def list_organizations(self) -> List[Organization]:
-        dict_orgs = self.client._get("organization/all")
+        dict_orgs = self._list_dict_organizations()
         organizations = []
         for dict_org in dict_orgs:
             organizations.append(
@@ -69,7 +77,7 @@ class Organizations:
         return organizations
 
     def get_organization_by_tag(self, tag: str) -> Organization:
-        dict_org = self.client._get(f"organization/{tag}")
+        dict_org = self._get_dict_organization_by_tag(tag)
         return Organization.from_dict(client=self.client, dict_org=dict_org)
 
     def get_organization_by_name(self, name: str) -> Organization:

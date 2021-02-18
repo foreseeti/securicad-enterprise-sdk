@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from securicad.enterprise.client import Client
     from securicad.enterprise.models import ModelInfo
     from securicad.enterprise.organizations import Organization
+    from securicad.enterprise.scenarios import Scenario
     from securicad.enterprise.users import User
 
 
@@ -78,7 +79,7 @@ class Project:
         self.client._delete("project", {"pid": self.pid})
 
     def list_users(self) -> List["User"]:
-        dict_project = self.client._post("project/data", {"pid": self.pid})
+        dict_project = self.client.projects._get_dict_project_by_pid(self.pid)
         users = []
         for dict_user in dict_project["users"]:
             users.append(self.client.users.get_user_by_uid(dict_user["uid"]))
@@ -97,7 +98,7 @@ class Project:
         self.client._delete("project/user", data)
 
     def get_access_level(self, user: "User") -> Optional[AccessLevel]:
-        dict_project = self.client._post("project/data", {"pid": self.pid})
+        dict_project = self.client.projects._get_dict_project_by_pid(self.pid)
         for dict_user in dict_project["users"]:
             if dict_user["uid"] == user.uid:
                 return AccessLevel.from_int(dict_user["accesslevel"])
@@ -112,7 +113,7 @@ class Project:
         self.client._post("project/user", data)
 
     def list_models(self) -> List["ModelInfo"]:
-        dict_projects = self.client._post("projects")
+        dict_projects = self.client.projects._list_dict_projects()
         models = []
         for dict_project in dict_projects:
             if dict_project["pid"] == self.pid:
@@ -136,8 +137,16 @@ class Projects:
     def __init__(self, client: "Client") -> None:
         self.client = client
 
-    def list_projects(self) -> List[Project]:
+    def _list_dict_projects(self) -> List[Dict[str, Any]]:
         dict_projects = self.client._post("projects")
+        return dict_projects
+
+    def _get_dict_project_by_pid(self, pid: str) -> Dict[str, Any]:
+        dict_project = self.client._post("project/data", {"pid": pid})
+        return dict_project
+
+    def list_projects(self) -> List[Project]:
+        dict_projects = self._list_dict_projects()
         projects = []
         for dict_project in dict_projects:
             projects.append(
@@ -146,7 +155,7 @@ class Projects:
         return projects
 
     def get_project_by_pid(self, pid: str) -> Project:
-        dict_project = self.client._post("project/data", {"pid": pid})
+        dict_project = self._get_dict_project_by_pid(pid)
         return Project.from_dict(client=self.client, dict_project=dict_project)
 
     def get_project_by_name(self, name: str) -> Project:

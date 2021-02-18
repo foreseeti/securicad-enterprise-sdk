@@ -60,8 +60,9 @@ class Scenario:
         self.client._delete("scenarios", data)
 
     def list_simulations(self) -> List[Simulation]:
-        data: Dict[str, Any] = {"pid": self.pid, "tid": self.tid}
-        dict_scenario = self.client._post("scenario/data", data)
+        dict_scenario = self.client.scenarios._get_dict_scenario_by_tid(
+            self.pid, self.tid
+        )
         simulations = []
         for dict_simulation in dict_scenario["results"].values():
             simulations.append(
@@ -76,8 +77,17 @@ class Scenarios:
     def __init__(self, client: "Client") -> None:
         self.client = client
 
+    def _list_dict_scenarios(self, pid: str) -> Dict[str, Dict[str, Any]]:
+        dict_scenarios = self.client._post("scenarios", {"pid": pid})
+        return dict_scenarios
+
+    def _get_dict_scenario_by_tid(self, pid: str, tid: str) -> Dict[str, Any]:
+        data: Dict[str, Any] = {"pid": pid, "tid": tid}
+        dict_scenario = self.client._post("scenario/data", data)
+        return dict_scenario
+
     def list_scenarios(self, project: "Project") -> List[Scenario]:
-        dict_scenarios = self.client._post("scenarios", {"pid": project.pid})
+        dict_scenarios = self._list_dict_scenarios(project.pid)
         scenarios = []
         for dict_scenario in dict_scenarios.values():
             scenarios.append(
@@ -86,8 +96,7 @@ class Scenarios:
         return scenarios
 
     def get_scenario_by_tid(self, project: "Project", tid: str) -> Scenario:
-        data: Dict[str, Any] = {"pid": project.pid, "tid": tid}
-        dict_scenario = self.client._post("scenario/data", data)
+        dict_scenario = self._get_dict_scenario_by_tid(project.pid, tid)
         return Scenario.from_dict(client=self.client, dict_scenario=dict_scenario)
 
     def get_scenario_by_name(self, project: "Project", name: str) -> Scenario:

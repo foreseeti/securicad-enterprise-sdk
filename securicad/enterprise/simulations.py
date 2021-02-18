@@ -44,16 +44,17 @@ class Simulation:
             progress=dict_simulation["progress"],
         )
 
-    def __update(self) -> None:
-        data: Dict[str, Any] = {"pid": self.pid, "simids": [self.simid]}
-        dict_simulation = self.client._post("simulations/data", data)[self.simid]
+    def __update_progress(self) -> None:
+        dict_simulation = self.client.simulations._get_dict_simulation_by_simid(
+            self.pid, self.simid
+        )
         self.progress = dict_simulation["progress"]
 
     def __wait_for_results(self) -> None:
         if self.progress == 100:
             return
         while True:
-            self.__update()
+            self.__update_progress()
             if self.progress == 100:
                 break
             time.sleep(1)
@@ -77,12 +78,16 @@ class Simulations:
     def __init__(self, client: "Client") -> None:
         self.client = client
 
+    def _get_dict_simulation_by_simid(self, pid: str, simid: str) -> Dict[str, Any]:
+        data: Dict[str, Any] = {"pid": pid, "simids": [simid]}
+        dict_simulation = self.client._post("simulations/data", data)[simid]
+        return dict_simulation
+
     def list_simulations(self, scenario: "Scenario") -> List[Simulation]:
         return scenario.list_simulations()
 
     def get_simulation_by_simid(self, scenario: "Scenario", simid: str) -> Simulation:
-        data: Dict[str, Any] = {"pid": scenario.pid, "simids": [simid]}
-        dict_simulation = self.client._post("simulations/data", data)[simid]
+        dict_simulation = self._get_dict_simulation_by_simid(scenario.pid, simid)
         return Simulation.from_dict(client=self.client, dict_simulation=dict_simulation)
 
     def get_simulation_by_name(self, scenario: "Scenario", name: str) -> Simulation:

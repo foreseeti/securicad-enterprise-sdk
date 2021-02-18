@@ -21,6 +21,7 @@ from securicad.enterprise.exceptions import StatusCodeException
 from securicad.enterprise.metadata import Metadata
 from securicad.enterprise.models import Models
 from securicad.enterprise.organizations import Organizations
+from securicad.enterprise.parsers import Parsers
 from securicad.enterprise.projects import Projects
 from securicad.enterprise.scenarios import Scenarios
 from securicad.enterprise.simulations import Simulations
@@ -44,6 +45,7 @@ class Client:
         self.organizations = Organizations(client=self)
         self.users = Users(client=self)
         self.projects = Projects(client=self)
+        self.parser = Parsers(client=self)
         self.models = Models(client=self)
         self.scenarios = Scenarios(client=self)
         self.simulations = Simulations(client=self)

@@ -30,9 +30,11 @@ class StatusCodeException(Exception):
         except ValueError:
             self.json = None
             self.content = response.text
-        message = f"""
-Unexpected status code {self.status_code} != {status_code} for {self.method} {self.url}
-Content:
-{self.content}
-""".strip()
+        message = "\n".join(
+            [
+                f"Unexpected status code {self.status_code} != {status_code} for {self.method} {self.url}",
+                "Content:",
+                self.content,
+            ]
+        )
         super().__init__(message)

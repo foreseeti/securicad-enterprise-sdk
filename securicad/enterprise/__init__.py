@@ -13,10 +13,12 @@
 # limitations under the License.
 
 from securicad.enterprise.client import Client
+from securicad.enterprise.model import Model
 from securicad.enterprise.models import ModelInfo
 from securicad.enterprise.organizations import Organization
 from securicad.enterprise.projects import AccessLevel, Project
 from securicad.enterprise.scenarios import Scenario
+from securicad.enterprise.simulations import Simulation
 from securicad.enterprise.users import Role, User
 
 __version__ = "0.0.1"
