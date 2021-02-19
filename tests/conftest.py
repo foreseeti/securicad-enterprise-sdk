@@ -34,6 +34,7 @@ BACKEND_URL: Optional[str] = None
 ADMIN_USERNAME: Optional[str] = None
 ADMIN_PASSWORD: Optional[str] = None
 COMMON_PASSWORD: Optional[str] = None
+AWS_IMPORT_CONFIG: Optional[Dict[str, Any]] = None
 
 AWSLANG: Optional[List[Dict[str, Any]]] = None
 
@@ -68,17 +69,25 @@ def get_awslang() -> List[Dict[str, Any]]:
 
 
 def read_config() -> None:
-    global BASE_URL, BACKEND_URL, ADMIN_USERNAME, ADMIN_PASSWORD, COMMON_PASSWORD
+    global BASE_URL, BACKEND_URL, ADMIN_USERNAME, ADMIN_PASSWORD, COMMON_PASSWORD, AWS_IMPORT_CONFIG
     config = get_config()
     BASE_URL = config["base_url"]
     BACKEND_URL = config["backend_url"]
     ADMIN_USERNAME = config["admin_username"]
     ADMIN_PASSWORD = config["admin_password"]
     COMMON_PASSWORD = config["common_password"]
+    AWS_IMPORT_CONFIG = config["aws_import_config"]
     assert BASE_URL, "base_url is not set in config.json"
     assert ADMIN_USERNAME, "admin_username is not set in config.json"
     assert ADMIN_PASSWORD, "admin_password is not set in config.json"
     assert COMMON_PASSWORD, "common_password is not set in config.json"
+    assert AWS_IMPORT_CONFIG["accounts"], "accounts is not set in config.json"
+    for account in AWS_IMPORT_CONFIG["accounts"]:
+        assert account["access_key"], "access_key is not set in config.json"
+        assert account["secret_key"], "secret_key is not set in config.json"
+        assert account["regions"], "regions is not set in config.json"
+        for region in account["regions"]:
+            assert region, "region is not set in config.json"
 
 
 def read_data() -> None:

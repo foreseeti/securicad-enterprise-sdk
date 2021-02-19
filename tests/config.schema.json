@@ -18,6 +18,41 @@
     },
     "common_password": {
       "type": "string"
+    },
+    "aws_import_config": {
+      "type": "object",
+      "properties": {
+        "accounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "access_key": {
+                "type": "string"
+              },
+              "secret_key": {
+                "type": "string"
+              },
+              "regions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "access_key",
+              "secret_key",
+              "regions"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "accounts"
+      ]
     }
   },
   "additionalProperties": false,
@@ -26,6 +61,7 @@
     "backend_url",
     "admin_username",
     "admin_password",
-    "common_password"
+    "common_password",
+    "aws_import_config"
   ]
 }
