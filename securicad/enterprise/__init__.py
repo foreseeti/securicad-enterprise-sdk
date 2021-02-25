@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from securicad.enterprise.client import Client
-from securicad.enterprise.model import Model
 from securicad.enterprise.models import ModelInfo
 from securicad.enterprise.organizations import Organization
 from securicad.enterprise.projects import AccessLevel, Project

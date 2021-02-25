@@ -742,9 +742,15 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
         )["assessmentRunArns"]
         if not runs:
             return ["inspector"], []
-        runs_details = unpaginated(
-            "inspector", "describe_assessment_runs", param={"assessmentRunArns": runs}
-        ).get("assessmentRuns", [])
+        runs_details = fake_paginate(
+            "inspector",
+            "describe_assessment_runs",
+            request_key="assessmentRunArns",
+            response_key="assessmentRuns",
+            param={},
+            n=10,
+            items=runs,
+        )
         run_arn = None
         # Get the latest run with findings in it
         for run in sorted(runs_details, key=lambda x: x["completedAt"], reverse=True):
@@ -759,11 +765,14 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
         all_package_arns = paginate(
             "inspector", "list_rules_packages", key="rulesPackageArns"
         )["rulesPackageArns"]
-        package_arns_details = unpaginated(
+        package_arns_details = fake_paginate(
             "inspector",
             "describe_rules_packages",
-            key="rulesPackages",
-            param={"rulesPackageArns": all_package_arns},
+            request_key="rulesPackageArns",
+            response_key="rulesPackages",
+            param={},
+            n=10,
+            items=all_package_arns,
         )
         for package in package_arns_details:
             if "Common Vulnerabilities and Exposures" in package["name"]:
@@ -792,7 +801,7 @@ def get_region_services(session, include_inspector, threads, delay, log_func):
             request_key="findingArns",
             response_key="findings",
             param={},
-            n=100,
+            n=10,
             items=findings,
         )
 

@@ -17,8 +17,9 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional
 from urllib.parse import urljoin
 
 if TYPE_CHECKING:
+    from securicad.model import Model
+
     from securicad.enterprise.client import Client
-    from securicad.enterprise.model import Model
     from securicad.enterprise.scenarios import Scenario
 
 

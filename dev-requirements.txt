@@ -6,7 +6,7 @@
 #
 appdirs==1.4.4
     # via black
-astroid==2.4.2
+astroid==2.5.0
     # via pylint
 attrs==20.3.0
     # via
@@ -52,7 +52,7 @@ jeepney==0.6.0
     #   secretstorage
 keyring==22.0.1
     # via twine
-lazy-object-proxy==1.4.3
+lazy-object-proxy==1.5.2
     # via astroid
 mccabe==0.6.1
     # via pylint
@@ -60,7 +60,7 @@ mypy-extensions==0.4.3
     # via
     #   black
     #   mypy
-mypy==0.800
+mypy==0.812
     # via -r dev-requirements.in
 packaging==20.9
     # via
@@ -78,13 +78,13 @@ pycparser==2.20
     # via cffi
 pygments==2.8.0
     # via readme-renderer
-pylint==2.6.2
+pylint==2.7.1
     # via -r dev-requirements.in
 pyparsing==2.4.7
     # via packaging
 pytest==6.2.2
     # via -r dev-requirements.in
-readme-renderer==28.0
+readme-renderer==29.0
     # via twine
 regex==2020.11.13
     # via black
@@ -102,7 +102,6 @@ secretstorage==3.3.1
 six==1.15.0
     # via
     #   -c requirements.txt
-    #   astroid
     #   bleach
     #   readme-renderer
 toml==0.10.2

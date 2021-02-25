@@ -13,11 +13,10 @@
 # limitations under the License.
 
 import base64
-import json
 import time
 from typing import TYPE_CHECKING, Any, BinaryIO, Dict, List, Optional, Tuple
 
-from securicad.enterprise.model import Model
+from securicad.model import Model
 
 if TYPE_CHECKING:
     from securicad.enterprise.client import Client
@@ -126,12 +125,19 @@ class ModelInfo:
     def get_model(self) -> Model:
         return Model(self.get_dict())
 
+    def save(self, model: Model) -> "ModelInfo":
+        model.model["mid"] = self.mid
+        model.model["name"] = self.name
+        data: Dict[str, Any] = {"pid": self.pid, "model": model.model}
+        self.client._post("savemodel", data)
+        return self.client.models._wait_for_model_validation(self.pid, self.mid)
+
 
 class Models:
     def __init__(self, client: "Client") -> None:
         self.client = client
 
-    def __wait_for_model_validation(self, pid: str, mid: str) -> ModelInfo:
+    def _wait_for_model_validation(self, pid: str, mid: str) -> ModelInfo:
         while True:
             for dict_model in self._list_dict_models(pid):
                 if dict_model["mid"] != mid:
@@ -177,16 +183,11 @@ class Models:
                 return ModelInfo.from_dict(client=self.client, dict_model=dict_model)
         raise ValueError(f"Invalid model {name}")
 
-    def save(self, project: "Project", model: Model) -> ModelInfo:
-        data: Dict[str, Any] = {"pid": project.pid, "model": model.model}
-        self.client._post("savemodel", data)
-        return self.__wait_for_model_validation(project.pid, model.model["mid"])
-
     def save_as(self, project: "Project", model: Model, name: str) -> ModelInfo:
         model.model["name"] = f"{name}.sCAD"
         data: Dict[str, Any] = {"pid": project.pid, "model": model.model}
         dict_model = self.client._post("savemodelas", data)
-        return self.__wait_for_model_validation(project.pid, dict_model["mid"])
+        return self._wait_for_model_validation(project.pid, dict_model["mid"])
 
     def upload_scad_model(
         self,
@@ -221,7 +222,7 @@ class Models:
 
         data: Dict[str, Any] = {"pid": project.pid, "files": [[get_file()]]}
         dict_model = self.client._put("models", data)[0]
-        return self.__wait_for_model_validation(project.pid, dict_model["mid"])
+        return self._wait_for_model_validation(project.pid, dict_model["mid"])
 
     def generate_model(
         self, project: "Project", parser: str, name: str, files: List[Dict[str, Any]]
@@ -272,4 +273,4 @@ class Models:
             "files": get_files(),
         }
         dict_model = self.client._post(f"projects/{project.pid}/multiparser", data)
-        return self.__wait_for_model_validation(project.pid, dict_model["mid"])
+        return self._wait_for_model_validation(project.pid, dict_model["mid"])

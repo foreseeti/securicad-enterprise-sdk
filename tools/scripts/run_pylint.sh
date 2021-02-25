@@ -15,13 +15,34 @@ create_venv() {
   . "$venv_dir/bin/activate"
 }
 
-run_pylint() {
+# Pylint does not support implicit namespace packages.
+#
+# Both this package and `securicad.model` use the implicit namespace package
+# `securicad` on the first level.
+#
+# This workaround first creates an __init__.py file in the securicad/ directory,
+# making it a regular package. It then copies the package `securicad.model` from
+# site-packages/ into the securicad/ directory.
+
+create_fake_namespace() {
+  site_packages="$(python -c "import site; print(site.getsitepackages()[0])")"
   touch securicad/__init__.py
+  cp -fpR "$site_packages/securicad/model" securicad/model
+}
+
+delete_fake_namespace() {
+  rm -f securicad/__init__.py
+  rm -fR securicad/model
+}
+
+run_pylint() {
+  delete_fake_namespace
+  create_fake_namespace
   set +e
   pylint securicad.enterprise
   status=$?
   set -e
-  rm securicad/__init__.py
+  delete_fake_namespace
   return $status
 }
 

@@ -74,7 +74,7 @@ def test_example():
 
     model = model_info.get_model()
     model.set_high_value_assets(high_value_assets=high_value_assets)
-    client.models.save(project, model)
+    model_info.save(model)
 
     # Create scenario and get initial simulation
     scenario = client.scenarios.create_scenario(

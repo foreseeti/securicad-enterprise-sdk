@@ -59,7 +59,7 @@ high_value_assets = [
 model.set_high_value_assets(high_value_assets=high_value_assets)
 
 # Save changes to model in project
-client.models.save(project, model)
+model_info.save(model)
 
 # Start a new simulation in a new scenario
 scenario = client.scenarios.create_scenario(project, model_info, name="My scenario")

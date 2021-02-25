@@ -30,7 +30,6 @@ from securicad.enterprise.exceptions import StatusCodeException
 # test_list_models()
 # test_get_model_by_mid()
 # test_get_model_by_name()
-# test_save()
 # test_save_as()
 # test_upload_scad_model()
 # test_generate_model()
@@ -41,3 +40,4 @@ from securicad.enterprise.exceptions import StatusCodeException
 # test_modelinfo_get_scad()
 # test_modelinfo_get_dict()
 # test_modelinfo_get_model()
+# test_modelinfo_save()
