@@ -20,7 +20,7 @@ from securicad.enterprise.scenarios import Scenario
 from securicad.enterprise.simulations import Simulation
 from securicad.enterprise.users import Role, User
 
-__version__ = "0.0.1"
+__version__ = "0.1.0"
 __author__ = "Foreseeti AB"
 
 
