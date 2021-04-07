@@ -6,9 +6,9 @@
 #
 attrs==20.3.0
     # via jsonschema
-boto3==1.17.15
+boto3==1.17.46
     # via -r requirements.in
-botocore==1.20.15
+botocore==1.20.46
     # via
     #   -r requirements.in
     #   boto3
@@ -31,7 +31,7 @@ python-dateutil==2.8.1
     # via botocore
 requests==2.25.1
     # via -r requirements.in
-s3transfer==0.3.4
+s3transfer==0.3.6
     # via boto3
 securicad-model==0.0.1
     # via -r requirements.in
@@ -39,7 +39,7 @@ six==1.15.0
     # via
     #   jsonschema
     #   python-dateutil
-urllib3==1.26.3
+urllib3==1.26.4
     # via
     #   botocore
     #   requests
