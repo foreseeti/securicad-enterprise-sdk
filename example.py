@@ -32,7 +32,7 @@ url = "https://xx.xx.xx.xx"
 
 # Create an authenticated enterprise client
 client = enterprise.client(
-    base_url=url, username=username, password=password, org=org, cacert=cacert
+    base_url=url, username=username, password=password, organization=org, cacert=cacert
 )
 
 # Get the project where the model will be added
