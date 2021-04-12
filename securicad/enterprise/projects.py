@@ -133,7 +133,7 @@ class Project:
     def list_scenarios(self) -> List["Scenario"]:
         return self.client.scenarios.list_scenarios(self)
 
-    def list_tnings(self) -> List["Tuning"]:
+    def list_tunings(self) -> List["Tuning"]:
         return self.client.tunings.list_tunings(self)
 
 

@@ -24,7 +24,7 @@ class Tuning:
     def __init__(
         self,
         client: "Client",
-        pid: str,
+        project: "Project",
         tuning_id: str,
         scope: str,
         ttc: str,
@@ -40,7 +40,7 @@ class Tuning:
         value: Optional[str] = None,
     ) -> None:
         self.client = client
-        self.pid = pid
+        self.project = project
         self.tuning_id = tuning_id
         self.id_ = id_
         self.attackstep = attackstep
@@ -59,10 +59,12 @@ class Tuning:
         self.value = value
 
     @staticmethod
-    def from_dict(client: "Client", dict_tuning: Dict[str, Any]) -> "Tuning":
+    def from_dict(
+        client: "Client", project: "Project", dict_tuning: Dict[str, Any]
+    ) -> "Tuning":
         return Tuning(
             client=client,
-            pid=dict_tuning["pid"],
+            project=project,
             tuning_id=dict_tuning["cid"],
             attackstep=dict_tuning["config"]["attackstep"],
             scope=dict_tuning["config"]["scope"],
@@ -76,6 +78,11 @@ class Tuning:
             name=dict_tuning["config"].get("name", None),
             tag=dict_tuning["config"].get("tag", None),
             value=dict_tuning["config"].get("value", None),
+        )
+
+    def delete(self) -> None:
+        self.client._delete(
+            "tunings", {"pid": self.project.pid, "cids": [self.tuning_id]}
         )
 
 
@@ -233,4 +240,6 @@ class Tunings:
             probability=probability,
         )
         dict_tuning = self.client._put("tunings", data)[0]
-        return Tuning.from_dict(client=self.client, dict_tuning=dict_tuning)
+        return Tuning.from_dict(
+            client=self.client, project=project, dict_tuning=dict_tuning
+        )

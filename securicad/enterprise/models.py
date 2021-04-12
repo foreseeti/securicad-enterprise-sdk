@@ -132,6 +132,8 @@ class ModelInfo:
         self.client._post("savemodel", data)
         return self.client.models._wait_for_model_validation(self.pid, self.mid)
 
+    # TODO: method for models/tune endpoint
+
 
 class Models:
     def __init__(self, client: "Client") -> None:

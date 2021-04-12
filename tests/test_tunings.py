@@ -179,7 +179,7 @@ def test_convert_ttc_object(data, project, model):
 
 def verify_tuning_response(
     tuning_data,
-    pid,
+    project,
     id_=None,
     scope="",
     attackstep=None,
@@ -193,7 +193,7 @@ def verify_tuning_response(
     tag=None,
     value=None,
 ):
-    assert tuning_data.pid == pid
+    assert tuning_data.project.pid == project.pid
     assert tuning_data.id_ == id_
     assert tuning_data.scope == scope
     assert tuning_data.attackstep == attackstep
@@ -222,7 +222,7 @@ def test_attacker_object_name(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         attackstep="developZeroDay",
         scope="object",
         name="Prod srv 1",
@@ -241,7 +241,7 @@ def test_attacker_object_tag(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         attackstep="developZeroDay",
         scope="any",
         condition={"tag": "env", "value": "prod"},
@@ -262,7 +262,7 @@ def test_all_attackstep_ttc_all(client, data, project, model):
         ttc="Exponential,3",
     )
     verify_tuning_response(
-        tuning, pid=project.pid, scope="any", attackstep="", ttc="Exponential,3"
+        tuning, project=project, scope="any", attackstep="", ttc="Exponential,3"
     )
 
 
@@ -278,7 +278,7 @@ def test_all_attackstep_ttc_all_tag(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="any",
         attackstep="",
         ttc="Exponential,3",
@@ -298,7 +298,7 @@ def test_all_attackstep_ttc_class(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="class",
         id_="Host",
         ttc="Exponential,3",
@@ -318,7 +318,7 @@ def test_all_attackstep_ttc_class_tag(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="class",
         id_="Host",
         ttc="Exponential,3",
@@ -339,7 +339,7 @@ def test_all_attackstep_ttc_object(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="object",
         name="Prod srv 1",
         class_="Host",
@@ -364,7 +364,7 @@ def test_one_attackstep_ttc(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="any",
         ttc="Exponential,3",
         attackstep="developZeroDay",
@@ -383,7 +383,7 @@ def test_one_attackstep_ttc_tag(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="any",
         ttc="Exponential,3",
         attackstep="developZeroDay",
@@ -403,7 +403,7 @@ def test_one_attackstep_ttc_class(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="class",
         id_="Host",
         ttc="Exponential,3",
@@ -427,7 +427,7 @@ def test_one_attackstep_ttc_class_tag(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="class",
         id_="Host",
         ttc="Exponential,3",
@@ -448,7 +448,7 @@ def test_one_attackstep_ttc_object(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="object",
         name="Prod srv 1",
         ttc="Exponential,3",
@@ -473,7 +473,7 @@ def test_one_attackstep_ttc_object(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="object",
         name="Prod srv 1",
         class_="Host",
@@ -498,7 +498,7 @@ def test_defense_probability_all(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="any",
         attackstep="",
         probability="0.5",
@@ -517,7 +517,7 @@ def test_defense_probability_all_tag(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="any",
         attackstep="",
         probability="0.5",
@@ -537,7 +537,7 @@ def test_defense_probability_tag_one_defense(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="any",
         attackstep="",
         defense="Patched",
@@ -558,7 +558,7 @@ def test_defense_probability_class_all_defense(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         id_="Host",
         scope="class",
         probability="0.5",
@@ -578,7 +578,7 @@ def test_defense_probability_class_one_defense(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         id_="Host",
         scope="class",
         probability="0.5",
@@ -599,7 +599,7 @@ def test_defense_probability_class_tag_all_defense(client, data, project, model)
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         id_="Host",
         scope="class",
         probability="0.5",
@@ -624,7 +624,7 @@ def test_defense_probability_class_tag_one_defense(client, data, project, model)
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         id_="Host",
         scope="class",
         probability="0.5",
@@ -646,7 +646,7 @@ def test_defense_probability_object_all_defense(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         name="Prod srv 1",
         scope="object",
         probability="0.5",
@@ -667,7 +667,7 @@ def test_defense_probability_object_one_defense(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         name="Prod srv 1",
         scope="object",
         probability="0.5",
@@ -689,7 +689,7 @@ def test_defense_probability_class_object_all_defense(client, data, project, mod
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         class_="Host",
         name="Prod srv 1",
         scope="object",
@@ -715,7 +715,7 @@ def test_defense_probability_class_object_one_defense(client, data, project, mod
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         class_="Host",
         name="Prod srv 1",
         scope="object",
@@ -741,7 +741,7 @@ def test_tag_all(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="any",
         attackstep="",
         tag="a",
@@ -761,7 +761,7 @@ def test_tag_all_tag(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         scope="any",
         attackstep="",
         tag="a",
@@ -782,7 +782,7 @@ def test_tag_class(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         id_="Host",
         scope="class",
         attackstep="",
@@ -803,7 +803,7 @@ def test_tag_class_tag(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         id_="Host",
         scope="class",
         attackstep="",
@@ -825,7 +825,7 @@ def test_tag_object(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         name="Prod srv 1",
         id_=90,
         scope="object",
@@ -847,7 +847,7 @@ def test_tag_object_class(client, data, project, model):
     )
     verify_tuning_response(
         tuning,
-        pid=project.pid,
+        project=project,
         class_="Host",
         id_=90,
         name="Prod srv 1",
@@ -856,3 +856,20 @@ def test_tag_object_class(client, data, project, model):
         tag="a",
         value="b",
     )
+
+
+# delete
+
+
+def test_delete(client, data, project, model):
+    tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="tags",
+        op="apply",
+        filterdict={"metaconcept": "Host", "object_name": "Prod srv 1"},
+        name="test_defense_probability_object_class",
+        tags={"a": "b"},
+    )
+    tuning.delete()
+    assert project.list_tunings() == []

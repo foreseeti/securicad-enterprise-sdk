@@ -179,6 +179,191 @@ user = client.users.create_user(
 project.add_user(user=user, access_level=AccessLevel.USER)
 ```
 
+## Tunings
+
+You can modify models in specific ways with the tunings api.
+
+A tuning has 3 core attributes, type, filter, arguments. The type is the category of change, the filter is what you want the change applied to, and the arguments are what new values you want.
+
+**Type**
+
+The tuning type is one of 4, the value of this field affects what other arguments are accepted.
+
+- attacker, move the attacker entrypoint to one or more attacksteps
+- ttc, set ttc distributions on attacksteps
+- probability, set the probability of defenses
+- consequence, set the consequence on attacksteps
+- tag, set one or more tags on objects
+
+**Filter**
+
+The filter is how you select which objects the arguments are applied to. It's a dictionary which, depending on type, accepts different values. More details in the various type descriptions.
+
+**object_name**
+
+If there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise an exception. This limitation will be removed when we have refactored tunings in Enterprise too.
+
+### attacker: Moving the attacker entrypoint
+
+To move the attacker you can create a tuning like this:
+
+```python
+
+tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="attacker",
+        op="apply",
+        filterdict={"attackstep": "DevelopZeroDay", "object_name": "Prod srv 1"},
+        name="prod_zeroday",
+    )
+```
+
+This will set the attacker to DevelopZeroDay on the object named "Prod srv 1". The tuning itself will be named "prod_zeroday".
+
+The filter will accept these arguments:
+
+- attackstep: which attackstep to connet to. If empty will be all attacksteps
+- metaconcept: the class of object to connect to the attackstep(s) on.
+- object_name: name of object. if there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise an exception. This limitation will be removed when we have refactored tunings in Enterprise too.
+- tags: Tags on the objects you want to make the attacker reach.
+
+### ttc: Set Time-To-Compromise distributions on attacksteps
+
+To set Time-To-Compormise on attackstep a specific attackstep on a specific object you can create a tuning like this:
+
+```python
+tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="ttc",
+        op="apply",
+        filterdict={"object_name": "Prod srv 1", "attackstep": "DevelopZeroDay"},
+        name="one_attackstep_ttc_object",
+        ttc="Exponential,3",
+    )
+```
+
+or all objects of a class
+
+
+```python
+tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="ttc",
+        op="apply",
+        filterdict={"metaconcept": "Host", "attackstep": "DevelopZeroDay"},
+        name="one_attackstep_ttc",
+        ttc="Exponential,3",
+    )
+```
+
+The filter will accept these arguments:
+
+- attackstep: which attackstep to set ttc for. If empty will be all attacksteps
+- metaconcept: the class of object to set ttc on attackstep(s) for.
+- object_name: name of object.
+- tags: Tags on the objects you want to set ttc for.
+
+The tuning take these arguments:
+
+- ttc: A string representation of the ttc distribution.
+
+### probability: Set defense probability
+
+To enable all defenses in the model you can create a tuning like this
+
+```python
+tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="probability",
+        op="apply",
+        filterdict={},
+        name="all_defenses",
+        probability="1.0",
+    )
+```
+
+Or to set patched on all Host objects:
+
+```python
+tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="probability",
+        op="apply",
+        filterdict={"metaconcept" : "Host", "defense" : "Patched"},
+        name="hosts_maybe_patched",
+        probability="0.5",
+    )
+```
+
+The filter will accept these arguments:
+
+- defense: which defense to set probability for. If empty will be all defenses
+- metaconcept: the class of object to set probability on defense(s) for.
+- object_name: name of object.
+- tags: Tags on the objects you want to set defense probability for.
+
+The tuning takes these arguments:
+
+- probability: Probability of defense being active
+
+### consequence: Set consequence values of attacksteps being reached
+
+To set consequence of any Host object being reached:
+
+```python
+tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="consequence",
+        op="apply",
+        filterdict={"metaconcept" : "Host", "defense" : "Patched"},
+        name="defense_probability_all",
+        consequence=2,
+    )
+```
+
+The filter will accept these arguments:
+
+- attackstep: which attacksteps to set consequence for. If empty will be all attackstepss
+- metaconcept: the class of object to set consequence on attacksteps(s) for.
+- object_name: name of object.
+- tags: Tags on the objects you want to set attacksteps probability for.
+
+The tuning takes these arguments:
+
+- Consequence: Consequence value of attackstep(s) being reached. An integer in the range [1,10].
+
+### tag: Set tags on objects
+
+To set tags on all Host objects which already has another certain tag:
+
+```python
+tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="tags",
+        op="apply",
+        filterdict={"metaconcept": "Host", "tags": {"env": "prod"}},
+        name="tag_all_prod_hosts",
+        tags={"c/i/a": "1/2/3"},
+    )
+```
+
+The filter will accept these arguments:
+
+- metaconcept: the class of object to set consequence on attacksteps(s) for.
+- object_name: name of object.
+- tags: Tags on the objects you want to set attacksteps probability for.
+
+The tuning takes these arguments:
+
+- tags: A dictionary of zero or more key-value pairs.
+
 ## Disable attacksteps
 
 To configure the attack simulation and the capabilities of the attacker use `Model.disable_attackstep(metaconcept, attackstep, name)`:
