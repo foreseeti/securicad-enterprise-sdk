@@ -25,6 +25,7 @@ from securicad.enterprise.parsers import Parsers
 from securicad.enterprise.projects import Projects
 from securicad.enterprise.scenarios import Scenarios
 from securicad.enterprise.simulations import Simulations
+from securicad.enterprise.tunings import Tunings
 from securicad.enterprise.users import Users
 
 
@@ -32,8 +33,9 @@ class Client:
     def __init__(
         self,
         base_url: str,
-        username: str,
-        password: str,
+        username: Optional[str] = None,
+        password: Optional[str] = None,
+        token: Optional[str] = None,
         organization: Optional[str] = None,
         backend_url: Optional[str] = None,
         cacert: Optional[Union[bool, str]] = None,
@@ -50,8 +52,16 @@ class Client:
         self.scenarios = Scenarios(client=self)
         self.simulations = Simulations(client=self)
         self.metadata = Metadata(client=self)
+        self.tunings = Tunings(client=self)
 
-        self.login(username, password, organization)
+        if token:
+            self._set_access_token(token)
+        elif username and password:
+            self.login(username, password, organization)
+        else:
+            raise ValueError(
+                "You need to supply either an jwt token or username and password"
+            )
 
     def __init_urls(self, base_url: str, backend_url: Optional[str]) -> None:
         self._base_url = urljoin(base_url, "/")
