@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import TYPE_CHECKING, Any, BinaryIO, Dict, List, NewType, Optional
+from typing import TYPE_CHECKING, Any, BinaryIO, Dict, List, Optional
 
 if TYPE_CHECKING:
     from securicad.enterprise.client import Client
+    from securicad.enterprise.models import Model
     from securicad.enterprise.projects import Project
 
 
@@ -27,16 +28,16 @@ class Tuning:
         tuning_id: str,
         scope: str,
         ttc: str,
-        condition: "TuningCondition" = None,
-        consequence: "Consequence" = None,
-        defense: str = None,
-        id_: str = None,
-        probability: str = None,
-        class_: str = None,
-        name: str = None,
-        attackstep: str = None,
-        tag: str = None,
-        value: str = None,
+        condition: Dict[str, Any] = None,
+        consequence: Optional[int] = None,
+        defense: Optional[str] = None,
+        id_: Optional[str] = None,
+        probability: Optional[str] = None,
+        class_: Optional[str] = None,
+        name: Optional[str] = None,
+        attackstep: Optional[str] = None,
+        tag: Optional[str] = None,
+        value: Optional[str] = None,
     ) -> None:
         self.client = client
         self.pid = pid
@@ -58,7 +59,7 @@ class Tuning:
         self.value = value
 
     @staticmethod
-    def from_dict(client, dict_tuning: Dict[str, Any]) -> "Tuning":
+    def from_dict(client: "Client", dict_tuning: Dict[str, Any]) -> "Tuning":
         return Tuning(
             client=client,
             pid=dict_tuning["pid"],
@@ -82,27 +83,27 @@ class Tunings:
     def __init__(self, client: "Client") -> None:
         self.client = client
 
-    def list_tunings(self, project: "Project"):
-        data: Dict[str, Any] = {"pid": project.pid}
-        resp = self.client._post("tunings", data)
+    def list_tunings(self, project: "Project") -> List[Tuning]:
+        dict_tunings = self.client._post("tunings", {"pid": project.pid})
         retr = []
-        for tuning_id, tuning_data in resp["configs"].items():
-            tuning_dict = {"pid": project.pid, "tuning_id": tuning_id, **tuning_data}
+        for tuning_id, tuning_data in dict_tunings["configs"].items():
+            tuning_dict = {"pid": project.pid, **tuning_data}
             retr.append(Tuning.from_dict(self.client, tuning_dict))
         return retr
 
+    @staticmethod
     def _convert_to_old_format(
-        project,
-        model,
-        tuning_type,
-        op,
-        filterdict,
-        name,
-        ttc,
-        tags,
-        consequence,
-        probability,
-    ):
+        project: "Project",
+        model: "Model",
+        tuning_type: "str",
+        op: "str",
+        filterdict: Dict[str, Any],
+        name: Optional[str],
+        ttc: str,
+        tags: Dict[str, str],
+        consequence: Optional[int],
+        probability: Optional[str],
+    ) -> Dict[str, Any]:
         def make_first_letter_lowercase(text):
             if text:
                 return text[0].lower() + text[1:]
@@ -137,7 +138,7 @@ class Tunings:
                     f"Several objects with matching name '{name}' found of the supplied type '{metaconcept}'"
                 )
 
-        config = {}
+        config: Dict[str, Any] = {}
 
         # set scope, name, id
         if "object_name" in filterdict:
@@ -211,11 +212,11 @@ class Tunings:
         tuning_type: str,
         op: str,
         filterdict: Dict[str, Any],
-        name: str = None,
+        name: Optional[str] = None,
         ttc="",
         tags=None,
-        consequence: "Consequence" = None,
-        probability: str = None,
+        consequence: Optional[int] = None,
+        probability: Optional[str] = None,
     ):
         if tuning_type not in ["attacker", "ttc", "tags", "probability", "consequence"]:
             raise ValueError(f"Unknown {tuning_type=}")
@@ -231,9 +232,5 @@ class Tunings:
             consequence=consequence,
             probability=probability,
         )
-        import json
-
-        # print(f"sending data:\n{json.dumps(data)}")
         dict_tuning = self.client._put("tunings", data)[0]
-        # print(dict_tuning)
         return Tuning.from_dict(client=self.client, dict_tuning=dict_tuning)

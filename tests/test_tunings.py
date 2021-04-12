@@ -44,31 +44,6 @@ def get_converted(project, model, newformat):
     )
 
 
-@pytest.fixture()
-def client():
-    return utils.get_client_sysadmin()
-
-
-@pytest.fixture()
-def project(data, client):
-    org = client.organizations.list_organizations()[0]
-    return org.list_projects()[0]
-
-
-@pytest.fixture()
-def model(data, project, client):
-    import io
-
-    with open("acme.sCAD", "rb") as reader:
-        data = io.BytesIO(reader.read())
-
-    model = client.models.upload_scad_model(
-        project, filename="acme.sCAD", file_io=data, description=""
-    )
-    yield model.get_model()
-    model.delete()
-
-
 def test_convert_attacker_object_name(data, project, model):
     newformat = {
         "type": "attacker",
@@ -515,7 +490,7 @@ def test_defense_probability_all(client, data, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="ttc",
+        tuning_type="probability",
         op="apply",
         filterdict={},
         name="test_defense_probability_all",
@@ -534,28 +509,48 @@ def test_defense_probability_all_tag(client, data, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="ttc",
+        tuning_type="probability",
         op="apply",
-        filterdict={"metaconcept": "Host", "tags": {"env": "prod"}},
+        filterdict={"tags": {"env": "prod"}},
         name="test_defense_probability_class",
         probability="0.5",
     )
     verify_tuning_response(
         tuning,
         pid=project.pid,
-        id_="Host",
-        scope="class",
+        scope="any",
         attackstep="",
         probability="0.5",
         condition={"tag": "env", "value": "prod"},
     )
 
 
-def test_defense_probability_class(client, data, project, model):
+def test_defense_probability_tag_one_defense(client, data, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="ttc",
+        tuning_type="probability",
+        op="apply",
+        filterdict={"defense": "Patched", "tags": {"env": "prod"}},
+        name="test_defense_probability_class",
+        probability="0.5",
+    )
+    verify_tuning_response(
+        tuning,
+        pid=project.pid,
+        scope="any",
+        attackstep="",
+        defense="Patched",
+        probability="0.5",
+        condition={"tag": "env", "value": "prod"},
+    )
+
+
+def test_defense_probability_class_all_defense(client, data, project, model):
+    tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="probability",
         op="apply",
         filterdict={"metaconcept": "Host"},
         name="test_defense_probability_class",
@@ -571,11 +566,32 @@ def test_defense_probability_class(client, data, project, model):
     )
 
 
-def test_defense_probability_class_tag(client, data, project, model):
+def test_defense_probability_class_one_defense(client, data, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="ttc",
+        tuning_type="probability",
+        op="apply",
+        filterdict={"metaconcept": "Host", "defense": "Patched"},
+        name="test_defense_probability_class",
+        probability="0.5",
+    )
+    verify_tuning_response(
+        tuning,
+        pid=project.pid,
+        id_="Host",
+        scope="class",
+        probability="0.5",
+        attackstep="",
+        defense="Patched",
+    )
+
+
+def test_defense_probability_class_tag_all_defense(client, data, project, model):
+    tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="probability",
         op="apply",
         filterdict={"metaconcept": "Host", "tags": {"env": "prod"}},
         name="test_defense_probability_class",
@@ -592,11 +608,37 @@ def test_defense_probability_class_tag(client, data, project, model):
     )
 
 
-def test_defense_probability_object(client, data, project, model):
+def test_defense_probability_class_tag_one_defense(client, data, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="ttc",
+        tuning_type="probability",
+        op="apply",
+        filterdict={
+            "metaconcept": "Host",
+            "defense": "Patched",
+            "tags": {"env": "prod"},
+        },
+        name="test_defense_probability_class",
+        probability="0.5",
+    )
+    verify_tuning_response(
+        tuning,
+        pid=project.pid,
+        id_="Host",
+        scope="class",
+        probability="0.5",
+        defense="Patched",
+        attackstep="",
+        condition={"tag": "env", "value": "prod"},
+    )
+
+
+def test_defense_probability_object_all_defense(client, data, project, model):
+    tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="probability",
         op="apply",
         filterdict={"object_name": "Prod srv 1"},
         name="test_defense_probability_class",
@@ -613,11 +655,33 @@ def test_defense_probability_object(client, data, project, model):
     )
 
 
-def test_defense_probability_class_object(client, data, project, model):
+def test_defense_probability_object_one_defense(client, data, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="ttc",
+        tuning_type="probability",
+        op="apply",
+        filterdict={"defense": "Patched", "object_name": "Prod srv 1"},
+        name="test_defense_probability_class",
+        probability="0.5",
+    )
+    verify_tuning_response(
+        tuning,
+        pid=project.pid,
+        name="Prod srv 1",
+        scope="object",
+        probability="0.5",
+        attackstep="",
+        defense="Patched",
+        id_=90,
+    )
+
+
+def test_defense_probability_class_object_all_defense(client, data, project, model):
+    tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="probability",
         op="apply",
         filterdict={"metaconcept": "Host", "object_name": "Prod srv 1"},
         name="test_defense_probability_class",
@@ -631,6 +695,33 @@ def test_defense_probability_class_object(client, data, project, model):
         scope="object",
         probability="0.5",
         attackstep="",
+        id_=90,
+    )
+
+
+def test_defense_probability_class_object_one_defense(client, data, project, model):
+    tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="probability",
+        op="apply",
+        filterdict={
+            "metaconcept": "Host",
+            "defense": "Patched",
+            "object_name": "Prod srv 1",
+        },
+        name="test_defense_probability_class",
+        probability="0.5",
+    )
+    verify_tuning_response(
+        tuning,
+        pid=project.pid,
+        class_="Host",
+        name="Prod srv 1",
+        scope="object",
+        probability="0.5",
+        attackstep="",
+        defense="Patched",
         id_=90,
     )
 

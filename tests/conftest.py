@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import io
 import json
 import sys
 from pathlib import Path
@@ -207,3 +208,28 @@ def awslang() -> List[Dict[str, Any]]:
     if AWSLANG is None:
         AWSLANG = get_awslang()
     return AWSLANG
+
+
+@pytest.fixture()
+def client():
+    import utils
+
+    return utils.get_client_sysadmin()
+
+
+@pytest.fixture()
+def project(data, client):
+    org = client.organizations.list_organizations()[0]
+    return org.list_projects()[0]
+
+
+@pytest.fixture()
+def model(data, project, client):
+    model_path = Path(__file__).with_name("acme.sCAD")
+    with model_path.open(mode="rb") as reader:
+        model = client.models.upload_scad_model(
+            project, filename="acme.sCAD", file_io=reader, description=""
+        )
+        yield model.get_model()
+
+    model.delete()

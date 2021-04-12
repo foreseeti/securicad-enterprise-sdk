@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from securicad.enterprise.models import ModelInfo
     from securicad.enterprise.organizations import Organization
     from securicad.enterprise.scenarios import Scenario
+    from securicad.enterprise.tunings import Tuning
     from securicad.enterprise.users import User
 
 
@@ -131,6 +132,9 @@ class Project:
 
     def list_scenarios(self) -> List["Scenario"]:
         return self.client.scenarios.list_scenarios(self)
+
+    def list_tnings(self) -> List["Tuning"]:
+        return self.client.tunings.list_tunings(self)
 
 
 class Projects:

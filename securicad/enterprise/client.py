@@ -60,7 +60,7 @@ class Client:
             self.login(username, password, organization)
         else:
             raise ValueError(
-                "You need to supply either an jwt token or username and password"
+                "You need to supply either a JWT token or username and password"
             )
 
     def __init_urls(self, base_url: str, backend_url: Optional[str]) -> None:
