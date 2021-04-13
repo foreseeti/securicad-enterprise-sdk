@@ -136,12 +136,6 @@ class Tunings:
         consequence: Optional[int],
         probability: Optional[str],
     ) -> Dict[str, Any]:
-        def make_first_letter_lowercase(text):
-            if text:
-                return text[0].lower() + text[1:]
-            else:
-                return ""
-
         def find_object(model, name, metaconcept):
             data = model.model
             matching_names = []
@@ -176,9 +170,7 @@ class Tunings:
         if "object_name" in filterdict:
             config["scope"] = "object"
             config["name"] = filterdict["object_name"]
-            config["attackstep"] = make_first_letter_lowercase(
-                filterdict.get("attackstep", None)
-            )
+            config["attackstep"] = filterdict.get("attackstep", None)
             if "metaconcept" in filterdict:
                 config["class"] = filterdict["metaconcept"]
             config["id"] = find_object(
@@ -187,15 +179,15 @@ class Tunings:
         elif "metaconcept" in filterdict:
             config["scope"] = "class"
             config["id"] = filterdict["metaconcept"]
-            config["attackstep"] = make_first_letter_lowercase(
-                filterdict.get("attackstep", None)
-            )
+            config["attackstep"] = filterdict.get("attackstep", None)
         else:
             config["scope"] = "any"
             config["id"] = None
-            config["attackstep"] = make_first_letter_lowercase(
-                filterdict.get("attackstep", None)
-            )
+            config["attackstep"] = filterdict.get("attackstep", None)
+
+        # override scope for attacker type
+        if tuning_type == "attacker":
+            config["scope"] = "attacker"
 
         # set condition dict
         if "tags" in filterdict and filterdict["tags"].keys():
@@ -224,7 +216,7 @@ class Tunings:
 
         # tags
         if tuning_type == "tag" and tags:
-            if len(tags) > 1:
+            if len(tags.keys()) > 1:
                 raise ValueError(
                     "Current ES tuning format only supports setting one tag per tuning"
                 )

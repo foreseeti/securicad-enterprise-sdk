@@ -53,14 +53,14 @@ def test_convert_attacker_object_name(data, project, model):
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "highPrivilegeAccess",
+                "attackstep": "HighPrivilegeAccess",
                 "condition": {"tag": "", "value": ""},
                 "consequence": None,
                 "defense": None,
                 "id": 151,
                 "name": "i-1",
                 "probability": None,
-                "scope": "object",
+                "scope": "attacker",
             }
         ],
     }
@@ -78,13 +78,13 @@ def test_convert_attacker_metaconcept(data, project, model):
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "highPrivilegeAccess",
+                "attackstep": "HighPrivilegeAccess",
                 "condition": {"tag": "", "value": ""},
                 "consequence": None,
                 "defense": None,
                 "id": "EC2Instance",
                 "probability": None,
-                "scope": "class",
+                "scope": "attacker",
             }
         ],
     }
@@ -106,13 +106,13 @@ def test_convert_attacker_metaconcept_tag(data, project, model):
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "highPrivilegeAccess",
+                "attackstep": "HighPrivilegeAccess",
                 "condition": {"tag": "tagkey", "value": "tagvalue"},
                 "consequence": None,
                 "defense": None,
                 "id": "EC2Instance",
                 "probability": None,
-                "scope": "class",
+                "scope": "attacker",
             }
         ],
     }
@@ -131,7 +131,7 @@ def test_convert_ttc_metaconcept(data, project, model):
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "highPrivilegeAccess",
+                "attackstep": "HighPrivilegeAccess",
                 "condition": {"tag": "", "value": ""},
                 "consequence": None,
                 "defense": None,
@@ -157,7 +157,7 @@ def test_convert_ttc_object(data, project, model):
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "highPrivilegeAccess",
+                "attackstep": "HighPrivilegeAccess",
                 "condition": {"tag": "", "value": ""},
                 "consequence": None,
                 "defense": None,
@@ -219,8 +219,8 @@ def test_attacker_object_name(client, project, model):
     verify_tuning_response(
         tuning,
         project=project,
-        attackstep="highPrivilegeAccess",
-        scope="object",
+        attackstep="HighPrivilegeAccess",
+        scope="attacker",
         name="i-1",
         id_=151,
     )
@@ -238,8 +238,8 @@ def test_attacker_object_tag(client, project, model):
     verify_tuning_response(
         tuning,
         project=project,
-        attackstep="highPrivilegeAccess",
-        scope="any",
+        attackstep="HighPrivilegeAccess",
+        scope="attacker",
         condition={"tag": "env", "value": "prod"},
     )
 
@@ -257,9 +257,7 @@ def test_all_attackstep_ttc_all(client, project, model):
         name="test_all_attackstep_ttc_all",
         ttc="Exponential,3",
     )
-    verify_tuning_response(
-        tuning, project=project, scope="any", attackstep="", ttc="Exponential,3"
-    )
+    verify_tuning_response(tuning, project=project, scope="any", ttc="Exponential,3")
 
 
 def test_all_attackstep_ttc_all_tag(client, project, model):
@@ -276,7 +274,6 @@ def test_all_attackstep_ttc_all_tag(client, project, model):
         tuning,
         project=project,
         scope="any",
-        attackstep="",
         ttc="Exponential,3",
         condition={"tag": "env", "value": "prod"},
     )
@@ -298,7 +295,6 @@ def test_all_attackstep_ttc_class(client, project, model):
         scope="class",
         id_="EC2Instance",
         ttc="Exponential,3",
-        attackstep="",
     )
 
 
@@ -318,7 +314,6 @@ def test_all_attackstep_ttc_class_tag(client, project, model):
         scope="class",
         id_="EC2Instance",
         ttc="Exponential,3",
-        attackstep="",
         condition={"tag": "env", "value": "prod"},
     )
 
@@ -341,7 +336,6 @@ def test_all_attackstep_ttc_object(client, project, model):
         class_="EC2Instance",
         ttc="Exponential,3",
         id_=151,
-        attackstep="",
     )
 
 
@@ -363,7 +357,7 @@ def test_one_attackstep_ttc(client, project, model):
         project=project,
         scope="any",
         ttc="Exponential,3",
-        attackstep="highPrivilegeAccess",
+        attackstep="HighPrivilegeAccess",
     )
 
 
@@ -382,7 +376,7 @@ def test_one_attackstep_ttc_tag(client, project, model):
         project=project,
         scope="any",
         ttc="Exponential,3",
-        attackstep="highPrivilegeAccess",
+        attackstep="HighPrivilegeAccess",
         condition={"tag": "env", "value": "prod"},
     )
 
@@ -403,7 +397,7 @@ def test_one_attackstep_ttc_class(client, project, model):
         scope="class",
         id_="EC2Instance",
         ttc="Exponential,3",
-        attackstep="highPrivilegeAccess",
+        attackstep="HighPrivilegeAccess",
     )
 
 
@@ -427,7 +421,7 @@ def test_one_attackstep_ttc_class_tag(client, project, model):
         scope="class",
         id_="EC2Instance",
         ttc="Exponential,3",
-        attackstep="highPrivilegeAccess",
+        attackstep="HighPrivilegeAccess",
         condition={"tag": "env", "value": "prod"},
     )
 
@@ -449,7 +443,7 @@ def test_one_attackstep_ttc_object(client, project, model):
         name="i-1",
         ttc="Exponential,3",
         id_=151,
-        attackstep="highPrivilegeAccess",
+        attackstep="HighPrivilegeAccess",
     )
 
 
@@ -475,7 +469,7 @@ def test_one_attackstep_ttc_object(client, project, model):
         class_="EC2Instance",
         ttc="Exponential,3",
         id_=151,
-        attackstep="highPrivilegeAccess",
+        attackstep="HighPrivilegeAccess",
     )
 
 
@@ -496,7 +490,6 @@ def test_defense_probability_all(client, project, model):
         tuning,
         project=project,
         scope="any",
-        attackstep="",
         probability="0.5",
     )
 
@@ -515,7 +508,6 @@ def test_defense_probability_all_tag(client, project, model):
         tuning,
         project=project,
         scope="any",
-        attackstep="",
         probability="0.5",
         condition={"tag": "env", "value": "prod"},
     )
@@ -535,7 +527,6 @@ def test_defense_probability_tag_one_defense(client, project, model):
         tuning,
         project=project,
         scope="any",
-        attackstep="",
         defense="Patched",
         probability="0.5",
         condition={"tag": "env", "value": "prod"},
@@ -558,7 +549,6 @@ def test_defense_probability_class_all_defense(client, project, model):
         id_="EC2Instance",
         scope="class",
         probability="0.5",
-        attackstep="",
     )
 
 
@@ -578,7 +568,6 @@ def test_defense_probability_class_one_defense(client, project, model):
         id_="EC2Instance",
         scope="class",
         probability="0.5",
-        attackstep="",
         defense="Patched",
     )
 
@@ -599,7 +588,6 @@ def test_defense_probability_class_tag_all_defense(client, project, model):
         id_="EC2Instance",
         scope="class",
         probability="0.5",
-        attackstep="",
         condition={"tag": "env", "value": "prod"},
     )
 
@@ -625,7 +613,6 @@ def test_defense_probability_class_tag_one_defense(client, project, model):
         scope="class",
         probability="0.5",
         defense="Patched",
-        attackstep="",
         condition={"tag": "env", "value": "prod"},
     )
 
@@ -646,7 +633,6 @@ def test_defense_probability_object_all_defense(client, project, model):
         name="i-1",
         scope="object",
         probability="0.5",
-        attackstep="",
         id_=151,
     )
 
@@ -667,7 +653,6 @@ def test_defense_probability_object_one_defense(client, project, model):
         name="i-1",
         scope="object",
         probability="0.5",
-        attackstep="",
         defense="Patched",
         id_=151,
     )
@@ -690,7 +675,6 @@ def test_defense_probability_class_object_all_defense(client, project, model):
         name="i-1",
         scope="object",
         probability="0.5",
-        attackstep="",
         id_=151,
     )
 
@@ -716,7 +700,6 @@ def test_defense_probability_class_object_one_defense(client, project, model):
         name="i-1",
         scope="object",
         probability="0.5",
-        attackstep="",
         defense="Patched",
         id_=151,
     )
@@ -739,7 +722,6 @@ def test_tag_all(client, project, model):
         tuning,
         project=project,
         scope="any",
-        attackstep="",
         tag="a",
         value="b",
     )
@@ -759,7 +741,6 @@ def test_tag_all_tag(client, project, model):
         tuning,
         project=project,
         scope="any",
-        attackstep="",
         tag="a",
         value="b",
         condition={"tag": "env", "value": "prod"},
@@ -781,7 +762,6 @@ def test_tag_class(client, project, model):
         project=project,
         id_="EC2Instance",
         scope="class",
-        attackstep="",
         tag="a",
         value="b",
     )
@@ -802,7 +782,6 @@ def test_tag_class_tag(client, project, model):
         project=project,
         id_="EC2Instance",
         scope="class",
-        attackstep="",
         tag="a",
         value="b",
         condition={"tag": "env", "value": "prod"},
@@ -825,7 +804,6 @@ def test_tag_object(client, project, model):
         name="i-1",
         id_=151,
         scope="object",
-        attackstep="",
         tag="a",
         value="b",
     )
@@ -848,7 +826,6 @@ def test_tag_object_class(client, project, model):
         id_=151,
         name="i-1",
         scope="object",
-        attackstep="",
         tag="a",
         value="b",
     )
