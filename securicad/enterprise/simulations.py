@@ -107,7 +107,7 @@ class Simulations:
         scenario: "Scenario",
         name: Optional[str] = None,
         model: Optional["Model"] = None,
-        tunings: List["Tuning"] = None,
+        tunings: Optional[List["Tuning"]] = None,
     ) -> Simulation:
         if tunings is None:
             tunings = []

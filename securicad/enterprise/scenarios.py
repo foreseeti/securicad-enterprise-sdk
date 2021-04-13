@@ -116,7 +116,7 @@ class Scenarios:
         model_info: "ModelInfo",
         name: str,
         description: Optional[str] = None,
-        tunings: List["Tuning"] = None,
+        tunings: Optional[List["Tuning"]] = None,
     ) -> Scenario:
         if tunings is None:
             tunings = []
