@@ -232,7 +232,9 @@ class Tunings:
             config["tag"] = key
             config["value"] = val
 
-        config["ttc"] = ttc
+        if ttc:
+            config["ttc"] = ttc
+
         config["probability"] = probability
         data: Dict[str, Any] = {"pid": project.pid, "configs": [config]}
         return data

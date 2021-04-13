@@ -229,7 +229,7 @@ The filter will accept these arguments:
 
 - attackstep: which attackstep to connect to. If empty will be all attacksteps.
 - metaconcept: the class of object to connect to the attackstep(s) on.
-- object_name: name of object. If there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise a ValueError exception. This limitation will be removed when we have refactored tunings in Enterprise too.
+- object_name: name of object. If there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise a ValueError exception. This limitation will be removed in a later version of securiCAD Enterprise.
 - tags: Tags on the objects you want to make the attacker reach.
 
 ### ttc: Set Time-To-Compromise distributions on attacksteps

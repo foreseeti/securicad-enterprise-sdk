@@ -116,8 +116,10 @@ class Scenarios:
         model_info: "ModelInfo",
         name: str,
         description: Optional[str] = None,
-        tunings: List["Tuning"] = [],
+        tunings: List["Tuning"] = None,
     ) -> Scenario:
+        if tunings is None:
+            tunings = []
         data: Dict[str, Any] = {
             "pid": project.pid,
             "mid": model_info.mid,

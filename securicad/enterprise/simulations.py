@@ -107,8 +107,10 @@ class Simulations:
         scenario: "Scenario",
         name: Optional[str] = None,
         model: Optional["Model"] = None,
-        tunings: List["Tuning"] = [],
+        tunings: List["Tuning"] = None,
     ) -> Simulation:
+        if tunings is None:
+            tunings = []
         data: Dict[str, Any] = {"pid": scenario.pid, "tid": scenario.tid}
         if name is not None:
             data["name"] = name

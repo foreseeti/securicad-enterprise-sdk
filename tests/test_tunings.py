@@ -61,7 +61,6 @@ def test_convert_attacker_object_name(data, project, model):
                 "name": "i-1",
                 "probability": None,
                 "scope": "object",
-                "ttc": None,
             }
         ],
     }
@@ -86,7 +85,6 @@ def test_convert_attacker_metaconcept(data, project, model):
                 "id": "EC2Instance",
                 "probability": None,
                 "scope": "class",
-                "ttc": None,
             }
         ],
     }
@@ -115,7 +113,6 @@ def test_convert_attacker_metaconcept_tag(data, project, model):
                 "id": "EC2Instance",
                 "probability": None,
                 "scope": "class",
-                "ttc": None,
             }
         ],
     }
@@ -182,7 +179,7 @@ def verify_tuning_response(
     id_=None,
     scope="",
     attackstep=None,
-    ttc="",
+    ttc=None,
     condition={"tag": "", "value": ""},
     consequence=None,
     defense=None,
