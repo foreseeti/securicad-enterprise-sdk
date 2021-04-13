@@ -218,12 +218,12 @@ tuning = client.tunings.create_tuning(
         model,
         tuning_type="attacker",
         op="apply",
-        filterdict={"attackstep": "DevelopZeroDay", "object_name": "Prod srv 1"},
+        filterdict={"attackstep": "HighPrivilegeAccess", "object_name": "Prod srv 1"},
         name="prod_zeroday",
     )
 ```
 
-This will set the attacker to DevelopZeroDay on the object named "Prod srv 1". The tuning itself will be named "prod_zeroday".
+This will set the attacker to HighPrivilegeAccess on the object named "Prod srv 1". The tuning itself will be named "prod_zeroday".
 
 The filter will accept these arguments:
 
@@ -242,7 +242,7 @@ tuning = client.tunings.create_tuning(
         model,
         tuning_type="ttc",
         op="apply",
-        filterdict={"object_name": "Prod srv 1", "attackstep": "DevelopZeroDay"},
+        filterdict={"object_name": "Prod srv 1", "attackstep": "HighPrivilegeAccess"},
         name="one_attackstep_ttc_object",
         ttc="Exponential,3",
     )
@@ -257,7 +257,7 @@ tuning = client.tunings.create_tuning(
         model,
         tuning_type="ttc",
         op="apply",
-        filterdict={"metaconcept": "Host", "attackstep": "DevelopZeroDay"},
+        filterdict={"metaconcept": "EC2Instance", "attackstep": "HighPrivilegeAccess"},
         name="one_attackstep_ttc",
         ttc="Exponential,3",
     )
@@ -290,7 +290,7 @@ tuning = client.tunings.create_tuning(
     )
 ```
 
-Or to set patched on all Host objects:
+Or to set patched on all EC2Instance objects:
 
 ```python
 tuning = client.tunings.create_tuning(
@@ -298,7 +298,7 @@ tuning = client.tunings.create_tuning(
         model,
         tuning_type="probability",
         op="apply",
-        filterdict={"metaconcept" : "Host", "defense" : "Patched"},
+        filterdict={"metaconcept" : "EC2Instance", "defense" : "Patched"},
         name="hosts_maybe_patched",
         probability="0.5",
     )
@@ -317,7 +317,7 @@ The tuning takes these arguments:
 
 ### consequence: Set consequence values of attacksteps being reached
 
-To set consequence of any Host object in prod being reached:
+To set consequence of any EC2Instance object in prod being reached:
 
 ```python
 tuning = client.tunings.create_tuning(
@@ -325,7 +325,7 @@ tuning = client.tunings.create_tuning(
         model,
         tuning_type="consequence",
         op="apply",
-        filterdict={"metaconcept" : "Host", "defense" : "Patched", "tags": {"env": "prod"}},
+        filterdict={"metaconcept" : "EC2Instance", "defense" : "Patched", "tags": {"env": "prod"}},
         name="defense_probability_all",
         consequence=2,
     )
@@ -344,7 +344,7 @@ The tuning takes these arguments:
 
 ### tag: Set tags on objects
 
-To set tags on all Host objects:
+To set tags on all EC2Instance objects:
 
 ```python
 tuning = client.tunings.create_tuning(
@@ -352,7 +352,7 @@ tuning = client.tunings.create_tuning(
         model,
         tuning_type="tags",
         op="apply",
-        filterdict={"metaconcept": "Host"},
+        filterdict={"metaconcept": "EC2Instance"},
         name="tag_all_prod_hosts",
         tags={"c/i/a": "1/2/3"},
     )
