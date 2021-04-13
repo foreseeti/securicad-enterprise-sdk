@@ -201,11 +201,11 @@ The filter is how you select which objects the arguments are applied to. It's a 
 
 *Note on tags in filter*
 
-Currently only one tag is supported. This limitation will be fixed in a later version of ES and then also from the SDK.
+Currently only one tag is supported. This limitation will be removed in a later version of securiCAD Enterprise.
 
 **object_name**
 
-If there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise an exception. This limitation will be removed when we have refactored tunings in Enterprise too.
+If there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise an exception. This limitation will be removed in a later version of securiCAD Enterprise.
 
 ### attacker: Moving the attacker entrypoint
 
