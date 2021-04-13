@@ -20,6 +20,7 @@ if TYPE_CHECKING:
     from securicad.enterprise.client import Client
     from securicad.enterprise.models import ModelInfo
     from securicad.enterprise.projects import Project
+    from securicad.enterprise.tunings import Tuning
 
 
 class Scenario:
@@ -109,19 +110,20 @@ class Scenarios:
                 return scenario
         raise ValueError(f"Invalid scenario {name}")
 
-    # TODO: add tunings parameter
     def create_scenario(
         self,
         project: "Project",
         model_info: "ModelInfo",
         name: str,
         description: Optional[str] = None,
+        tunings: List["Tuning"] = [],
     ) -> Scenario:
         data: Dict[str, Any] = {
             "pid": project.pid,
             "mid": model_info.mid,
             "name": name,
             "description": "" if description is None else description,
+            "cids": [t.tuning_id for t in tunings],
         }
         dict_scenario = self.client._put("scenario", data)
         return Scenario.from_dict(client=self.client, dict_scenario=dict_scenario)

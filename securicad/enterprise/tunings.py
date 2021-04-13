@@ -84,13 +84,12 @@ class Tuning:
     # the format when listing tunings format differs from above.
     # convert, then call above
     @staticmethod
-    def __from_dict_listing(
+    def _from_dict_listing(
         client: "Client", project: "Project", dict_tuning: Dict[str, Any]
     ) -> "Tuning":
         converted = {
             "cid": dict_tuning["cid"],
             "config": {
-                "attackstep": dict_tuning["attackstep"],
                 "attackstep": dict_tuning["attackstep"],
                 "scope": dict_tuning["scope"],
                 "condition": dict_tuning["condition"],
@@ -121,21 +120,19 @@ class Tunings:
         dict_tunings = self.client._post("tunings", {"pid": project.pid})
         retr = []
         for tuning_id, dict_tuning in dict_tunings["configs"].items():
-            retr.append(
-                Tuning._Tuning__from_dict_listing(self.client, project, dict_tuning)
-            )
+            retr.append(Tuning._from_dict_listing(self.client, project, dict_tuning))
         return retr
 
     @staticmethod
     def _convert_to_old_format(
         project: "Project",
         model: "Model",
-        tuning_type: "str",
-        op: "str",
+        tuning_type: str,
+        op: str,
         filterdict: Dict[str, Any],
         name: Optional[str],
         ttc: str,
-        tags: Dict[str, str],
+        tags: Optional[Dict[str, str]],
         consequence: Optional[int],
         probability: Optional[str],
     ) -> Dict[str, Any]:
@@ -226,7 +223,7 @@ class Tunings:
             config["defense"] = None
 
         # tags
-        if tuning_type == "tags" and tags:
+        if tuning_type == "tag" and tags:
             if len(tags) > 1:
                 raise ValueError(
                     "Current ES tuning format only supports setting one tag per tuning"
@@ -249,11 +246,11 @@ class Tunings:
         filterdict: Dict[str, Any],
         name: Optional[str] = None,
         ttc: str = "",
-        tags: Dict[str, Any] = None,
+        tags: Optional[Dict[str, Any]] = None,
         consequence: Optional[int] = None,
         probability: Optional[str] = None,
-    ):
-        if tuning_type not in ["attacker", "ttc", "tags", "probability", "consequence"]:
+    ) -> Tuning:
+        if tuning_type not in ["attacker", "ttc", "tag", "probability", "consequence"]:
             raise ValueError(f"Unknown {tuning_type=}")
         data = Tunings._convert_to_old_format(
             project,

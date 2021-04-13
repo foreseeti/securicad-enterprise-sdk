@@ -227,14 +227,14 @@ This will set the attacker to HighPrivilegeAccess on the object named "Prod srv 
 
 The filter will accept these arguments:
 
-- attackstep: which attackstep to connet to. If empty will be all attacksteps
+- attackstep: which attackstep to connect to. If empty will be all attacksteps.
 - metaconcept: the class of object to connect to the attackstep(s) on.
-- object_name: name of object. if there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise an exception. This limitation will be removed when we have refactored tunings in Enterprise too.
+- object_name: name of object. If there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise a ValueError exception. This limitation will be removed when we have refactored tunings in Enterprise too.
 - tags: Tags on the objects you want to make the attacker reach.
 
 ### ttc: Set Time-To-Compromise distributions on attacksteps
 
-To set Time-To-Compormise on attackstep a specific attackstep on a specific object you can create a tuning like this:
+To set Time-To-Compormise on a specific attackstep on a specific object you can create a tuning like this:
 
 ```python
 tuning = client.tunings.create_tuning(
@@ -265,12 +265,12 @@ tuning = client.tunings.create_tuning(
 
 The filter will accept these arguments:
 
-- attackstep: which attackstep to set ttc for. If empty will be all attacksteps
+- attackstep: which attackstep to set ttc for. If empty will be all attacksteps.
 - metaconcept: the class of object to set ttc on attackstep(s) for.
 - object_name: name of object.
 - tags: Tags on the objects you want to set ttc for.
 
-The tuning take these arguments:
+The tuning takes these arguments:
 
 - ttc: A string representation of the ttc distribution.
 
@@ -306,7 +306,7 @@ tuning = client.tunings.create_tuning(
 
 The filter will accept these arguments:
 
-- defense: which defense to set probability for. If empty will be all defenses
+- defense: which defense to set probability for. If empty will be all defenses.
 - metaconcept: the class of object to set probability on defense(s) for.
 - object_name: name of object.
 - tags: Tags on the objects you want to set defense probability for.
@@ -340,7 +340,7 @@ The filter will accept these arguments:
 
 The tuning takes these arguments:
 
-- Consequence: Consequence value of attackstep(s) being reached. An integer in the range [1,10].
+- consequence: Consequence value of attackstep(s) being reached. An integer in the range [1,10].
 
 ### tag: Set tags on objects
 
@@ -350,7 +350,7 @@ To set tags on all EC2Instance objects:
 tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="tags",
+        tuning_type="tag",
         op="apply",
         filterdict={"metaconcept": "EC2Instance"},
         name="tag_all_prod_hosts",

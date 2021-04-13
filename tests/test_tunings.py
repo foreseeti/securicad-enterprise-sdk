@@ -732,7 +732,7 @@ def test_tag_all(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="tags",
+        tuning_type="tag",
         op="apply",
         filterdict={},
         name="test_defense_probability_class",
@@ -752,7 +752,7 @@ def test_tag_all_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="tags",
+        tuning_type="tag",
         op="apply",
         filterdict={"tags": {"env": "prod"}},
         name="test_defense_probability_class",
@@ -773,7 +773,7 @@ def test_tag_class(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="tags",
+        tuning_type="tag",
         op="apply",
         filterdict={"metaconcept": "EC2Instance"},
         name="test_defense_probability_class",
@@ -794,7 +794,7 @@ def test_tag_class_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="tags",
+        tuning_type="tag",
         op="apply",
         filterdict={"metaconcept": "EC2Instance", "tags": {"env": "prod"}},
         name="test_defense_probability_class",
@@ -816,7 +816,7 @@ def test_tag_object(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="tags",
+        tuning_type="tag",
         op="apply",
         filterdict={"object_name": "i-1"},
         name="test_defense_probability_object",
@@ -838,7 +838,7 @@ def test_tag_object_class(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="tags",
+        tuning_type="tag",
         op="apply",
         filterdict={"metaconcept": "EC2Instance", "object_name": "i-1"},
         name="test_defense_probability_object_class",
@@ -861,7 +861,7 @@ def test_delete(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="tags",
+        tuning_type="tag",
         op="apply",
         filterdict={"metaconcept": "EC2Instance", "object_name": "i-1"},
         name="test_defense_probability_object_class",
@@ -876,7 +876,7 @@ def test_list(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
-        tuning_type="tags",
+        tuning_type="tag",
         op="apply",
         filterdict={"metaconcept": "EC2Instance", "object_name": "i-1"},
         name="test_defense_probability_object_class",
