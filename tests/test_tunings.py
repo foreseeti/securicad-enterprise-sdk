@@ -23,7 +23,6 @@ import utils
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 from securicad.enterprise.exceptions import StatusCodeException
-
 from securicad.enterprise.tunings import Tunings
 
 # isort: on
@@ -48,18 +47,18 @@ def test_convert_attacker_object_name(data, project, model):
     newformat = {
         "type": "attacker",
         "op": "apply",
-        "filter": {"attackstep": "DevelopZeroDay", "object_name": "Prod srv 1"},
+        "filter": {"attackstep": "HighPrivilegeAccess", "object_name": "i-1"},
     }
     oldformat: Dict[str, Any] = {
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "developZeroDay",
+                "attackstep": "highPrivilegeAccess",
                 "condition": {"tag": "", "value": ""},
                 "consequence": None,
                 "defense": None,
-                "id": 90,
-                "name": "Prod srv 1",
+                "id": 151,
+                "name": "i-1",
                 "probability": None,
                 "scope": "object",
                 "ttc": None,
@@ -74,17 +73,17 @@ def test_convert_attacker_metaconcept(data, project, model):
     newformat = {
         "type": "attacker",
         "op": "apply",
-        "filter": {"attackstep": "DevelopZeroDay", "metaconcept": "Host"},
+        "filter": {"attackstep": "HighPrivilegeAccess", "metaconcept": "EC2Instance"},
     }
     oldformat: Dict[str, Any] = {
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "developZeroDay",
+                "attackstep": "highPrivilegeAccess",
                 "condition": {"tag": "", "value": ""},
                 "consequence": None,
                 "defense": None,
-                "id": "Host",
+                "id": "EC2Instance",
                 "probability": None,
                 "scope": "class",
                 "ttc": None,
@@ -100,8 +99,8 @@ def test_convert_attacker_metaconcept_tag(data, project, model):
         "type": "attacker",
         "op": "apply",
         "filter": {
-            "attackstep": "DevelopZeroDay",
-            "metaconcept": "Host",
+            "attackstep": "HighPrivilegeAccess",
+            "metaconcept": "EC2Instance",
             "tags": {"tagkey": "tagvalue"},
         },
     }
@@ -109,11 +108,11 @@ def test_convert_attacker_metaconcept_tag(data, project, model):
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "developZeroDay",
+                "attackstep": "highPrivilegeAccess",
                 "condition": {"tag": "tagkey", "value": "tagvalue"},
                 "consequence": None,
                 "defense": None,
-                "id": "Host",
+                "id": "EC2Instance",
                 "probability": None,
                 "scope": "class",
                 "ttc": None,
@@ -128,18 +127,18 @@ def test_convert_ttc_metaconcept(data, project, model):
     newformat = {
         "type": "ttc",
         "op": "apply",
-        "filter": {"attackstep": "DevelopZeroDay", "metaconcept": "Host"},
+        "filter": {"attackstep": "HighPrivilegeAccess", "metaconcept": "EC2Instance"},
         "ttc": "Exponential,3",
     }
     oldformat: Dict[str, Any] = {
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "developZeroDay",
+                "attackstep": "highPrivilegeAccess",
                 "condition": {"tag": "", "value": ""},
                 "consequence": None,
                 "defense": None,
-                "id": "Host",
+                "id": "EC2Instance",
                 "probability": None,
                 "scope": "class",
                 "ttc": "Exponential,3",
@@ -154,19 +153,19 @@ def test_convert_ttc_object(data, project, model):
     newformat = {
         "type": "ttc",
         "op": "apply",
-        "filter": {"attackstep": "DevelopZeroDay", "object_name": "Prod srv 1"},
+        "filter": {"attackstep": "HighPrivilegeAccess", "object_name": "i-1"},
         "ttc": "Exponential,3",
     }
     oldformat: Dict[str, Any] = {
         "pid": project.pid,
         "configs": [
             {
-                "attackstep": "developZeroDay",
+                "attackstep": "highPrivilegeAccess",
                 "condition": {"tag": "", "value": ""},
                 "consequence": None,
                 "defense": None,
-                "id": 90,
-                "name": "Prod srv 1",
+                "id": 151,
+                "name": "i-1",
                 "probability": None,
                 "scope": "object",
                 "ttc": "Exponential,3",
@@ -211,38 +210,38 @@ def verify_tuning_response(
 # Attacker entry
 
 
-def test_attacker_object_name(client, data, project, model):
+def test_attacker_object_name(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="attacker",
         op="apply",
-        filterdict={"attackstep": "DevelopZeroDay", "object_name": "Prod srv 1"},
+        filterdict={"attackstep": "HighPrivilegeAccess", "object_name": "i-1"},
         name="test_attacker_object_name",
     )
     verify_tuning_response(
         tuning,
         project=project,
-        attackstep="developZeroDay",
+        attackstep="highPrivilegeAccess",
         scope="object",
-        name="Prod srv 1",
-        id_=90,
+        name="i-1",
+        id_=151,
     )
 
 
-def test_attacker_object_tag(client, data, project, model):
+def test_attacker_object_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="attacker",
         op="apply",
-        filterdict={"attackstep": "DevelopZeroDay", "tags": {"env": "prod"}},
+        filterdict={"attackstep": "HighPrivilegeAccess", "tags": {"env": "prod"}},
         name="test_attacker_object_name",
     )
     verify_tuning_response(
         tuning,
         project=project,
-        attackstep="developZeroDay",
+        attackstep="highPrivilegeAccess",
         scope="any",
         condition={"tag": "env", "value": "prod"},
     )
@@ -251,7 +250,7 @@ def test_attacker_object_tag(client, data, project, model):
 # TTC all attacksteps
 
 
-def test_all_attackstep_ttc_all(client, data, project, model):
+def test_all_attackstep_ttc_all(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
@@ -266,7 +265,7 @@ def test_all_attackstep_ttc_all(client, data, project, model):
     )
 
 
-def test_all_attackstep_ttc_all_tag(client, data, project, model):
+def test_all_attackstep_ttc_all_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
@@ -286,13 +285,13 @@ def test_all_attackstep_ttc_all_tag(client, data, project, model):
     )
 
 
-def test_all_attackstep_ttc_class(client, data, project, model):
+def test_all_attackstep_ttc_class(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="ttc",
         op="apply",
-        filterdict={"metaconcept": "Host"},
+        filterdict={"metaconcept": "EC2Instance"},
         name="test_all_attackstep_ttc_class",
         ttc="Exponential,3",
     )
@@ -300,19 +299,19 @@ def test_all_attackstep_ttc_class(client, data, project, model):
         tuning,
         project=project,
         scope="class",
-        id_="Host",
+        id_="EC2Instance",
         ttc="Exponential,3",
         attackstep="",
     )
 
 
-def test_all_attackstep_ttc_class_tag(client, data, project, model):
+def test_all_attackstep_ttc_class_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="ttc",
         op="apply",
-        filterdict={"metaconcept": "Host", "tags": {"env": "prod"}},
+        filterdict={"metaconcept": "EC2Instance", "tags": {"env": "prod"}},
         name="test_all_attackstep_ttc_class",
         ttc="Exponential,3",
     )
@@ -320,20 +319,20 @@ def test_all_attackstep_ttc_class_tag(client, data, project, model):
         tuning,
         project=project,
         scope="class",
-        id_="Host",
+        id_="EC2Instance",
         ttc="Exponential,3",
         attackstep="",
         condition={"tag": "env", "value": "prod"},
     )
 
 
-def test_all_attackstep_ttc_object(client, data, project, model):
+def test_all_attackstep_ttc_object(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="ttc",
         op="apply",
-        filterdict={"metaconcept": "Host", "object_name": "Prod srv 1"},
+        filterdict={"metaconcept": "EC2Instance", "object_name": "i-1"},
         name="test_all_attackstep_ttc_object",
         ttc="Exponential,3",
     )
@@ -341,10 +340,10 @@ def test_all_attackstep_ttc_object(client, data, project, model):
         tuning,
         project=project,
         scope="object",
-        name="Prod srv 1",
-        class_="Host",
+        name="i-1",
+        class_="EC2Instance",
         ttc="Exponential,3",
-        id_=90,
+        id_=151,
         attackstep="",
     )
 
@@ -352,13 +351,13 @@ def test_all_attackstep_ttc_object(client, data, project, model):
 # TTC one attackstep
 
 
-def test_one_attackstep_ttc(client, data, project, model):
+def test_one_attackstep_ttc(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="ttc",
         op="apply",
-        filterdict={"attackstep": "DevelopZeroDay"},
+        filterdict={"attackstep": "HighPrivilegeAccess"},
         name="test_one_attackstep_ttc_class",
         ttc="Exponential,3",
     )
@@ -367,17 +366,17 @@ def test_one_attackstep_ttc(client, data, project, model):
         project=project,
         scope="any",
         ttc="Exponential,3",
-        attackstep="developZeroDay",
+        attackstep="highPrivilegeAccess",
     )
 
 
-def test_one_attackstep_ttc_tag(client, data, project, model):
+def test_one_attackstep_ttc_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="ttc",
         op="apply",
-        filterdict={"attackstep": "DevelopZeroDay", "tags": {"env": "prod"}},
+        filterdict={"attackstep": "HighPrivilegeAccess", "tags": {"env": "prod"}},
         name="test_one_attackstep_ttc_class",
         ttc="Exponential,3",
     )
@@ -386,18 +385,18 @@ def test_one_attackstep_ttc_tag(client, data, project, model):
         project=project,
         scope="any",
         ttc="Exponential,3",
-        attackstep="developZeroDay",
+        attackstep="highPrivilegeAccess",
         condition={"tag": "env", "value": "prod"},
     )
 
 
-def test_one_attackstep_ttc_class(client, data, project, model):
+def test_one_attackstep_ttc_class(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="ttc",
         op="apply",
-        filterdict={"metaconcept": "Host", "attackstep": "DevelopZeroDay"},
+        filterdict={"metaconcept": "EC2Instance", "attackstep": "HighPrivilegeAccess"},
         name="test_one_attackstep_ttc_class",
         ttc="Exponential,3",
     )
@@ -405,21 +404,21 @@ def test_one_attackstep_ttc_class(client, data, project, model):
         tuning,
         project=project,
         scope="class",
-        id_="Host",
+        id_="EC2Instance",
         ttc="Exponential,3",
-        attackstep="developZeroDay",
+        attackstep="highPrivilegeAccess",
     )
 
 
-def test_one_attackstep_ttc_class_tag(client, data, project, model):
+def test_one_attackstep_ttc_class_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="ttc",
         op="apply",
         filterdict={
-            "metaconcept": "Host",
-            "attackstep": "DevelopZeroDay",
+            "metaconcept": "EC2Instance",
+            "attackstep": "HighPrivilegeAccess",
             "tags": {"env": "prod"},
         },
         name="test_one_attackstep_ttc_class",
@@ -429,20 +428,20 @@ def test_one_attackstep_ttc_class_tag(client, data, project, model):
         tuning,
         project=project,
         scope="class",
-        id_="Host",
+        id_="EC2Instance",
         ttc="Exponential,3",
-        attackstep="developZeroDay",
+        attackstep="highPrivilegeAccess",
         condition={"tag": "env", "value": "prod"},
     )
 
 
-def test_one_attackstep_ttc_object(client, data, project, model):
+def test_one_attackstep_ttc_object(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="ttc",
         op="apply",
-        filterdict={"object_name": "Prod srv 1", "attackstep": "DevelopZeroDay"},
+        filterdict={"object_name": "i-1", "attackstep": "HighPrivilegeAccess"},
         name="test_one_attackstep_ttc_object",
         ttc="Exponential,3",
     )
@@ -450,23 +449,23 @@ def test_one_attackstep_ttc_object(client, data, project, model):
         tuning,
         project=project,
         scope="object",
-        name="Prod srv 1",
+        name="i-1",
         ttc="Exponential,3",
-        id_=90,
-        attackstep="developZeroDay",
+        id_=151,
+        attackstep="highPrivilegeAccess",
     )
 
 
-def test_one_attackstep_ttc_object(client, data, project, model):
+def test_one_attackstep_ttc_object(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="ttc",
         op="apply",
         filterdict={
-            "metaconcept": "Host",
-            "object_name": "Prod srv 1",
-            "attackstep": "DevelopZeroDay",
+            "metaconcept": "EC2Instance",
+            "object_name": "i-1",
+            "attackstep": "HighPrivilegeAccess",
         },
         name="test_one_attackstep_ttc_object",
         ttc="Exponential,3",
@@ -475,18 +474,18 @@ def test_one_attackstep_ttc_object(client, data, project, model):
         tuning,
         project=project,
         scope="object",
-        name="Prod srv 1",
-        class_="Host",
+        name="i-1",
+        class_="EC2Instance",
         ttc="Exponential,3",
-        id_=90,
-        attackstep="developZeroDay",
+        id_=151,
+        attackstep="highPrivilegeAccess",
     )
 
 
 # Defense probability
 
 
-def test_defense_probability_all(client, data, project, model):
+def test_defense_probability_all(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
@@ -505,7 +504,7 @@ def test_defense_probability_all(client, data, project, model):
     )
 
 
-def test_defense_probability_all_tag(client, data, project, model):
+def test_defense_probability_all_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
@@ -525,7 +524,7 @@ def test_defense_probability_all_tag(client, data, project, model):
     )
 
 
-def test_defense_probability_tag_one_defense(client, data, project, model):
+def test_defense_probability_tag_one_defense(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
@@ -546,40 +545,40 @@ def test_defense_probability_tag_one_defense(client, data, project, model):
     )
 
 
-def test_defense_probability_class_all_defense(client, data, project, model):
+def test_defense_probability_class_all_defense(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="probability",
         op="apply",
-        filterdict={"metaconcept": "Host"},
+        filterdict={"metaconcept": "EC2Instance"},
         name="test_defense_probability_class",
         probability="0.5",
     )
     verify_tuning_response(
         tuning,
         project=project,
-        id_="Host",
+        id_="EC2Instance",
         scope="class",
         probability="0.5",
         attackstep="",
     )
 
 
-def test_defense_probability_class_one_defense(client, data, project, model):
+def test_defense_probability_class_one_defense(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="probability",
         op="apply",
-        filterdict={"metaconcept": "Host", "defense": "Patched"},
+        filterdict={"metaconcept": "EC2Instance", "defense": "Patched"},
         name="test_defense_probability_class",
         probability="0.5",
     )
     verify_tuning_response(
         tuning,
         project=project,
-        id_="Host",
+        id_="EC2Instance",
         scope="class",
         probability="0.5",
         attackstep="",
@@ -587,20 +586,20 @@ def test_defense_probability_class_one_defense(client, data, project, model):
     )
 
 
-def test_defense_probability_class_tag_all_defense(client, data, project, model):
+def test_defense_probability_class_tag_all_defense(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="probability",
         op="apply",
-        filterdict={"metaconcept": "Host", "tags": {"env": "prod"}},
+        filterdict={"metaconcept": "EC2Instance", "tags": {"env": "prod"}},
         name="test_defense_probability_class",
         probability="0.5",
     )
     verify_tuning_response(
         tuning,
         project=project,
-        id_="Host",
+        id_="EC2Instance",
         scope="class",
         probability="0.5",
         attackstep="",
@@ -608,14 +607,14 @@ def test_defense_probability_class_tag_all_defense(client, data, project, model)
     )
 
 
-def test_defense_probability_class_tag_one_defense(client, data, project, model):
+def test_defense_probability_class_tag_one_defense(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="probability",
         op="apply",
         filterdict={
-            "metaconcept": "Host",
+            "metaconcept": "EC2Instance",
             "defense": "Patched",
             "tags": {"env": "prod"},
         },
@@ -625,7 +624,7 @@ def test_defense_probability_class_tag_one_defense(client, data, project, model)
     verify_tuning_response(
         tuning,
         project=project,
-        id_="Host",
+        id_="EC2Instance",
         scope="class",
         probability="0.5",
         defense="Patched",
@@ -634,81 +633,81 @@ def test_defense_probability_class_tag_one_defense(client, data, project, model)
     )
 
 
-def test_defense_probability_object_all_defense(client, data, project, model):
+def test_defense_probability_object_all_defense(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="probability",
         op="apply",
-        filterdict={"object_name": "Prod srv 1"},
+        filterdict={"object_name": "i-1"},
         name="test_defense_probability_class",
         probability="0.5",
     )
     verify_tuning_response(
         tuning,
         project=project,
-        name="Prod srv 1",
+        name="i-1",
         scope="object",
         probability="0.5",
         attackstep="",
-        id_=90,
+        id_=151,
     )
 
 
-def test_defense_probability_object_one_defense(client, data, project, model):
+def test_defense_probability_object_one_defense(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="probability",
         op="apply",
-        filterdict={"defense": "Patched", "object_name": "Prod srv 1"},
+        filterdict={"defense": "Patched", "object_name": "i-1"},
         name="test_defense_probability_class",
         probability="0.5",
     )
     verify_tuning_response(
         tuning,
         project=project,
-        name="Prod srv 1",
+        name="i-1",
         scope="object",
         probability="0.5",
         attackstep="",
         defense="Patched",
-        id_=90,
+        id_=151,
     )
 
 
-def test_defense_probability_class_object_all_defense(client, data, project, model):
+def test_defense_probability_class_object_all_defense(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="probability",
         op="apply",
-        filterdict={"metaconcept": "Host", "object_name": "Prod srv 1"},
+        filterdict={"metaconcept": "EC2Instance", "object_name": "i-1"},
         name="test_defense_probability_class",
         probability="0.5",
     )
     verify_tuning_response(
         tuning,
         project=project,
-        class_="Host",
-        name="Prod srv 1",
+        class_="EC2Instance",
+        name="i-1",
         scope="object",
         probability="0.5",
         attackstep="",
-        id_=90,
+        id_=151,
     )
 
 
-def test_defense_probability_class_object_one_defense(client, data, project, model):
+def test_defense_probability_class_object_one_defense(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="probability",
         op="apply",
         filterdict={
-            "metaconcept": "Host",
+            "metaconcept": "EC2Instance",
             "defense": "Patched",
-            "object_name": "Prod srv 1",
+            "object_name": "i-1",
         },
         name="test_defense_probability_class",
         probability="0.5",
@@ -716,20 +715,20 @@ def test_defense_probability_class_object_one_defense(client, data, project, mod
     verify_tuning_response(
         tuning,
         project=project,
-        class_="Host",
-        name="Prod srv 1",
+        class_="EC2Instance",
+        name="i-1",
         scope="object",
         probability="0.5",
         attackstep="",
         defense="Patched",
-        id_=90,
+        id_=151,
     )
 
 
 # Set tags
 
 
-def test_tag_all(client, data, project, model):
+def test_tag_all(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
@@ -749,7 +748,7 @@ def test_tag_all(client, data, project, model):
     )
 
 
-def test_tag_all_tag(client, data, project, model):
+def test_tag_all_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
@@ -770,20 +769,20 @@ def test_tag_all_tag(client, data, project, model):
     )
 
 
-def test_tag_class(client, data, project, model):
+def test_tag_class(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="tags",
         op="apply",
-        filterdict={"metaconcept": "Host"},
+        filterdict={"metaconcept": "EC2Instance"},
         name="test_defense_probability_class",
         tags={"a": "b"},
     )
     verify_tuning_response(
         tuning,
         project=project,
-        id_="Host",
+        id_="EC2Instance",
         scope="class",
         attackstep="",
         tag="a",
@@ -791,20 +790,20 @@ def test_tag_class(client, data, project, model):
     )
 
 
-def test_tag_class_tag(client, data, project, model):
+def test_tag_class_tag(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="tags",
         op="apply",
-        filterdict={"metaconcept": "Host", "tags": {"env": "prod"}},
+        filterdict={"metaconcept": "EC2Instance", "tags": {"env": "prod"}},
         name="test_defense_probability_class",
         tags={"a": "b"},
     )
     verify_tuning_response(
         tuning,
         project=project,
-        id_="Host",
+        id_="EC2Instance",
         scope="class",
         attackstep="",
         tag="a",
@@ -813,21 +812,21 @@ def test_tag_class_tag(client, data, project, model):
     )
 
 
-def test_tag_object(client, data, project, model):
+def test_tag_object(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="tags",
         op="apply",
-        filterdict={"object_name": "Prod srv 1"},
+        filterdict={"object_name": "i-1"},
         name="test_defense_probability_object",
         tags={"a": "b"},
     )
     verify_tuning_response(
         tuning,
         project=project,
-        name="Prod srv 1",
-        id_=90,
+        name="i-1",
+        id_=151,
         scope="object",
         attackstep="",
         tag="a",
@@ -835,22 +834,22 @@ def test_tag_object(client, data, project, model):
     )
 
 
-def test_tag_object_class(client, data, project, model):
+def test_tag_object_class(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="tags",
         op="apply",
-        filterdict={"metaconcept": "Host", "object_name": "Prod srv 1"},
+        filterdict={"metaconcept": "EC2Instance", "object_name": "i-1"},
         name="test_defense_probability_object_class",
         tags={"a": "b"},
     )
     verify_tuning_response(
         tuning,
         project=project,
-        class_="Host",
-        id_=90,
-        name="Prod srv 1",
+        class_="EC2Instance",
+        id_=151,
+        name="i-1",
         scope="object",
         attackstep="",
         tag="a",
@@ -858,18 +857,30 @@ def test_tag_object_class(client, data, project, model):
     )
 
 
-# delete
-
-
-def test_delete(client, data, project, model):
+def test_delete(client, project, model):
     tuning = client.tunings.create_tuning(
         project,
         model,
         tuning_type="tags",
         op="apply",
-        filterdict={"metaconcept": "Host", "object_name": "Prod srv 1"},
+        filterdict={"metaconcept": "EC2Instance", "object_name": "i-1"},
         name="test_defense_probability_object_class",
         tags={"a": "b"},
     )
     tuning.delete()
     assert project.list_tunings() == []
+
+
+def test_list(client, project, model):
+    assert project.list_tunings() == []
+    tuning = client.tunings.create_tuning(
+        project,
+        model,
+        tuning_type="tags",
+        op="apply",
+        filterdict={"metaconcept": "EC2Instance", "object_name": "i-1"},
+        name="test_defense_probability_object_class",
+        tags={"a": "b"},
+    )
+    curr_tunings = project.list_tunings()
+    assert len(curr_tunings) == 1, curr_tunings

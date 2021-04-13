@@ -80,6 +80,33 @@ class Tuning:
             value=dict_tuning["config"].get("value", None),
         )
 
+    # because the tunings API is ancient and we were stupid
+    # the format when listing tunings format differs from above.
+    # convert, then call above
+    @staticmethod
+    def __from_dict_listing(
+        client: "Client", project: "Project", dict_tuning: Dict[str, Any]
+    ) -> "Tuning":
+        converted = {
+            "cid": dict_tuning["cid"],
+            "config": {
+                "attackstep": dict_tuning["attackstep"],
+                "attackstep": dict_tuning["attackstep"],
+                "scope": dict_tuning["scope"],
+                "condition": dict_tuning["condition"],
+                "consequence": dict_tuning["consequence"],
+                "defense": dict_tuning["defense"],
+                "id_": dict_tuning.get("id", None),
+                "probability": dict_tuning["probability"],
+                "ttc": dict_tuning["ttc"],
+                "class_": dict_tuning.get("class", None),
+                "name": dict_tuning.get("name", None),
+                "tag": dict_tuning.get("tag", None),
+                "value": dict_tuning.get("value", None),
+            },
+        }
+        return Tuning.from_dict(client, project, converted)
+
     def delete(self) -> None:
         self.client._delete(
             "tunings", {"pid": self.project.pid, "cids": [self.tuning_id]}
@@ -93,9 +120,10 @@ class Tunings:
     def list_tunings(self, project: "Project") -> List[Tuning]:
         dict_tunings = self.client._post("tunings", {"pid": project.pid})
         retr = []
-        for tuning_id, tuning_data in dict_tunings["configs"].items():
-            tuning_dict = {"pid": project.pid, **tuning_data}
-            retr.append(Tuning.from_dict(self.client, tuning_dict))
+        for tuning_id, dict_tuning in dict_tunings["configs"].items():
+            retr.append(
+                Tuning._Tuning__from_dict_listing(self.client, project, dict_tuning)
+            )
         return retr
 
     @staticmethod
@@ -220,8 +248,8 @@ class Tunings:
         op: str,
         filterdict: Dict[str, Any],
         name: Optional[str] = None,
-        ttc="",
-        tags=None,
+        ttc: str = "",
+        tags: Dict[str, Any] = None,
         consequence: Optional[int] = None,
         probability: Optional[str] = None,
     ):

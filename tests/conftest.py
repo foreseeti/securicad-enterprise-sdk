@@ -220,15 +220,20 @@ def client():
 @pytest.fixture()
 def project(data, client):
     org = client.organizations.list_organizations()[0]
-    return org.list_projects()[0]
+    project = client.projects.create_project(
+        name="project", description="", organization=org
+    )
+    yield project
+    project.delete()
 
 
 @pytest.fixture()
 def model(data, project, client):
-    model_path = Path(__file__).with_name("acme.sCAD")
+    name = "smallAwsModel.sCAD"
+    model_path = Path(__file__).with_name(name)
     with model_path.open(mode="rb") as reader:
         model = client.models.upload_scad_model(
-            project, filename="acme.sCAD", file_io=reader, description=""
+            project, filename=name, file_io=reader, description=""
         )
         yield model.get_model()
 

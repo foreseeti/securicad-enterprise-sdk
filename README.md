@@ -199,6 +199,10 @@ The tuning type is one of 4, the value of this field affects what other argument
 
 The filter is how you select which objects the arguments are applied to. It's a dictionary which, depending on type, accepts different values. More details in the various type descriptions.
 
+*Note on tags in filter*
+
+Currently only one tag is supported. This limitation will be fixed in a later version of ES and then also from the SDK.
+
 **object_name**
 
 If there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise an exception. This limitation will be removed when we have refactored tunings in Enterprise too.
@@ -226,7 +230,7 @@ The filter will accept these arguments:
 - attackstep: which attackstep to connet to. If empty will be all attacksteps
 - metaconcept: the class of object to connect to the attackstep(s) on.
 - object_name: name of object. if there are several objects with the same name but different types the metaconcept argument will be used to differentiate. If there are multiple objects with the same name and same type it will raise an exception. This limitation will be removed when we have refactored tunings in Enterprise too.
-- tags: Tags on the objects you want to make the attacker reach. If you supply multiple tags all of them will be required. `tags : { "key1" : "val1", "key2" : "val2" }` can be thought of like `key1 == val1 and key2 == val2`.
+- tags: Tags on the objects you want to make the attacker reach.
 
 ### ttc: Set Time-To-Compromise distributions on attacksteps
 
@@ -313,7 +317,7 @@ The tuning takes these arguments:
 
 ### consequence: Set consequence values of attacksteps being reached
 
-To set consequence of any customer management related Host object in prod being reached:
+To set consequence of any Host object in prod being reached:
 
 ```python
 tuning = client.tunings.create_tuning(
@@ -321,7 +325,7 @@ tuning = client.tunings.create_tuning(
         model,
         tuning_type="consequence",
         op="apply",
-        filterdict={"metaconcept" : "Host", "defense" : "Patched", "tags": {"env": "prod", "system" : "customer_management"}},
+        filterdict={"metaconcept" : "Host", "defense" : "Patched", "tags": {"env": "prod"}},
         name="defense_probability_all",
         consequence=2,
     )
