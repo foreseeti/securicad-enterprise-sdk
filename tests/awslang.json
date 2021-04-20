@@ -184,6 +184,10 @@
         "description": "Access to Docker daemon means the containers are compromised, the container instance might have stored registry credentials"
       },
       {
+        "name": "ModifyUserDataScript",
+        "description": "The attacker can modify the user data script and execute any code as root when the machine is started."
+      },
+      {
         "name": "Terminate",
         "description": "The attacker has terminated the instance. When an instance terminates, the data on any instance store volumes associated with that instance is deleted and associated tasks are stopped."
       }
@@ -753,8 +757,22 @@
         "description": "Low privilege access means that the attacker can connect to any local application. Additionally, we assume low-privilege access allows network transmissions."
       },
       {
+        "name": "ModifyUserDataScript",
+        "description": "The attacker can modify the user data script and execute any code as root when the machine is started."
+      },
+      {
         "name": "Terminate",
         "description": "The attacker has terminated the instance. When an instance terminates, the data on any instance store volumes associated with that instance is deleted."
+      }
+    ]
+  },
+  {
+    "name": "EC2ModifyInstanceAttribute",
+    "description": "Modifies the specified attribute of the specified instance.",
+    "attacksteps": [
+      {
+        "name": "PerformAction",
+        "description": "Modifies the specified attribute of the specified instance."
       }
     ]
   },
@@ -2722,6 +2740,35 @@
     "attacksteps": []
   },
   {
+    "name": "TransitGateway",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": []
+  },
+  {
+    "name": "TransitGatewayAttachment",
+    "description": "",
+    "attacksteps": []
+  },
+  {
+    "name": "TransitGatewayRouteTable",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "AttemptVpnConnection",
+        "description": "The attacker is attempting to connect via the attached VPN."
+      },
+      {
+        "name": "VpnConnection",
+        "description": "The attacker is able to connect via the attached VPN."
+      }
+    ]
+  },
+  {
+    "name": "TransitGatewayRouteTableRoute",
+    "description": "",
+    "attacksteps": []
+  },
+  {
     "name": "UnknownApplication",
     "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
     "attacksteps": [
@@ -2810,8 +2857,85 @@
   },
   {
     "name": "VPCEndpoint",
+    "description": "A VPC endpoint acts like a virtual network interface in a subnet that enables private connections to supported AWS services.",
+    "attacksteps": [
+      {
+        "name": "RespondConnect",
+        "description": "The attacker is able to spoof the server, in case a client submits a request."
+      },
+      {
+        "name": "TransmitRequest",
+        "description": "The attacker is able to transmit requests through the VPC endpoint."
+      },
+      {
+        "name": "TransmitResponse",
+        "description": "The attacker is able to spoof and transmit responses to clients from the network interface."
+      }
+    ]
+  },
+  {
+    "name": "VPCEndpointInstance",
     "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
-    "attacksteps": []
+    "attacksteps": [
+      {
+        "name": "Connect",
+        "description": "The attacker can connect to the instance, e.g., through a shell, but has not yet authenticated."
+      },
+      {
+        "name": "HighPrivilegeAccess",
+        "description": "High privilege access to the instance means that the attacker can access any application and transmit from the instance."
+      },
+      {
+        "name": "LowPrivilegeAccess",
+        "description": "Low privilege access means that the attacker can connect to any local application. Additionally, we assume low-privilege access allows network transmissions."
+      },
+      {
+        "name": "Terminate",
+        "description": "The attacker has terminated the instance. When an instance terminates, the data on any instance store volumes associated with that instance is deleted."
+      }
+    ]
+  },
+  {
+    "name": "VPCEndpointListener",
+    "description": "In AWS, a resource is an entity you can work with. Examples include an Amazon EC2 instance, an Amazon S3 bucket, etc. Concretely, a resource can be the target of a policy.",
+    "attacksteps": [
+      {
+        "name": "Access",
+        "description": "The attacker is authenticated and has access to the application."
+      },
+      {
+        "name": "Authenticate",
+        "description": "The attacker is able to authenticate in the application."
+      },
+      {
+        "name": "CodeExecution",
+        "description": "Vulnerabilities in the application could allow an attacker to inject code into the service process, thus assuming the service's privileges on the hosting instance. An attacker could under these circumstances influence other applications or the underlying operating system itself."
+      },
+      {
+        "name": "Deny",
+        "description": "The attacker can deny some or all functionality and data pertaining to this service."
+      },
+      {
+        "name": "LocalConnect",
+        "description": "The attacker has gained low-privilege access on the executing instance and can interact with the application."
+      },
+      {
+        "name": "Modify",
+        "description": "The attacker can modify some or all of this service's data."
+      },
+      {
+        "name": "NetworkRequestConnect",
+        "description": "The attacker can send requests to the application."
+      },
+      {
+        "name": "NetworkRespondConnect",
+        "description": "An attacker might be able to respond with forged requests submitted by an application."
+      },
+      {
+        "name": "Read",
+        "description": "The attacker can read some or all of this service's code and data."
+      }
+    ]
   },
   {
     "name": "VPCPeering",
