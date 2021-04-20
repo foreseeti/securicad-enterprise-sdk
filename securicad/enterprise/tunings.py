@@ -120,6 +120,7 @@ class Tunings:
         dict_tunings = self.client._post("tunings", {"pid": project.pid})
         retr = []
         for tuning_id, dict_tuning in dict_tunings["configs"].items():
+            dict_tuning["cid"] = tuning_id
             retr.append(Tuning._from_dict_listing(self.client, project, dict_tuning))
         return retr
 
