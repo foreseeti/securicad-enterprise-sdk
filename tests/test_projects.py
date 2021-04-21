@@ -33,22 +33,28 @@ from securicad.enterprise.users import User, Role
 
 
 def test_list_projects(data, client):
-    assert len(client.projects.list_projects()) == 1
+    assert len(client.projects.list_projects()) == len(
+        data["organizations"]["org1"]["projects"]
+    )
 
 
 def test_get_project_by_pid(data, client):
-    data_pid = data["organizations"]["org1"]["projects"]["p1"]["pid"]
-    p = client.projects.get_project_by_pid(pid=data_pid)
-    assert p.pid == data_pid
+    for org_data in data["organizations"].values():
+        for project_data in org_data["projects"].values():
+            p = client.projects.get_project_by_pid(project_data["pid"])
+            assert p.pid == project_data["pid"]
+            assert p.name == project_data["name"]
 
 
 def test_get_project_by_name(data, client):
-    data_name = data["organizations"]["org1"]["projects"]["p1"]["name"]
-    p = client.projects.get_project_by_name(name=data_name)
-    assert p.name == data_name
+    for org_data in data["organizations"].values():
+        for project_data in org_data["projects"].values():
+            p = client.projects.get_project_by_name(project_data["name"])
+            assert p.pid == project_data["pid"]
+            assert p.name == project_data["name"]
 
 
-def test_create_project(data, client, organization):
+def test_create_project(client, organization):
     name = str(uuid.uuid4())
     description = str(uuid.uuid4())
     p = client.projects.create_project(
@@ -64,6 +70,10 @@ def test_project_update(data, client, project, organization):
     description = str(uuid.uuid4())
     project.update(name=name, description=description)
     p2 = client.projects.get_project_by_name(name=name)
+
+    assert project.name == name
+    assert project.description == description
+
     assert p2.pid == project.pid
     assert p2.name == name
     assert p2.description == description
@@ -81,7 +91,7 @@ def test_project_delete(data, client, organization):
     assert len(client.projects.list_projects()) == 1
 
 
-def test_project_list_users(data, client, project):
+def test_project_list_users(project):
     users = project.list_users()
     assert len(users) == 1
 
@@ -98,12 +108,7 @@ def test_project_add_remove_user_and_get_access_level(data, client, organization
     p = client.projects.create_project(
         name=str(uuid.uuid4()), description=str(uuid.uuid4()), organization=organization
     )
-    for level in [
-        AccessLevel.GUEST,
-        AccessLevel.USER,
-        AccessLevel.OWNER,
-        AccessLevel.ADMIN,
-    ]:
+    for level in AccessLevel:
         p.add_user(user, level)
         assert p.get_access_level(user) == level
         assert len(p.list_users()) == 2, [
@@ -126,7 +131,7 @@ def test_project_set_access_level(data, client, organization):
     p = client.projects.create_project(
         name=str(uuid.uuid4()), description=str(uuid.uuid4()), organization=organization
     )
-    levels = [AccessLevel.GUEST, AccessLevel.USER, AccessLevel.OWNER, AccessLevel.ADMIN]
+    levels = list(AccessLevel)
     for lidx, level in enumerate(levels):
         p.add_user(user, level)
         assert p.get_access_level(user) == level
@@ -141,9 +146,10 @@ def test_project_set_access_level(data, client, organization):
 def test_list_models(data, client, project):
     assert project.list_models() == []
     modelpath = Path(__file__).with_name("aws.sCAD")
-    model_info = project.upload_scad_model(
-        filename="aws.sCAD", file_io=open(modelpath, mode="rb"), description="descr"
-    )
+    with open(modelpath, mode="rb") as reader:
+        model_info = project.upload_scad_model(
+            filename="aws.sCAD", file_io=reader, description="descr"
+        )
     fetched = project.list_models()
     assert len(fetched) == 1
     fetched_model = fetched[0]
@@ -158,9 +164,10 @@ def test_project_import_models(data, client, organization, project):
         name=str(uuid.uuid4()), description=str(uuid.uuid4()), organization=organization
     )
     modelpath = Path(__file__).with_name("aws.sCAD")
-    model_info = other_project.upload_scad_model(
-        filename="aws.sCAD", file_io=open(modelpath, mode="rb"), description="descr"
-    )
+    with open(modelpath, mode="rb") as reader:
+        model_info = other_project.upload_scad_model(
+            filename="aws.sCAD", file_io=reader, description="descr"
+        )
     assert project.list_models() == []
     project.import_models([model_info])
     assert len(project.list_models()) == 1
@@ -169,15 +176,23 @@ def test_project_import_models(data, client, organization, project):
 
 def test_project_list_scenarios(data, client, project):
     modelpath = Path(__file__).with_name("aws.sCAD")
-    model_info = project.upload_scad_model(
-        filename="aws.sCAD", file_io=open(modelpath, mode="rb"), description="descr"
-    )
+    with open(modelpath, mode="rb") as reader:
+        model_info = project.upload_scad_model(
+            filename="aws.sCAD", file_io=reader, description="descr"
+        )
     assert project.list_scenarios() == []
-    scenario = client.scenarios.create_scenario(
-        project=project,
+    scenario = project.create_scenario(
         model_info=model_info,
         name="simulation",
         description="descr",
         tunings=[],
     )
     assert len(project.list_scenarios()) == 1
+
+
+# TODO
+# Tests not running as sysadmin.
+# Negative tests.
+# - Attempted project access
+# - Attempted project creation
+# - Attempted project delete

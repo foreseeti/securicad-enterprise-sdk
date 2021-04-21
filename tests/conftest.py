@@ -218,8 +218,9 @@ def client():
 
 @pytest.fixture()
 def organization(client):
-    org = client.organizations.list_organizations()[0]
-    return org
+    org = client.organizations.create_organization(name="sdktest")
+    yield org
+    org.delete()
 
 
 @pytest.fixture()

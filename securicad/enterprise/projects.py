@@ -130,12 +130,6 @@ class Project:
         data: Dict[str, Any] = {"pid": self.pid, "mids": mids}
         self.client._post("models/import", data)
 
-    def list_scenarios(self) -> List["Scenario"]:
-        return self.client.scenarios.list_scenarios(self)
-
-    def list_tunings(self) -> List["Tuning"]:
-        return self.client.tunings.list_tunings(self)
-
     def upload_scad_model(
         self,
         filename: str,
@@ -145,6 +139,9 @@ class Project:
         return self.client.models.upload_scad_model(
             project=self, filename=filename, file_io=file_io, description=description
         )
+
+    def list_scenarios(self) -> List["Scenario"]:
+        return self.client.scenarios.list_scenarios(self)
 
     def create_scenario(
         self,
@@ -160,6 +157,9 @@ class Project:
             description=description,
             tunings=tunings,
         )
+
+    def list_tunings(self) -> List["Tuning"]:
+        return self.client.tunings.list_tunings(self)
 
 
 class Projects:
