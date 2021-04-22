@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import random
 import sys
 import uuid
 from pathlib import Path
@@ -27,7 +26,7 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 from securicad.enterprise.exceptions import StatusCodeException
 
 from securicad.enterprise.projects import AccessLevel
-from securicad.enterprise.users import User, Role
+from securicad.enterprise.users import Role
 
 # isort: on
 
@@ -41,53 +40,53 @@ def test_list_projects(data, client):
 def test_get_project_by_pid(data, client):
     for org_data in data["organizations"].values():
         for project_data in org_data["projects"].values():
-            p = client.projects.get_project_by_pid(project_data["pid"])
-            assert p.pid == project_data["pid"]
-            assert p.name == project_data["name"]
+            proj = client.projects.get_project_by_pid(project_data["pid"])
+            assert proj.pid == project_data["pid"]
+            assert proj.name == project_data["name"]
 
 
 def test_get_project_by_name(data, client):
     for org_data in data["organizations"].values():
         for project_data in org_data["projects"].values():
-            p = client.projects.get_project_by_name(project_data["name"])
-            assert p.pid == project_data["pid"]
-            assert p.name == project_data["name"]
+            proj = client.projects.get_project_by_name(project_data["name"])
+            assert proj.pid == project_data["pid"]
+            assert proj.name == project_data["name"]
 
 
 def test_create_project(client, organization):
     name = str(uuid.uuid4())
     description = str(uuid.uuid4())
-    p = client.projects.create_project(
+    proj = client.projects.create_project(
         name=name, description=description, organization=organization
     )
-    assert p.name == name
-    assert p.description == description
-    p.delete()
+    assert proj.name == name
+    assert proj.description == description
+    proj.delete()
 
 
-def test_project_update(data, client, project, organization):
+def test_project_update(client, project):
     name = str(uuid.uuid4())
     description = str(uuid.uuid4())
     project.update(name=name, description=description)
-    p2 = client.projects.get_project_by_name(name=name)
+    project2 = client.projects.get_project_by_name(name=name)
 
     assert project.name == name
     assert project.description == description
 
-    assert p2.pid == project.pid
-    assert p2.name == name
-    assert p2.description == description
+    assert project2.pid == project.pid
+    assert project2.name == name
+    assert project2.description == description
 
 
-def test_project_delete(data, client, organization):
+def test_project_delete(client, organization):
     assert len(client.projects.list_projects()) == 1
     name = str(uuid.uuid4())
     description = str(uuid.uuid4())
-    p = client.projects.create_project(
+    proj = client.projects.create_project(
         name=name, description=description, organization=organization
     )
     assert len(client.projects.list_projects()) == 2
-    p.delete()
+    proj.delete()
     assert len(client.projects.list_projects()) == 1
 
 
@@ -96,7 +95,7 @@ def test_project_list_users(project):
     assert len(users) == 1
 
 
-def test_project_add_remove_user_and_get_access_level(data, client, organization):
+def test_project_add_user(client, organization):
     user = client.users.create_user(
         username="user",
         password="psw",
@@ -105,21 +104,55 @@ def test_project_add_remove_user_and_get_access_level(data, client, organization
         role=Role.USER,
         organization=organization,
     )
-    p = client.projects.create_project(
+    proj = client.projects.create_project(
+        name=str(uuid.uuid4()), description=str(uuid.uuid4()), organization=organization
+    )
+    assert len(proj.list_users()) == 1
+    proj.add_user(user, AccessLevel.ADMIN)
+    assert len(proj.list_users()) == 2
+    user.delete()
+    proj.delete()
+
+
+def test_project_remove_user(client, organization):
+    user = client.users.create_user(
+        username="user",
+        password="psw",
+        firstname="f",
+        lastname="l",
+        role=Role.USER,
+        organization=organization,
+    )
+    proj = client.projects.create_project(
+        name=str(uuid.uuid4()), description=str(uuid.uuid4()), organization=organization
+    )
+    assert len(proj.list_users()) == 1
+    proj.add_user(user, AccessLevel.ADMIN)
+    user.delete()
+    assert len(proj.list_users()) == 1
+    proj.delete()
+
+
+def test_project_get_access_level(client, organization):
+    proj = client.projects.create_project(
         name=str(uuid.uuid4()), description=str(uuid.uuid4()), organization=organization
     )
     for level in AccessLevel:
-        p.add_user(user, level)
-        assert p.get_access_level(user) == level
-        assert len(p.list_users()) == 2, [
-            p.username for p in p.list_users()
-        ]  # admin, and one already existed
-        p.remove_user(user)
-    user.delete()
-    p.delete()
+        user = client.users.create_user(
+            username="user",
+            password="psw",
+            firstname="f",
+            lastname="l",
+            role=Role.USER,
+            organization=organization,
+        )
+        proj.add_user(user, level)
+        assert proj.get_access_level(user) == level
+        user.delete()
+    proj.delete()
 
 
-def test_project_set_access_level(data, client, organization):
+def test_project_set_access_level(client, organization):
     user = client.users.create_user(
         username="user",
         password="psw",
@@ -128,26 +161,26 @@ def test_project_set_access_level(data, client, organization):
         role=Role.USER,
         organization=organization,
     )
-    p = client.projects.create_project(
+    proj = client.projects.create_project(
         name=str(uuid.uuid4()), description=str(uuid.uuid4()), organization=organization
     )
     levels = list(AccessLevel)
     for lidx, level in enumerate(levels):
-        p.add_user(user, level)
-        assert p.get_access_level(user) == level
+        proj.add_user(user, level)
+        assert proj.get_access_level(user) == level
         next_level = levels[(lidx + 1) % len(levels)]
-        p.set_access_level(user, next_level)
-        assert p.get_access_level(user) == next_level
-        p.remove_user(user)
+        proj.set_access_level(user, next_level)
+        assert proj.get_access_level(user) == next_level
+        proj.remove_user(user)
     user.delete()
-    p.delete()
+    proj.delete()
 
 
-def test_list_models(data, client, project):
+def test_list_models(project):
     assert project.list_models() == []
     modelpath = Path(__file__).with_name("aws.sCAD")
     with open(modelpath, mode="rb") as reader:
-        model_info = project.upload_scad_model(
+        project.upload_scad_model(
             filename="aws.sCAD", file_io=reader, description="descr"
         )
     fetched = project.list_models()
@@ -159,7 +192,7 @@ def test_list_models(data, client, project):
     assert project.list_models() == []
 
 
-def test_project_import_models(data, client, organization, project):
+def test_project_import_models(client, organization, project):
     other_project = client.projects.create_project(
         name=str(uuid.uuid4()), description=str(uuid.uuid4()), organization=organization
     )
@@ -174,14 +207,14 @@ def test_project_import_models(data, client, organization, project):
     other_project.delete()
 
 
-def test_project_list_scenarios(data, client, project):
+def test_project_list_scenarios(project):
     modelpath = Path(__file__).with_name("aws.sCAD")
     with open(modelpath, mode="rb") as reader:
         model_info = project.upload_scad_model(
             filename="aws.sCAD", file_io=reader, description="descr"
         )
     assert project.list_scenarios() == []
-    scenario = project.create_scenario(
+    project.create_scenario(
         model_info=model_info,
         name="simulation",
         description="descr",
