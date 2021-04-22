@@ -57,7 +57,7 @@ class Simulation:
             return
         while True:
             self.__update_progress()
-            if self.progress == 100:
+            if self.progress < 0 or self.progress == 100:  # failed or finished
                 break
             time.sleep(1)
 
