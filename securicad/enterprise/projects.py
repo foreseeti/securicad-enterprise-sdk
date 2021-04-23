@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from enum import IntEnum, unique
-from typing import TYPE_CHECKING, Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any, BinaryIO, Dict, List, Optional
 
 if TYPE_CHECKING:
     from securicad.enterprise.client import Client
@@ -130,8 +130,33 @@ class Project:
         data: Dict[str, Any] = {"pid": self.pid, "mids": mids}
         self.client._post("models/import", data)
 
+    def upload_scad_model(
+        self,
+        filename: str,
+        file_io: BinaryIO,
+        description: Optional[str] = None,
+    ) -> "ModelInfo":
+        return self.client.models.upload_scad_model(
+            project=self, filename=filename, file_io=file_io, description=description
+        )
+
     def list_scenarios(self) -> List["Scenario"]:
         return self.client.scenarios.list_scenarios(self)
+
+    def create_scenario(
+        self,
+        model_info: "ModelInfo",
+        name: str,
+        description: Optional[str] = None,
+        tunings: Optional[List["Tuning"]] = None,
+    ) -> "Scenario":
+        return self.client.scenarios.create_scenario(
+            project=self,
+            model_info=model_info,
+            name=name,
+            description=description,
+            tunings=tunings,
+        )
 
     def list_tunings(self) -> List["Tuning"]:
         return self.client.tunings.list_tunings(self)
