@@ -217,10 +217,15 @@ def client():
 
 
 @pytest.fixture()
-def project(data, client):
+def organization(client):
     org = client.organizations.list_organizations()[0]
+    return org
+
+
+@pytest.fixture()
+def project(data, client, organization):
     project = client.projects.create_project(
-        name="project", description="", organization=org
+        name="project", description="", organization=organization
     )
     yield project
     project.delete()
